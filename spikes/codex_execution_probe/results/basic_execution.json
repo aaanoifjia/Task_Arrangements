@@ -1,0 +1,11 @@
+{
+  "thread_id": null,
+  "turn_id": null,
+  "event_methods": [],
+  "saw_turn_started": false,
+  "saw_turn_completed": false,
+  "completed_status": null,
+  "output_verified": false,
+  "unexpected_files": [],
+  "error": "TransportClosedError: Codex process closed stdout. stderr_tail=WARNING: proceeding, even though we could not create PATH aliases: Could not find home directory\nError: Could not find home directory"
+}

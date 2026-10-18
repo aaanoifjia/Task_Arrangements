@@ -1,0 +1,5 @@
+{
+  "resume": {},
+  "interrupt": {},
+  "error": "Probe did not receive a first-turn event and was stopped after prolonged inactivity; no resume or interrupt success was recorded."
+}
