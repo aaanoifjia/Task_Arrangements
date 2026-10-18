@@ -1,0 +1,20 @@
+{
+  "environment": {
+    "HOME": "",
+    "USERPROFILE": "C:\\Users\\Administrator",
+    "HOMEDRIVE": "C:",
+    "HOMEPATH": "\\Users\\Administrator",
+    "Path.home()": "C:\\Users\\Administrator",
+    "os.path.expanduser(\"~\")": "C:\\Users\\Administrator"
+  },
+  "resolved_directories": {
+    "HOME": false,
+    "USERPROFILE": true,
+    "Path.home()": true,
+    "os.path.expanduser(\"~\")": true,
+    "HOMEDRIVE+HOMEPATH": true
+  },
+  "canonical_home": "C:\\Users\\Administrator",
+  "canonical_home_exists": true,
+  "expanduser_home": "C:\\Users\\Administrator"
+}

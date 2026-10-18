@@ -11,13 +11,8 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": {
-    "id": "M1-HOME-FIX-001",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19",
-    "note": "Valid existing home is C:\\Users\\Administrator; repairing probe child-process environment handoff."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M1-AUTH-001",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -28,18 +23,10 @@
     "M3-GRAPH-001",
     "M3-STATE-002",
     "M3-READY-003",
-    "M3-LOCK-004"
+    "M3-LOCK-004",
+    "M1-HOME-FIX-001"
   ],
-  "blocked_tasks": {
-    "M1-RUN-002": {
-      "reason": "Codex runtime exits before thread creation with 'Could not find home directory'.",
-      "remediation": "M1-HOME-FIX-001"
-    },
-    "M1-CTRL-003": {
-      "reason": "No first-turn event was received; resume/interrupt validation cannot proceed until real execution works.",
-      "remediation": "M1-HOME-FIX-001 then rerun M1-CTRL-003"
-    }
-  },
+  "blocked_tasks": {},
   "task_queue_after_current": [
     "M1-AUTH-001",
     "M1-RUN-002",
@@ -84,8 +71,9 @@
     "architecture_docs_present": true,
     "adr_001_to_008_present": true,
     "v1_acceptance_present": true,
-    "codex_basic_probe_terminal_event": false,
-    "codex_basic_probe_error": "Could not find home directory"
+    "codex_basic_probe_terminal_event": true,
+    "codex_basic_probe_output_verified": true,
+    "codex_basic_probe_error": null
   },
-  "last_validation_note": "Repository contains unit tests for graph, state machine, readiness, and locks. Current remote evidence does not include a fresh full-suite test result in progress metadata; rerun targeted tests when modifying these modules."
+  "last_validation_note": "M1-HOME-FIX-001 validated with home_environment_probe.py, auth_probe.py, basic_execution_probe.py, and resume_interrupt_probe.py using the project venv. Canonical home is C:\\Users\\Administrator; auth succeeded; basic probe reached turn/started and turn/completed and verified exact output. Resume/interrupt reached completed/interrupted terminal events, but resume response extraction remained empty for the downstream control probe."
 }

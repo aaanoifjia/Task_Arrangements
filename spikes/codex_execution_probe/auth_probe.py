@@ -1,6 +1,7 @@
 """Probe the installed Codex SDK and the current local Codex session."""
 
 import json
+import os
 import platform
 import sys
 from pathlib import Path
@@ -11,6 +12,26 @@ from openai_codex import Codex
 
 _SENSITIVE_KEY_PARTS = ("token", "secret", "key", "credential")
 _RESULT_PATH = Path(__file__).parent / "results" / "auth_probe.json"
+
+
+def ensure_home_environment() -> str:
+    candidates = (
+        os.environ.get("USERPROFILE", ""),
+        os.environ.get("HOME", ""),
+        str(Path.home()),
+        os.path.join(os.environ.get("HOMEDRIVE", ""), os.environ.get("HOMEPATH", "")),
+    )
+    canonical_home = next(
+        (candidate for candidate in candidates if candidate and Path(candidate).is_dir()),
+        None,
+    )
+    if canonical_home is None:
+        raise RuntimeError("No existing Windows home directory could be identified")
+    if not os.environ.get("USERPROFILE"):
+        os.environ["USERPROFILE"] = canonical_home
+    if not os.environ.get("HOME"):
+        os.environ["HOME"] = canonical_home
+    return canonical_home
 
 
 def _sanitize(value):
@@ -42,6 +63,7 @@ def _to_data(value):
 
 def main():
     try:
+        ensure_home_environment()
         with Codex() as codex:
             account = codex.account(refresh_token=False)
     except Exception:

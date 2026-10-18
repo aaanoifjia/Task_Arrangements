@@ -1,0 +1,14 @@
+{
+  "python_version": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+  "openai_codex_version": "0.162.1",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "account_access_ok": true,
+  "account": {
+    "account": {
+      "email": "aaanoif17041048@gmail.com",
+      "plan_type": "plus",
+      "type": "chatgpt"
+    },
+    "requires_openai_auth": true
+  }
+}

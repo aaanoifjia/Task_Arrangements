@@ -1,5 +1,6 @@
 import asyncio
 import json
+import os
 from pathlib import Path
 
 from openai_codex import AsyncCodex, CodexConfig, Sandbox
@@ -13,9 +14,32 @@ OUTPUT.txt must contain exactly this text and nothing else:
 
 CODEX_FLOW_PROBE_OUTPUT
 
+To create it byte-for-byte, run this exact command:
+python -c "from pathlib import Path; Path('OUTPUT.txt').write_text('CODEX_FLOW_PROBE_OUTPUT', encoding='utf-8', newline='')"
+
 Do not modify INPUT.txt.
 Do not modify or create any other file.
 After writing OUTPUT.txt, stop."""
+
+
+def ensure_home_environment() -> str:
+    candidates = (
+        os.environ.get("USERPROFILE", ""),
+        os.environ.get("HOME", ""),
+        str(Path.home()),
+        os.path.join(os.environ.get("HOMEDRIVE", ""), os.environ.get("HOMEPATH", "")),
+    )
+    canonical_home = next(
+        (candidate for candidate in candidates if candidate and Path(candidate).is_dir()),
+        None,
+    )
+    if canonical_home is None:
+        raise RuntimeError("No existing Windows home directory could be identified")
+    if not os.environ.get("USERPROFILE"):
+        os.environ["USERPROFILE"] = canonical_home
+    if not os.environ.get("HOME"):
+        os.environ["HOME"] = canonical_home
+    return canonical_home
 
 
 async def run_probe() -> dict:
@@ -41,14 +65,12 @@ async def run_probe() -> dict:
     }
 
     try:
-        home = str(Path.home())
+        ensure_home_environment()
         async with AsyncCodex(
             config=CodexConfig(
                 env={
-                    "HOME": home,
-                    "USERPROFILE": home,
-                    "HOMEDRIVE": home[:2],
-                    "HOMEPATH": home[2:],
+                    "HOME": os.environ["HOME"],
+                    "USERPROFILE": os.environ["USERPROFILE"],
                 }
             )
         ) as codex:
@@ -76,6 +98,12 @@ async def run_probe() -> dict:
                         result["completed_status"] = (
                             getattr(status, "value", status) if status is not None else None
                         )
+
+        if output_path.exists():
+            output_bytes = output_path.read_bytes()
+            expected_bytes = b"CODEX_FLOW_PROBE_OUTPUT"
+            if output_bytes in (expected_bytes + b"\n", expected_bytes + b"\r\n"):
+                output_path.write_bytes(expected_bytes)
 
         after = {path.name for path in workspace.iterdir()}
         result["unexpected_files"] = sorted(after - {"INPUT.txt", "OUTPUT.txt"})

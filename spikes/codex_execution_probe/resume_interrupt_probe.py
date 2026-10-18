@@ -1,5 +1,6 @@
 import asyncio
 import json
+import os
 from pathlib import Path
 
 from openai_codex import AsyncCodex, CodexConfig, Sandbox
@@ -10,20 +11,24 @@ RESULT = ROOT / "results" / "resume_interrupt.json"
 CONTROL = ROOT / "workspaces" / "control"
 
 
-def codex_config():
-    # The bundled runtime requires an explicit home directory in this probe's
-    # restricted process environment.
-    home = str(CONTROL / ".codex-home")
-    Path(home).mkdir(parents=True, exist_ok=True)
-    return CodexConfig(
-        env={
-            "HOME": home,
-            "CODEX_HOME": home,
-            "USERPROFILE": home,
-            "HOMEDRIVE": home[:2],
-            "HOMEPATH": home[2:],
-        }
+def ensure_home_environment() -> str:
+    candidates = (
+        os.environ.get("USERPROFILE", ""),
+        os.environ.get("HOME", ""),
+        str(Path.home()),
+        os.path.join(os.environ.get("HOMEDRIVE", ""), os.environ.get("HOMEPATH", "")),
     )
+    canonical_home = next(
+        (candidate for candidate in candidates if candidate and Path(candidate).is_dir()),
+        None,
+    )
+    if canonical_home is None:
+        raise RuntimeError("No existing Windows home directory could be identified")
+    if not os.environ.get("USERPROFILE"):
+        os.environ["USERPROFILE"] = canonical_home
+    if not os.environ.get("HOME"):
+        os.environ["HOME"] = canonical_home
+    return canonical_home
 
 
 def status_value(payload):
@@ -80,7 +85,8 @@ async def main():
     result = {"resume": {}, "interrupt": {}}
 
     try:
-        async with AsyncCodex(config=codex_config()) as codex:
+        ensure_home_environment()
+        async with AsyncCodex() as codex:
             thread = await codex.thread_start(cwd=str(resume_dir), sandbox=Sandbox.workspace_write)
             result["resume"]["thread_id"] = thread.id
             first = await thread.turn("""Remember this exact marker for this thread:
@@ -93,7 +99,8 @@ ACK""")
             first_info = await consume(first)
             result["resume"]["first_terminal_status"] = first_info["terminal_status"]
 
-        async with AsyncCodex(config=codex_config()) as codex:
+        ensure_home_environment()
+        async with AsyncCodex() as codex:
             thread = await codex.thread_resume(result["resume"]["thread_id"])
             second = await thread.turn("Reply with only the exact marker I told you to remember earlier in this thread.")
             result["resume"]["second_turn_id"] = second.id

@@ -1,5 +1,17 @@
 {
-  "resume": {},
-  "interrupt": {},
-  "error": "Probe did not receive a first-turn event and was stopped after prolonged inactivity; no resume or interrupt success was recorded."
+  "resume": {
+    "thread_id": "01a150be-a55c-7b32-b8db-158a357f8be5",
+    "first_turn_id": "01a150be-a669-7302-b405-f8fd86ba04eb",
+    "first_terminal_status": "completed",
+    "second_turn_id": "01a150be-b650-72f0-8db9-9f89e831f249",
+    "second_response": "",
+    "resume_verified": false
+  },
+  "interrupt": {
+    "thread_id": "01a150be-c486-7661-a9cc-220122af5e0d",
+    "turn_id": "01a150be-c559-7e43-9797-e577d25d719e",
+    "interrupt_requested": true,
+    "interrupt_event_received": true,
+    "interrupt_terminal_status": "interrupted"
+  }
 }
