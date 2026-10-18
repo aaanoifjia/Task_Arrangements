@@ -73,3 +73,7 @@ If quota ends during a task:
 See `AGENTS.md` and `.codex/AUTO_EXECUTION.md`.
 
 The resume/interrupt follow-up probe reached both completed and interrupted terminal events; its resume response extraction remains a downstream control-probe issue for `M1-CTRL-003`.
+
+## Current Blocker
+
+`M1-CTRL-003` is referenced by the progress metadata and dependency graph, but its authoritative task definition is missing from both `docs/reference/Codex_Flow_Early_Phase_Task_Plan.md` and `.codex/tasks/`. No owned files, implementation steps, or acceptance criteria are available, so autonomous execution stops here until that specification is added.

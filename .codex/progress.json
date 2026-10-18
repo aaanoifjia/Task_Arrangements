@@ -12,7 +12,7 @@
     "task_selection": "next_task_only"
   },
   "active_task": null,
-  "next_task": "M1-CTRL-003",
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -28,7 +28,13 @@
     "M1-AUTH-001",
     "M1-RUN-002"
   ],
-  "blocked_tasks": {},
+  "blocked_tasks": {
+    "M1-CTRL-003": {
+      "reason": "M1-CTRL-003 is referenced by progress metadata and the dependency graph, but no authoritative task definition with owned files, steps, or acceptance criteria exists in docs/reference/Codex_Flow_Early_Phase_Task_Plan.md or .codex/tasks.",
+      "last_successful_validation": "M1-RUN-002 passed with real turn/started and turn/completed events and exact output verification.",
+      "remediation": "Add the authoritative M1-CTRL-003 task specification before implementation; do not infer control-probe scope."
+    }
+  },
   "task_queue_after_current": [
     "M1-AUTH-001",
     "M1-RUN-002",
@@ -77,5 +83,5 @@
     "codex_basic_probe_output_verified": true,
     "codex_basic_probe_error": null
   },
-  "last_validation_note": "M1-RUN-002 passed with .venv\\Scripts\\python.exe spikes\\codex_execution_probe\\basic_execution_probe.py: exit code 0, real turn/started and turn/completed events, completed status, exact output verification, and no unexpected files."
+  "last_validation_note": "M1-RUN-002 passed with .venv\\Scripts\\python.exe spikes\\codex_execution_probe\\basic_execution_probe.py: exit code 0, real turn/started and turn/completed events, completed status, exact output verification, and no unexpected files. Autonomous progression is blocked because the authoritative M1-CTRL-003 task specification is missing."
 }
