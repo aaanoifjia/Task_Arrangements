@@ -11,13 +11,8 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": {
-    "id": "M1-RUN-002",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19",
-    "note": "Rerunning the real thread, turn, stream, and exact workspace-output probe after home remediation."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M1-CTRL-003",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -30,7 +25,8 @@
     "M3-READY-003",
     "M3-LOCK-004",
     "M1-HOME-FIX-001",
-    "M1-AUTH-001"
+    "M1-AUTH-001",
+    "M1-RUN-002"
   ],
   "blocked_tasks": {},
   "task_queue_after_current": [
@@ -81,5 +77,5 @@
     "codex_basic_probe_output_verified": true,
     "codex_basic_probe_error": null
   },
-  "last_validation_note": "M1-AUTH-001 passed with .venv\\Scripts\\python.exe spikes\\codex_execution_probe\\auth_probe.py: exit code 0, openai_codex_version 0.162.1, account access succeeded, and sensitive key fields were absent from the recorded result."
+  "last_validation_note": "M1-RUN-002 passed with .venv\\Scripts\\python.exe spikes\\codex_execution_probe\\basic_execution_probe.py: exit code 0, real turn/started and turn/completed events, completed status, exact output verification, and no unexpected files."
 }
