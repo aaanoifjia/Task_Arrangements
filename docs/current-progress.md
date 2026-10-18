@@ -21,12 +21,13 @@ The deterministic local core is substantially ahead of the original initial stat
 - M3-READY-003 — dependency readiness calculation
 - M3-LOCK-004 — global concurrency, workspace write locks, thread-turn locks
 - M1-HOME-FIX-001 — Codex child-process home environment repair; basic real execution verified
+- M1-AUTH-001 — SDK version and existing Codex session authentication probe
 
 ## Current Task
 
-The home-directory remediation passed. The next deterministic task is:
+The home-directory remediation and authentication probe passed. The next deterministic task is:
 
-`M1-AUTH-001`
+`M1-RUN-002`
 
 The probes now identify `C:\\Users\\Administrator` as the canonical existing home. Authentication succeeds, and the basic probe reaches real `turn/started` and `turn/completed` events while verifying the exact output file.
 
@@ -45,8 +46,7 @@ After the home fix, follow `.codex/progress.json.next_task` and the recorded que
 The intended near-term sequence is:
 
 ```text
-M1-AUTH-001
-→ M1-RUN-002
+M1-RUN-002
 → M1-CTRL-003
 → M1-PACK-005
 → M1-DESKTOP-004 (manual user check)
