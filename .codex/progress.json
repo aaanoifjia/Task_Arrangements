@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "project": "Codex Flow",
+  "repository": "aaanoifjia/Task_Arrangements",
+  "branch": "master",
+  "updated_at": "2026-10-19",
+  "execution_policy": {
+    "automatic_push": false,
+    "commit_each_completed_task": true,
+    "checkpoint_task_start": true,
+    "fail_closed": true,
+    "task_selection": "next_task_only"
+  },
+  "active_task": null,
+  "next_task": "M1-HOME-FIX-001",
+  "completed_tasks": [
+    "PREP-000",
+    "M0-ARCH-001",
+    "M0-DOMAIN-002",
+    "M0-STATE-003",
+    "M0-ADR-004",
+    "M0-ACCEPT-005",
+    "M3-GRAPH-001",
+    "M3-STATE-002",
+    "M3-READY-003",
+    "M3-LOCK-004"
+  ],
+  "blocked_tasks": {
+    "M1-RUN-002": {
+      "reason": "Codex runtime exits before thread creation with 'Could not find home directory'.",
+      "remediation": "M1-HOME-FIX-001"
+    },
+    "M1-CTRL-003": {
+      "reason": "No first-turn event was received; resume/interrupt validation cannot proceed until real execution works.",
+      "remediation": "M1-HOME-FIX-001 then rerun M1-CTRL-003"
+    }
+  },
+  "task_queue_after_current": [
+    "M1-AUTH-001",
+    "M1-RUN-002",
+    "M1-CTRL-003",
+    "M1-PACK-005",
+    "M1-DESKTOP-004",
+    "M1-REPORT-006",
+    "M2-INTERFACE-001",
+    "M2-FAKE-002",
+    "M2-SDK-003",
+    "M2-CONTRACT-004",
+    "M3-SCHED-005",
+    "M3-MANUAL-006",
+    "M3-CONTINUE-007",
+    "M3-TEST-008",
+    "M4-SCHEMA-001",
+    "M4-REPO-002",
+    "M4-SNAPSHOT-003",
+    "M4-ATTEMPT-004",
+    "M4-RECOVERY-005",
+    "M4-DUP-006",
+    "M5-CLI-001",
+    "M5-EXAMPLES-002",
+    "M5-LINEAR-003",
+    "M5-FORKJOIN-004",
+    "M5-RESTART-005",
+    "M5-REPORT-006"
+  ],
+  "manual_gates": [
+    {
+      "task": "M1-DESKTOP-004",
+      "requires_user": true,
+      "reason": "Desktop opened/correct thread/sidebar visibility must be observed by the user."
+    }
+  ],
+  "verified_repository_state": {
+    "domain_models_present": true,
+    "graph_validation_present": true,
+    "state_machine_present": true,
+    "readiness_present": true,
+    "workspace_locks_present": true,
+    "architecture_docs_present": true,
+    "adr_001_to_008_present": true,
+    "v1_acceptance_present": true,
+    "codex_basic_probe_terminal_event": false,
+    "codex_basic_probe_error": "Could not find home directory"
+  },
+  "last_validation_note": "Repository contains unit tests for graph, state machine, readiness, and locks. Current remote evidence does not include a fresh full-suite test result in progress metadata; rerun targeted tests when modifying these modules."
+}
