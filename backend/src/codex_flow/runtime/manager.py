@@ -14,8 +14,11 @@ class RuntimeManager:
         self._adapter = adapter
         self._runner = DurableRunner(repository, adapter)
         self._tasks: dict[str, asyncio.Task[None]] = {}
+        self._accepting = True
 
     async def start(self, workflow: WorkflowDefinition) -> str:
+        if not self._accepting:
+            raise RuntimeError("runtime manager is shutting down")
         run_id = self._runner.prepare_run(workflow)
         task = asyncio.create_task(self._runner.execute_run(run_id, workflow))
         self._tasks[run_id] = task
@@ -34,3 +37,11 @@ class RuntimeManager:
     @property
     def active_count(self) -> int:
         return len(self._tasks)
+
+    async def shutdown(self) -> None:
+        self._accepting = False
+        tasks = tuple(self._tasks.values())
+        for task in tasks:
+            task.cancel()
+        if tasks:
+            await asyncio.gather(*tasks, return_exceptions=True)
