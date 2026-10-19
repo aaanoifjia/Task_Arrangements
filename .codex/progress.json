@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M6-WS-011",
+  "active_task": {
+    "id": "M6-WS-011",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-19",
+    "note": "Implement the durable WebSocket run stream with snapshots, events, cursor reconnect, and disconnect isolation."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
