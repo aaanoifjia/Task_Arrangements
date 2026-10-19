@@ -23,12 +23,14 @@ class RuntimeManager:
         self._adapter = adapter
         self._runner = DurableRunner(repository, adapter)
         self._tasks: dict[str, asyncio.Task[None]] = {}
+        self._workflows: dict[str, WorkflowDefinition] = {}
         self._accepting = True
 
     async def start(self, workflow: WorkflowDefinition) -> str:
         if not self._accepting:
             raise RuntimeError("runtime manager is shutting down")
         run_id = self._runner.prepare_run(workflow)
+        self._workflows[run_id] = workflow
         task = asyncio.create_task(self._runner.execute_run(run_id, workflow))
         self._tasks[run_id] = task
         task.add_done_callback(lambda _: self._tasks.pop(run_id, None))
@@ -60,6 +62,45 @@ class RuntimeManager:
         self._repository.set_workflow_run_paused(run_id, True)
         result = accepted_result(command)
         self._repository.append_manual_action_audit(result)
+        return result
+
+    async def resume(self, run_id: str) -> ControlResult:
+        """Clear pause and schedule exactly one unfinished run continuation."""
+        command = ControlCommand(run_id=run_id, action=ControlAction.RESUME)
+        row = self._repository.get_workflow_run(run_id)
+        if row is None:
+            return rejected_result(command, error_code="RUN_NOT_FOUND", message="run not found")
+        status = TaskStatus(str(row["status"]))
+        if is_terminal(status):
+            result = rejected_result(
+                command,
+                error_code="RUN_NOT_ACTIVE",
+                message=f"run is already terminal: {status.value}",
+            )
+            self._repository.append_manual_action_audit(result)
+            return result
+        if not self._repository.get_workflow_run_paused(run_id):
+            result = rejected_result(
+                command,
+                error_code="NOT_PAUSED",
+                message="run is not paused",
+            )
+            self._repository.append_manual_action_audit(result)
+            return result
+
+        self._repository.set_workflow_run_paused(run_id, False)
+        result = accepted_result(command)
+        self._repository.append_manual_action_audit(result)
+        task = self._tasks.get(run_id)
+        if task is not None and task.done():
+            self._tasks.pop(run_id, None)
+        if run_id not in self._tasks:
+            workflow = self._workflows.get(run_id)
+            if workflow is None:
+                raise ValueError(f"workflow definition not available for run: {run_id}")
+            task = asyncio.create_task(self._runner.execute_run(run_id, workflow))
+            self._tasks[run_id] = task
+            task.add_done_callback(lambda _: self._tasks.pop(run_id, None))
         return result
 
     async def wait(self, run_id: str) -> None:
