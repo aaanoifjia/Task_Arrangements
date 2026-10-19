@@ -91,7 +91,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M8-CONTROL-008` — Terminal-vs-Control Race Guard
+`M8-CONTROL-008` — Terminal-vs-Control Race Guard (IN_PROGRESS)
 
 The late-phase plan contains 120 sequential tasks:
 - M8: 44 tasks
