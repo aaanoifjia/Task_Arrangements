@@ -18,7 +18,7 @@
     "started_at": "2026-10-19T14:29:17.7644118Z",
     "note": "Implement health and SDK-independent local runtime status endpoints."
   },
-  "next_task": null,
+  "next_task": "M6-INTEGRATE-014",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -71,7 +71,8 @@
     "M6-RUN-API-009",
     "M6-EVENT-SVC-010",
     "M6-WS-011",
-    "M6-LIFECYCLE-012"
+    "M6-LIFECYCLE-012",
+    "M6-SYSTEM-013"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -159,5 +160,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M6-LIFECYCLE-012 PASS: startup recovery ordering, same-database reopen, ambiguous-task fail-closed behavior, adapter shutdown, DB shutdown, recovery, runtime, Ruff, and strict API mypy passed. M6-SYSTEM-013 is next."
+  "last_validation_note": "M6-SYSTEM-013 PASS: health and SDK-independent status endpoints passed on an empty migrated DB with active runtime count and secret-free output; system, lifecycle, workflow, WebSocket, Ruff, and strict API/application mypy checks passed. One pre-lifecycle runtime-unavailable legacy assertion remains for M6-INTEGRATE-014 repair."
 }

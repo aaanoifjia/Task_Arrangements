@@ -81,8 +81,8 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M6-SYSTEM-013` — Health & Local Runtime Status API
+`M6-INTEGRATE-014` — Local API End-to-End Integration
 
 M6 has 16 concrete tasks queued in the authoritative Early Phase Task Plan. Autonomous execution should continue task-by-task through `M6-REPORT-016` unless a genuine blocker is reached.
 
-M5 remains complete; its headless MVP gate report is PASS and must not be reimplemented. M6 workflow/run APIs, runtime manager, application services, durable event stream, WebSocket route, and startup recovery lifecycle are complete. `M6-SYSTEM-013` is next.
+M5 remains complete; its headless MVP gate report is PASS and must not be reimplemented. M6 workflow/run APIs, runtime manager, application services, durable event stream, WebSocket route, startup recovery lifecycle, and health/status endpoints are complete. `M6-INTEGRATE-014` is next; it owns bounded repairs for the full API contract.
