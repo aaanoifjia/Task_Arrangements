@@ -11,8 +11,13 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": null,
-  "next_task": "M1-PACK-005",
+  "active_task": {
+    "id": "M1-PACK-005",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-19",
+    "note": "Running the frozen PyInstaller feasibility probe for the Codex SDK runtime path."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
