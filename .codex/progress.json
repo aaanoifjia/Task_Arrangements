@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-EDIT-027",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T16:15:00.0000000Z",
-    "note": "Add pure client-side graph preflight validation for task fields, dependencies, edges, cycles, and continuation sources."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-EDIT-028",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -101,7 +96,8 @@
     "M7-EDIT-023",
     "M7-EDIT-024",
     "M7-EDIT-025",
-    "M7-EDIT-026"
+    "M7-EDIT-026",
+    "M7-EDIT-027"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -247,5 +243,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-EDIT-026 PASS: explicit deletion confirmation removes a task, incident edges, dependencies, and invalid continuation references; typecheck, ESLint, and Vitest (36 tests) passed. M7-EDIT-027 is next."
+  "last_validation_note": "M7-EDIT-027 PASS: pure client preflight covers valid DAGs, required fields, unique IDs, targets, edge/dependency consistency, duplicates, self edges, cycles, and continuation source rules; typecheck, ESLint, and Vitest (41 tests) passed. M7-EDIT-028 is next."
 }
