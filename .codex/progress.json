@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M6-RUNTIME-007",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19",
-    "note": "Add non-blocking RuntimeManager while preserving DurableRunner CLI and durable semantics."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M6-RUN-SVC-008",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -65,7 +60,8 @@
     "M6-SCHEMA-003",
     "M6-STORE-004",
     "M6-WF-SVC-005",
-    "M6-WF-API-006"
+    "M6-WF-API-006",
+    "M6-RUNTIME-007"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -153,5 +149,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M6-WF-API-006 PASS: 2 workflow route tests passed; CRUD/404/ID mismatch behavior, Ruff, and strict API/application mypy passed. M6-RUNTIME-007 is next."
+  "last_validation_note": "M6-RUNTIME-007 PASS: 5 runtime/persistent-runner tests passed; non-blocking start, wait, duplicate active rejection, CLI compatibility, Ruff, and strict runtime mypy passed. M6-RUN-SVC-008 is next."
 }

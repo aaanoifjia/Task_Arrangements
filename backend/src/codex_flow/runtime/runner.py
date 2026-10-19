@@ -32,14 +32,23 @@ class DurableRunner:
             await StartupReconciler(self._repository._connection, self._adapter).reconcile()
             return str(active_runs[0]["id"])
 
-        self._repository.save_workflow_definition(workflow)
-        run_id = self._repository.create_workflow_run(workflow.id, create_run_snapshot(workflow))
-        self._repository.create_task_runs(run_id, order)
-        self._repository.update_workflow_run_state(run_id, "RUNNING")
-        await self._run_ready_tasks(run_id, workflow)
+        run_id = self.prepare_run(workflow, order)
+        await self.execute_run(run_id, workflow)
         return run_id
 
-    async def _run_ready_tasks(self, run_id: str, workflow: WorkflowDefinition) -> None:
+    def prepare_run(self, workflow: WorkflowDefinition, order: list[str] | None = None) -> str:
+        """Persist a new run and its task rows before background execution starts."""
+        active_runs = self._repository.load_active_runs_for_workflow(workflow.id)
+        if active_runs:
+            raise ValueError(f"an active run already exists for workflow: {workflow.id}")
+        task_order = order or topological_order(workflow)
+        self._repository.save_workflow_definition(workflow)
+        run_id = self._repository.create_workflow_run(workflow.id, create_run_snapshot(workflow))
+        self._repository.create_task_runs(run_id, task_order)
+        self._repository.update_workflow_run_state(run_id, "RUNNING")
+        return run_id
+
+    async def execute_run(self, run_id: str, workflow: WorkflowDefinition) -> None:
         dependencies = dependency_map(workflow)
         tasks = {task.id: task for task in workflow.tasks}
         while True:
