@@ -6,6 +6,7 @@ import ValidationPanel from './ValidationPanel'
 import type { ValidationIssue } from './validation'
 import WorkflowMetadataPanel, { type WorkflowMetadataChanges } from './WorkflowMetadataPanel'
 import SaveWorkflowButton, { type SaveWorkflowButtonProps } from './SaveWorkflowButton'
+import UnsavedIndicator from './UnsavedIndicator'
 import './WorkflowEditorLayout.css'
 
 export type WorkflowEditorLayoutProps = {
@@ -19,6 +20,7 @@ export type WorkflowEditorLayoutProps = {
   workflowDescription?: string | null
   onMetadataChange?: (changes: WorkflowMetadataChanges) => void
   saveConfig?: Omit<SaveWorkflowButtonProps, 'hasBlockingIssues'>
+  dirty?: boolean
 }
 
 function WorkflowEditorLayout({
@@ -32,6 +34,7 @@ function WorkflowEditorLayout({
   workflowDescription = null,
   onMetadataChange,
   saveConfig,
+  dirty = false,
 }: WorkflowEditorLayoutProps) {
   const [internalSelectedTaskId, setInternalSelectedTaskId] = useState<string | null>(null)
   const activeTaskId = selectedTaskId === undefined ? internalSelectedTaskId : selectedTaskId
@@ -49,6 +52,7 @@ function WorkflowEditorLayout({
         description={workflowDescription}
         onChange={onMetadataChange}
       />
+      <UnsavedIndicator dirty={dirty} />
       <div className="workflow-editor-layout">
         <section className="workflow-editor-layout__canvas" aria-label="Workflow editor canvas panel">
           <WorkflowCanvas graph={graph} selectedTaskId={activeTaskId} onSelectTask={selectTask} />
