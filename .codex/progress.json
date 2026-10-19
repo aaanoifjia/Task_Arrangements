@@ -14,9 +14,9 @@
   },
   "active_task": {
     "id": "M8-UI-031",
-    "status": "IN_PROGRESS",
+    "status": "BLOCKED",
     "started_at": "2026-10-20T07:00:00.0000000Z",
-    "note": "Mirror public M8 control response/error and paused-run TypeScript models."
+    "note": "BLOCKED: acceptance typecheck requires a non-owned SKIPPED presentation entry in frontend/src/features/runs/status.ts."
   },
   "next_task": null,
   "completed_tasks": [
@@ -165,7 +165,14 @@
     "M8-CONTROL-029",
     "M8-CONTROL-030"
   ],
-  "blocked_tasks": {},
+  "blocked_tasks": {
+    "M8-UI-031": {
+      "status": "BLOCKED",
+      "reason": "BLOCKED: requires change to frontend/src/features/runs/status.ts. Adding the authoritative SKIPPED TaskStatus makes its non-owned Record<TaskStatus, TaskStatusPresentation> incomplete, so the required frontend typecheck cannot pass within the task Owned Files.",
+      "last_successful_validation": "frontend/src/api/types.test.ts: 3 passed; frontend tsc -b failed with TS2741 for missing SKIPPED in frontend/src/features/runs/status.ts.",
+      "next_action": "Authorize or define a remediation task that owns frontend/src/features/runs/status.ts, then resume M8-UI-031."
+    }
+  },
   "blocker_history": [
     {
       "task": "M5-RESTART-005",
@@ -429,5 +436,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-UI-031 IN_PROGRESS: adding frontend control types and public type coverage."
+  "last_validation_note": "M8-UI-031 BLOCKED: type tests pass, but tsc -b requires non-owned frontend/src/features/runs/status.ts to add SKIPPED presentation."
 }

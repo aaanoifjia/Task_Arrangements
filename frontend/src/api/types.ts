@@ -11,6 +11,7 @@ export type TaskStatus =
   | 'CANCELLED'
   | 'INTERRUPTED'
   | 'NEEDS_ATTENTION'
+  | 'SKIPPED'
 
 export type Edge = { source_task_id: string; target_task_id: string }
 
@@ -78,6 +79,23 @@ export type EventView = {
 
 export type ErrorBody = { code: string; message: string }
 export type ErrorResponse = { error: ErrorBody }
+export type ControlAction = 'PAUSE' | 'RESUME' | 'RETRY' | 'CANCEL' | 'SKIP' | 'MARK_SUCCESS'
+export type ManualActionResponse = {
+  action: ControlAction
+  run_id: string
+  task_id: string | null
+  accepted: boolean
+  previous_status: TaskStatus | null
+  status: TaskStatus | null
+  retry_requested: boolean
+  error_code: string | null
+  message: string | null
+}
+export type RunControlState = {
+  run_id: string
+  paused: boolean
+  paused_at: string | null
+}
 export type StreamMessage =
   | { kind: 'event'; payload: EventView }
   | { kind: 'snapshot'; payload: { tasks: TaskRunView[] } }

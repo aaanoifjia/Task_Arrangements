@@ -114,7 +114,9 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M8-UI-031` — Frontend Control Types (IN_PROGRESS)
+`M8-UI-031` — Frontend Control Types (BLOCKED)
+
+Blocker: the required frontend `tsc -b` fails because adding the authoritative `SKIPPED` status requires a matching entry in non-owned `frontend/src/features/runs/status.ts`. The task owns only `frontend/src/api/types.ts` and `frontend/src/api/types.test.ts`; no task-scope-compliant completion is possible without an authorized remediation task.
 
 The late-phase plan contains 120 sequential tasks:
 - M8: 44 tasks
