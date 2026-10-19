@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import type { EventView, RunDetail, TaskRunView } from '../../api/types'
 import { createRunApi, type RunApi } from './api'
 import EventLog from './EventLog'
+import RunSummaryPanel from './RunSummaryPanel'
 import RunGraph from './RunGraph'
 import { useRunStream, type UseRunStreamOptions } from './useRunStream'
 import './RunDetailPage.css'
@@ -78,6 +79,7 @@ function RunDetailPage({ api, streamOptions }: RunDetailPageProps) {
         <div><dt>Workflow ID</dt><dd>{run.workflow_id}</dd></div>
         <div><dt>Created</dt><dd><time dateTime={run.created_at}>{run.created_at}</time></dd></div>
       </dl>
+      <RunSummaryPanel runStatus={run.status} tasks={visibleTasks} />
       <section aria-labelledby="run-graph-heading">
         <h2 id="run-graph-heading">Snapshot graph</h2>
         <RunGraph snapshot={run.snapshot} taskRuns={visibleTasks} />
