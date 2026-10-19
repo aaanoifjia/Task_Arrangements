@@ -11,8 +11,8 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": null,
-  "next_task": "M2-SDK-003",
+  "active_task": {"id": "M2-SDK-003", "status": "IN_PROGRESS", "started_at": "2026-10-19", "note": "Implementing the official SDK adapter and its live exact-file-write smoke test."},
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
