@@ -11,13 +11,8 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": {
-    "id": "M4-REPO-002",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19",
-    "note": "Implementing transactional SQLite repositories for the current storage stage."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M4-SNAPSHOT-003",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -39,7 +34,11 @@
     "M2-INTERFACE-001", "M2-FAKE-002", "M2-SDK-003", "M2-CONTRACT-004",
     "M3-SCHED-005",
     "M3-MANUAL-006",
-    "M3-CONTINUE-007"
+    "M3-CONTINUE-007",
+    "M3-INTEGRATE-008A",
+    "M3-TEST-008",
+    "M4-SCHEMA-001",
+    "M4-REPO-002"
   ],
   "blocked_tasks": {},
   "task_queue_after_current": [
@@ -93,5 +92,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M4-SCHEMA-001 passed: SQLite migration tests, Ruff, and strict storage mypy passed."
+  "last_validation_note": "M4-REPO-002 passed: storage repository integration test, Ruff, and strict storage mypy passed."
 }
