@@ -4,9 +4,9 @@ Updated: 2026-10-19
 
 ## Current Phase
 
-M6 — Local API & Runtime Service.
+M7 — Visual DAG UI.
 
-M5 Headless MVP is complete with every required gate PASS. The authoritative Early Phase Task Plan now defines 16 deterministic M6 tasks covering FastAPI bootstrap, SQLite-backed workflow/run queries, non-blocking runtime management, WebSocket state/event streaming, startup recovery, integration gates, and the M6 milestone report.
+M6 Local API is complete with all gates PASS. The authoritative task plan now defines 58 deterministic M7 tasks, taking the frontend from an empty directory through React/Vite bootstrap, workflow DAG editing, persistence, run launch/history, live WebSocket status/events, attempt inspection, Open-in-Codex URI support, integration gates, and the M7 report.
 
 ## Completed
 
@@ -81,8 +81,8 @@ unexpected_files = []
 
 Current deterministic next task:
 
-M6 complete — M7 awaiting concrete task definitions
+`M7-FE-001` — Frontend React/Vite Bootstrap
 
-M6 has 16 concrete tasks queued in the authoritative Early Phase Task Plan. Autonomous execution should continue task-by-task through `M6-REPORT-016` unless a genuine blocker is reached.
+M7 contains 58 sequential concrete tasks and is intentionally sized at approximately five times the implementation workload of M6. Autonomous execution should continue through `M7-REPORT-058` unless a genuine blocker occurs.
 
-M5 remains complete; its headless MVP gate report is PASS and must not be reimplemented. M6 is complete with the local API milestone report PASS. Workflow/run APIs, runtime manager, application services, durable event stream, WebSocket route, startup recovery lifecycle, health/status endpoints, failure blocking, restart persistence, and M0–M5 regressions are green. No authoritative concrete M7 task plan exists yet.
+M6 remains complete and must not be reimplemented.
