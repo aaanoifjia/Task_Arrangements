@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-FE-001",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T14:44:55.5204731Z",
-    "note": "Initialize React, TypeScript, Vite, React Flow, and router frontend bootstrap."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-FE-002",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -75,7 +70,8 @@
     "M6-SYSTEM-013",
     "M6-INTEGRATE-014",
     "M6-GATE-015",
-    "M6-REPORT-016"
+    "M6-REPORT-016",
+    "M7-FE-001"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -221,5 +217,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M6 complete. Authoritative M7 Visual DAG UI plan now defines 58 deterministic tasks targeting roughly 5x the M6 implementation workload; M7-FE-001 is READY."
+  "last_validation_note": "M7-FE-001 PASS: npm install succeeded and npm run build completed with Vite. React/TypeScript/Vite bootstrap mounts without backend dependency. M7-FE-002 is next."
 }
