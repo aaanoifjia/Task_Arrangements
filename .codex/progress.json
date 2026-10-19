@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M8-CONTROL-025",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T05:30:00.0000000Z",
-    "note": "Normalize control API errors into stable status/code envelopes and verify the full matrix."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M8-CONTROL-026",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -157,7 +152,8 @@
     "M8-CONTROL-021",
     "M8-CONTROL-022",
     "M8-CONTROL-023",
-    "M8-CONTROL-024"
+    "M8-CONTROL-024",
+    "M8-CONTROL-025"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -423,5 +419,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-025 IN_PROGRESS: implementing stable control error helper and full API error matrix tests."
+  "last_validation_note": "M8-CONTROL-025 COMPLETE: full control API error matrix, Ruff, and strict mypy PASS."
 }

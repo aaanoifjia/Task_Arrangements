@@ -22,3 +22,8 @@ def conflict(code: str, message: str) -> HTTPException:
 
 def invalid_request(code: str, message: str) -> HTTPException:
     return api_error(400, code, message)
+
+
+def unprocessable(code: str, message: str) -> HTTPException:
+    """Build the stable 422 envelope used for invalid control state/actions."""
+    return api_error(422, code, message)
