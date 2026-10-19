@@ -30,12 +30,22 @@ git status --short
 git log --oneline -10
 ```
 
-Then read:
+Then read `.codex/progress.json`.
+
+If the working tree is clean and `active_task` is null:
+
+```powershell
+git pull --ff-only origin master
+```
+
+After a successful pull, re-read:
 
 1. `AGENTS.md`
 2. `.codex/progress.json`
 3. the active/next task spec
 4. relevant canonical docs
+
+If `active_task` is non-null, or legitimate active-task work is dirty, do not pull. Resume that task from the current local state.
 
 ### Dirty working tree
 
@@ -51,9 +61,11 @@ If dirty and `active_task` is null:
 ### Clean working tree
 
 If clean and `active_task` is null:
+- automatically run `git pull --ff-only origin master`;
+- re-read progress/task definitions after the pull;
 - execute `next_task`.
 
-A clean tree may use `git pull --ff-only` before starting only if the user has configured a remote and no task is active.
+If the fast-forward pull cannot be completed safely, stop and report the repository conflict. Never merge, rebase, reset, or stash automatically.
 
 ## Starting a Task
 
@@ -73,6 +85,14 @@ chore(progress): start <TASK_ID>
 ```
 
 This checkpoint makes any externally forced interruption recoverable. It is not a reason to stop voluntarily.
+
+After the checkpoint commit succeeds, automatically run:
+
+```powershell
+git push origin master
+```
+
+If the push is rejected, stop and report the remote conflict. Never force-push.
 
 ## Executing a Task
 
@@ -113,7 +133,13 @@ Then:
 task(<TASK_ID>): complete <short title>
 ```
 
-5. Immediately continue with the next deterministic dependency-ready task.
+5. Push the completed-task commit:
+
+```powershell
+git push origin master
+```
+
+6. Immediately continue with the next deterministic dependency-ready task.
 
 Do not stop to report a successfully completed individual task. Do not decide that "resources", "budget", "time", "context", or "quota" may be running low. Continue until a genuine stop condition occurs or the host/runtime actually terminates the invocation.
 
@@ -139,6 +165,8 @@ Commit blocker metadata only if no unsafe/failed implementation files need to be
 ```text
 chore(progress): block <TASK_ID>
 ```
+
+After a blocker metadata commit succeeds, automatically push it to `origin master`.
 
 Then stop autonomous progression unless another independent task is explicitly marked READY in progress.
 
@@ -192,9 +220,29 @@ If a task needs a user check, set it BLOCKED with `requires_user = true` and sto
 Current known manual gate later in M1:
 - Desktop deep-link/sidebar observation in `M1-DESKTOP-004`.
 
-## Push Policy
+## Git Synchronization Policy
 
 Local commits are required for durability.
-Automatic push is disabled.
 
-Only push when the user explicitly asks for remote synchronization.
+Automatic pull:
+
+- mode is `safe_when_clean`;
+- at invocation startup, pull with `git pull --ff-only origin master` only when the working tree is clean and `active_task` is null;
+- after pulling, re-read `.codex/progress.json` and authoritative task definitions;
+- never pull across legitimate active-task dirty work;
+- never auto-merge or auto-rebase a divergence.
+
+Automatic push:
+
+- enabled for autonomous execution;
+- push every successful checkpoint, blocker, and completed-task commit with `git push origin master`;
+- never force-push;
+- on rejection, stop and report the conflict instead of rewriting history.
+
+Forbidden synchronization shortcuts remain:
+
+- automatic stash;
+- `git reset --hard`;
+- `git clean -fd`;
+- `git rebase`;
+- force push.
