@@ -11,8 +11,13 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": null,
-  "next_task": "M1-REPORT-006",
+  "active_task": {
+    "id": "M1-REPORT-006",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-19",
+    "note": "Consolidating verified M1 probe evidence into the compatibility gate report."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
