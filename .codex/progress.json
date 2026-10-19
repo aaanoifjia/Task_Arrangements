@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-GATE-057",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T00:40:00.0000000Z",
-    "note": "Run the full M7 acceptance matrix, frontend gates, and complete non-live backend regression; repair only owned frontend/test files if needed."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-REPORT-058",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -131,7 +126,8 @@
     "M7-RUN-053",
     "M7-NAV-054",
     "M7-UX-055",
-    "M7-INTEGRATE-056"
+    "M7-INTEGRATE-056",
+    "M7-GATE-057"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -277,5 +273,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-GATE-057 IN_PROGRESS: full M7 frontend acceptance matrix and complete non-live backend regression in progress."
+  "last_validation_note": "M7-GATE-057 PASS: frontend Vitest 45 files/111 tests, typecheck, ESLint, and production build passed; non-live backend regression 141 passed with 6 live tests excluded. M7-REPORT-058 is next."
 }

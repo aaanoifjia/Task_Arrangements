@@ -51,6 +51,7 @@ M6 Local API is complete with all gates PASS. The authoritative task plan now de
 - M5-RESTART-005 — real subprocess kill/restart recovery without duplicate prompts or downstream execution
 - M5-REPORT-006 — headless MVP gate report; all required results PASS
 - M7-INTEGRATE-056 — complete mocked visual DAG user flow; frontend Vitest 45 files/111 tests, typecheck, ESLint, and production build PASS
+- M7-GATE-057 — M7 acceptance matrix PASS; frontend gates and non-live backend regression 141 passed
 
 ## Verified Codex Runtime
 
@@ -82,7 +83,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M7-GATE-057` — M7 Acceptance Matrix & Backend Regression (IN_PROGRESS)
+`M7-REPORT-058` — Visual DAG UI Milestone Report
 
 M7 contains 58 sequential concrete tasks and is intentionally sized at approximately five times the implementation workload of M6. Autonomous execution should continue through `M7-REPORT-058` unless a genuine blocker occurs.
 

@@ -40,7 +40,7 @@ def test_run_routes_return_stable_missing_and_runtime_errors(tmp_path: Path) -> 
     app = create_app(ServiceConfig.from_db_path(tmp_path / "api.sqlite3"))
 
     with TestClient(app) as client:
-        assert client.post("/api/workflows/missing/runs").json()["detail"]["error"]["code"] == "RUNTIME_UNAVAILABLE"
+        assert client.post("/api/workflows/missing/runs").json()["detail"]["error"]["code"] == "WORKFLOW_NOT_FOUND"
         app.state.runtime = RuntimeManager(get_repositories(app), FakeCodexAdapter())
         response = client.post("/api/workflows/missing/runs")
 
