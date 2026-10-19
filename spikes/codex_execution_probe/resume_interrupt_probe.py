@@ -40,7 +40,8 @@ def status_value(payload):
 async def consume(turn, interrupt_after_started=False):
     methods = []
     statuses = []
-    response_parts = []
+    delta_parts = []
+    completed_message_parts = []
     started = False
     interrupt_requested = False
     interrupt_event_received = False
@@ -57,10 +58,14 @@ async def consume(turn, interrupt_after_started=False):
             if interrupt_after_started and not interrupt_requested:
                 await turn.interrupt()
                 interrupt_requested = True
+        if event.method == "item/agentMessage/delta":
+            delta = getattr(payload, "delta", None)
+            if isinstance(delta, str):
+                delta_parts.append(delta)
         item = getattr(payload, "item", None)
         text = getattr(item, "text", None)
         if isinstance(text, str):
-            response_parts.append(text)
+            completed_message_parts.append(text)
         if event.method == "turn/completed":
             terminal_status = status
             interrupt_event_received = terminal_status == "interrupted"
@@ -68,7 +73,7 @@ async def consume(turn, interrupt_after_started=False):
     return {
         "methods": methods,
         "statuses": statuses,
-        "response": "".join(response_parts),
+        "response": "".join(delta_parts) or "".join(completed_message_parts),
         "started": started,
         "interrupt_requested": interrupt_requested,
         "interrupt_event_received": interrupt_event_received,

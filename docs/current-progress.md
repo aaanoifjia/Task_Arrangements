@@ -23,6 +23,7 @@ The deterministic local core is implemented through graph validation, state tran
 - M1-HOME-FIX-001 — repaired child-process home environment
 - M1-AUTH-001 — SDK version and existing ChatGPT Plus authentication verified
 - M1-RUN-002 — real Codex thread, turn, stream completion, workspace write, and exact output verification
+- M1-CTRL-003 — resumed-thread context verification and real turn interruption
 
 ## Verified Codex Runtime
 
@@ -54,34 +55,20 @@ unexpected_files = []
 
 The next deterministic task is:
 
-`M1-CTRL-003`
+`M1-PACK-005`
 
-Authoritative task specification:
+The control probe now verifies resumed context using the exact marker and observes a real interrupted terminal event.
 
-`.codex/tasks/M1-CTRL-003.md`
+The next task specification is:
 
-The existing control probe has already demonstrated a real interrupted terminal event. The remaining known defect is resumed-turn response extraction:
+`.codex/tasks/M1-PACK-005.md`
 
-```text
-first turn = completed
-second turn = completed
-second_response = ""
-resume_verified = false
+## Waiting After M1-PACK-005
 
-interrupt_requested = true
-interrupt_event_received = true
-interrupt_terminal_status = interrupted
-```
-
-M1-CTRL-003 now has a formal Owned Files / Steps / Acceptance definition and is READY to execute.
-
-## Waiting After M1-CTRL-003
-
-If M1-CTRL-003 passes:
+If M1-PACK-005 passes:
 
 ```text
-M1-PACK-005
-→ M1-DESKTOP-004 (manual user observation gate)
+M1-DESKTOP-004 (manual user observation gate)
 → M1-REPORT-006
 → M2-INTERFACE-001
 → M2-FAKE-002 + M2-SDK-003

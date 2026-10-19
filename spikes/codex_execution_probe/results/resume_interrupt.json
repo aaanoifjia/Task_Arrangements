@@ -1,15 +1,15 @@
 {
   "resume": {
-    "thread_id": "01a150be-a55c-7b32-b8db-158a357f8be5",
-    "first_turn_id": "01a150be-a669-7302-b405-f8fd86ba04eb",
+    "thread_id": "01a15293-c482-7693-93f3-7fd980c4767e",
+    "first_turn_id": "01a15293-ca68-7ca1-a224-0ab6af419e74",
     "first_terminal_status": "completed",
-    "second_turn_id": "01a150be-b650-72f0-8db9-9f89e831f249",
-    "second_response": "",
-    "resume_verified": false
+    "second_turn_id": "01a15293-dd85-7ce1-b886-50f7543fb420",
+    "second_response": "CODEX_FLOW_RESUME_MARKER_7F31",
+    "resume_verified": true
   },
   "interrupt": {
-    "thread_id": "01a150be-c486-7661-a9cc-220122af5e0d",
-    "turn_id": "01a150be-c559-7e43-9797-e577d25d719e",
+    "thread_id": "01a15293-ee8b-70d1-8888-b1e817309b75",
+    "turn_id": "01a15293-ef70-7e01-bc65-dccd4d1f1b6e",
     "interrupt_requested": true,
     "interrupt_event_received": true,
     "interrupt_terminal_status": "interrupted"

@@ -11,13 +11,8 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": {
-    "id": "M1-CTRL-003",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19",
-    "note": "Repairing public resumed-turn response extraction and rerunning the control probe."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M1-PACK-005",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -31,7 +26,8 @@
     "M3-LOCK-004",
     "M1-HOME-FIX-001",
     "M1-AUTH-001",
-    "M1-RUN-002"
+    "M1-RUN-002",
+    "M1-CTRL-003"
   ],
   "blocked_tasks": {},
   "task_queue_after_current": [
@@ -79,7 +75,7 @@
     "codex_basic_probe_output_verified": true,
     "codex_basic_probe_error": null,
     "codex_interrupt_probe_verified": true,
-    "codex_resume_probe_verified": false
+    "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M1-HOME-FIX-001, M1-AUTH-001, and M1-RUN-002 are complete. Real Codex execution reaches turn/started and turn/completed with exact output verification. Interrupt produces an interrupted terminal event. M1-CTRL-003 is now READY with an authoritative task spec; remaining work is resumed-turn response extraction and marker verification."
+  "last_validation_note": "M1-CTRL-003 passed with .venv\\Scripts\\python.exe spikes\\codex_execution_probe\\resume_interrupt_probe.py: exit code 0, completed first turn, non-empty resumed second turn containing CODEX_FLOW_RESUME_MARKER_7F31, and a real interrupted terminal event."
 }
