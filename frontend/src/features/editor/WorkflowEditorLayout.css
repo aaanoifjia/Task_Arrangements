@@ -1,0 +1,16 @@
+.workflow-editor-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(15rem, 20rem);
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.workflow-editor-layout__canvas {
+  min-width: 0;
+}
+
+@media (max-width: 48rem) {
+  .workflow-editor-layout {
+    grid-template-columns: 1fr;
+  }
+}

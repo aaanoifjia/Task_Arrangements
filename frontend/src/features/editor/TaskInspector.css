@@ -1,0 +1,38 @@
+.task-inspector {
+  min-width: 15rem;
+  padding: var(--space-4);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--surface-panel);
+  color: var(--text-primary);
+}
+
+.task-inspector h2 {
+  margin: 0 0 var(--space-4);
+  font-size: var(--font-size-lg);
+}
+
+.task-inspector dl {
+  margin: 0;
+}
+
+.task-inspector dl > div + div {
+  margin-top: var(--space-3);
+}
+
+.task-inspector dt {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.task-inspector dd {
+  margin: var(--space-1) 0 0;
+}
+
+.task-inspector--empty {
+  display: grid;
+  min-height: 8rem;
+  place-items: center;
+  color: var(--text-secondary);
+  text-align: center;
+}
