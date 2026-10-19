@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M6-CONFIG-002",
+  "active_task": {
+    "id": "M6-CONFIG-002",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-19",
+    "note": "Implement deterministic local service configuration and explicit SQLite lifespan foundation."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
