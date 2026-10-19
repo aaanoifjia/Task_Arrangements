@@ -81,6 +81,8 @@ class DurableRunner:
                 self._finish_run(run_id, statuses)
                 return
             for task_id in ready:
+                if self._repository.get_workflow_run_paused(run_id):
+                    return
                 self._repository.update_task_run_state(
                     str(by_task[task_id]["id"]), TaskStatus.READY.value
                 )

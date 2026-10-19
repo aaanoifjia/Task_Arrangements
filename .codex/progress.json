@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M8-CONTROL-007",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T02:00:00.0000000Z",
-    "note": "Consult durable pause state before releasing newly-ready tasks without interrupting active work."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M8-CONTROL-008",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -139,7 +134,8 @@
     "M8-CONTROL-003",
     "M8-CONTROL-004",
     "M8-CONTROL-005",
-    "M8-CONTROL-006"
+    "M8-CONTROL-006",
+    "M8-CONTROL-007"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -405,5 +401,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-007 IN_PROGRESS: implementing durable pause checkpoint before new task starts."
+  "last_validation_note": "M8-CONTROL-007 PASS: pause checkpoint/runtime regression 6 passed; paused ready descendant stayed BLOCKED with no second external thread, then resumed successfully; Ruff and strict mypy passed. M8-CONTROL-008 is next."
 }
