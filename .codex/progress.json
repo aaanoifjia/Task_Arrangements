@@ -11,8 +11,13 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": null,
-  "next_task": "M5-RUNNER-005A",
+  "active_task": {
+    "id": "M5-RUNNER-005A",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-19",
+    "note": "Integrate the frozen scheduler, durable SQLite state, CLI run path, and fresh-process SDK thread reads."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
