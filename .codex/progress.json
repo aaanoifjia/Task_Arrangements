@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M7-INTEGRATE-056",
+  "active_task": {
+    "id": "M7-INTEGRATE-056",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-20T00:28:00.0000000Z",
+    "note": "Exercise the complete mocked M7 user flow and repair only frontend integration defects within frontend/**."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
