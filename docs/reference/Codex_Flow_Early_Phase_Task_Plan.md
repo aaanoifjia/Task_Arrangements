@@ -2397,7 +2397,910 @@ PASS / FAIL
 
 ---
 
-# 11. 现在应该怎么开跑
+
+# 11. M6 — Local API & Runtime Service
+
+## M6 Goal
+
+Expose the completed M5 durable headless runtime through a local FastAPI service without moving workflow authority out of SQLite or bypassing the deterministic scheduler/runtime rules.
+
+Frozen architecture for this milestone:
+
+~~~text
+UI / future desktop
+        ↓
+FastAPI Local Service
+        ↓
+Application Services
+        ↓
+Durable Runtime / Scheduler
+        ↓
+SQLite + CodexAdapter
+~~~
+
+Rules for all M6 tasks:
+
+- SQLite remains authoritative durable state.
+- API code must not import or expose OpenAI Codex SDK-specific objects.
+- API routes must not implement DAG scheduling logic.
+- API routes must not infer dependencies, rewrite prompts, or decide task progression.
+- DurableRunner / scheduler semantics remain deterministic and fail closed.
+- All external execution remains behind CodexAdapter.
+- No multi-user auth, cloud deployment, browser/Desktop RPA, or master-LLM control plane.
+- M6 is local-only. Bind-address/auth hardening belongs to later milestones.
+- Tests use FakeCodexAdapter unless a task explicitly requires a live Codex check.
+- Existing M0–M5 regression tests must continue to pass.
+
+## M6 Deterministic Task Order
+
+~~~text
+M6-API-001
+↓
+M6-CONFIG-002
+↓
+M6-SCHEMA-003
+↓
+M6-STORE-004
+↓
+M6-WF-SVC-005
+↓
+M6-WF-API-006
+↓
+M6-RUNTIME-007
+↓
+M6-RUN-SVC-008
+↓
+M6-RUN-API-009
+↓
+M6-EVENT-SVC-010
+↓
+M6-WS-011
+↓
+M6-LIFECYCLE-012
+↓
+M6-SYSTEM-013
+↓
+M6-INTEGRATE-014
+↓
+M6-GATE-015
+↓
+M6-REPORT-016
+~~~
+
+The order above is the deterministic autonomous execution order even when a later task would otherwise be dependency-ready.
+
+---
+
+## M6-API-001 — FastAPI Bootstrap
+
+### Dependencies
+
+M5-REPORT-006
+
+### Owned Files
+
+~~~text
+backend/pyproject.toml
+backend/src/codex_flow/api/__init__.py
+backend/src/codex_flow/api/app.py
+backend/tests/api/test_app_bootstrap.py
+~~~
+
+### Implementation
+
+Add the local-service dependencies required by the frozen architecture:
+
+~~~text
+fastapi
+uvicorn
+~~~
+
+Add httpx to dev dependencies for API tests.
+
+Use bounded compatible version ranges; do not upgrade or change existing Codex/Pydantic pins.
+
+Create:
+
+~~~python
+create_app(...) -> FastAPI
+~~~
+
+Requirements:
+
+- importing the API package performs no DB, network, Codex, or filesystem side effects;
+- app construction is explicit through create_app;
+- OpenAPI generation succeeds;
+- no SDK-specific type appears in route/API modules;
+- no production server is started during import.
+
+### Acceptance
+
+- API bootstrap test passes.
+- Existing backend import tests pass.
+- Ruff passes for owned Python files.
+- strict mypy passes for the API package.
+
+---
+
+## M6-CONFIG-002 — Local Service Configuration & DB Lifespan Foundation
+
+### Dependencies
+
+M6-API-001
+
+### Owned Files
+
+~~~text
+backend/src/codex_flow/api/config.py
+backend/src/codex_flow/api/lifespan.py
+backend/src/codex_flow/api/app.py
+backend/tests/api/test_service_config.py
+~~~
+
+### Implementation
+
+Define deterministic local service configuration without adding a settings framework dependency.
+
+At minimum:
+
+~~~text
+db_path
+event_poll_interval_seconds
+~~~
+
+Default DB path:
+
+~~~text
+.codex-flow.sqlite3
+~~~
+
+relative to the process current working directory.
+
+create_app must allow an explicit DB path override for tests and future desktop startup.
+
+Lifespan foundation:
+
+- open/migrate the SQLite DB on app startup;
+- expose repository/connection through typed application state helpers;
+- close the DB on shutdown;
+- never open a second authoritative DB implicitly;
+- no Codex call during this task.
+
+### Acceptance
+
+- explicit temp DB path is honored;
+- default path resolution is deterministic;
+- migration runs once through existing storage code;
+- app shutdown closes the connection;
+- no global module-level connection exists.
+
+---
+
+## M6-SCHEMA-003 — Public API DTO & Error Contract
+
+### Dependencies
+
+M6-CONFIG-002
+
+### Owned Files
+
+~~~text
+backend/src/codex_flow/api/schemas.py
+backend/src/codex_flow/api/errors.py
+backend/tests/api/test_api_schemas.py
+~~~
+
+### Implementation
+
+Define SDK-independent Pydantic API models for at least:
+
+~~~text
+ErrorResponse
+WorkflowSummary
+WorkflowDetail
+RunStartResponse
+RunSummary
+RunDetail
+TaskRunView
+AttemptView
+EventView
+~~~
+
+Rules:
+
+- IDs and statuses serialize as stable strings.
+- WorkflowDetail may embed the frozen WorkflowDefinition representation.
+- API DTOs must not contain sqlite3.Row or openai_codex SDK objects.
+- Error shape is deterministic:
+
+~~~json
+{
+  "error": {
+    "code": "STABLE_CODE",
+    "message": "human readable message"
+  }
+}
+~~~
+
+Provide helpers for 404, 409, and invalid-request errors.
+
+### Acceptance
+
+- schema round-trip/serialization tests pass;
+- OpenAPI can generate every public DTO;
+- SDK types are absent from API schema modules.
+
+---
+
+## M6-STORE-004 — API Query Repository Extensions
+
+### Dependencies
+
+M6-SCHEMA-003
+
+### Owned Files
+
+~~~text
+backend/src/codex_flow/storage/repositories.py
+backend/tests/integration/test_api_repository_queries.py
+~~~
+
+### Implementation
+
+Add only query operations required by M6:
+
+~~~text
+list_workflows
+get_workflow_run
+list_workflow_runs
+load_task_runs
+get_task_run
+load_attempts
+load_events_for_run
+load_events_after
+~~~
+
+Requirements:
+
+- preserve all existing M4/M5 write behavior;
+- deterministic ordering for every list;
+- event ordering must use created_at then id as a stable tie-break;
+- filters use IDs, never raw SQL supplied by callers;
+- no ORM or new DB dependency;
+- no schema migration unless a hard requirement is discovered; if migration is truly required, BLOCK instead of silently altering M4 schema.
+
+### Acceptance
+
+- empty/list/single/missing query cases pass;
+- event cursor ordering is deterministic;
+- M4 repository and migration suites remain green.
+
+---
+
+## M6-WF-SVC-005 — Workflow Application Service
+
+### Dependencies
+
+M6-STORE-004
+
+### Owned Files
+
+~~~text
+backend/src/codex_flow/application/__init__.py
+backend/src/codex_flow/application/workflows.py
+backend/tests/unit/test_workflow_service.py
+~~~
+
+### Implementation
+
+Create an application-service layer between routes and repositories.
+
+Support:
+
+~~~text
+save workflow
+update workflow
+list workflows
+get workflow
+~~~
+
+Rules:
+
+- validate input through WorkflowDefinition;
+- save the editable WorkflowDefinition only;
+- never mutate an existing WorkflowRun snapshot;
+- application service owns validation/error translation;
+- route code must not execute SQL.
+
+### Acceptance
+
+- create/update/list/get tests pass;
+- editing a workflow does not mutate an existing run snapshot;
+- malformed DAG/domain input is rejected before persistence.
+
+---
+
+## M6-WF-API-006 — Workflow REST API
+
+### Dependencies
+
+M6-WF-SVC-005
+
+### Owned Files
+
+~~~text
+backend/src/codex_flow/api/routes/__init__.py
+backend/src/codex_flow/api/routes/workflows.py
+backend/src/codex_flow/api/app.py
+backend/tests/api/test_workflow_routes.py
+~~~
+
+### Endpoints
+
+~~~text
+POST /api/workflows
+PUT  /api/workflows/{workflow_id}
+GET  /api/workflows
+GET  /api/workflows/{workflow_id}
+~~~
+
+Rules:
+
+- POST returns 201.
+- PUT requires path/body workflow IDs to match.
+- GET missing workflow returns stable 404 error contract.
+- routes call WorkflowApplicationService only;
+- no scheduler/Codex calls from workflow routes;
+- response bodies use M6 API schemas.
+
+### Acceptance
+
+- create → get → update → list integration passes against temp SQLite DB;
+- OpenAPI contains the four routes;
+- no route accesses private repository connection state.
+
+---
+
+## M6-RUNTIME-007 — Async Runtime Manager & Non-blocking Start
+
+### Dependencies
+
+~~~text
+M5-RUNNER-005A
+M6-STORE-004
+~~~
+
+### Owned Files
+
+~~~text
+backend/src/codex_flow/runtime/runner.py
+backend/src/codex_flow/runtime/manager.py
+backend/src/codex_flow/runtime/__init__.py
+backend/tests/integration/test_runtime_manager.py
+backend/tests/integration/test_persistent_runner.py
+~~~
+
+### Implementation
+
+Refactor DurableRunner only as needed to support a non-blocking local service while preserving CLI behavior.
+
+Provide a RuntimeManager that:
+
+- prepares/persists a new WorkflowRun before external execution;
+- returns run_id without waiting for the full workflow to finish;
+- executes the persisted run in a tracked asyncio background task;
+- tracks active local background tasks by run_id;
+- prevents a second active run for the same workflow;
+- exposes wait(run_id) for deterministic tests;
+- removes finished local tasks from its in-memory registry;
+- never treats the in-memory registry as authoritative durable state.
+
+DurableRunner must preserve:
+
+~~~text
+snapshot before execution
+Attempt before Codex call
+RUNNING only after TURN_STARTED
+terminal event before terminal TaskRun state
+fail-closed recovery
+no duplicate prompt on restart
+~~~
+
+The existing CLI synchronous run behavior must remain compatible.
+
+### Acceptance
+
+- start returns a persisted run_id before Fake adapter workflow completion is awaited;
+- duplicate active start is rejected deterministically;
+- wait(run_id) observes final durable state;
+- existing persistent-runner/restart tests pass.
+
+---
+
+## M6-RUN-SVC-008 — Run & Task Query Application Service
+
+### Dependencies
+
+M6-RUNTIME-007
+
+### Owned Files
+
+~~~text
+backend/src/codex_flow/application/runs.py
+backend/tests/unit/test_run_service.py
+~~~
+
+### Implementation
+
+Support:
+
+~~~text
+start workflow run
+list runs
+get run
+list task runs
+get task run
+list attempts for task run
+~~~
+
+Start semantics:
+
+- load persisted WorkflowDefinition by ID;
+- reject missing workflow;
+- reject a second active run for the same workflow with conflict;
+- delegate execution only to RuntimeManager;
+- return run_id immediately.
+
+Read semantics:
+
+- map repository rows to public DTO-compatible data;
+- no SDK objects;
+- no direct SQL.
+
+### Acceptance
+
+- missing workflow -> not found;
+- active duplicate -> conflict;
+- start returns run ID before completion;
+- task/attempt history remains available after completion.
+
+---
+
+## M6-RUN-API-009 — Run & Task REST API
+
+### Dependencies
+
+~~~text
+M6-WF-API-006
+M6-RUN-SVC-008
+~~~
+
+### Owned Files
+
+~~~text
+backend/src/codex_flow/api/routes/runs.py
+backend/src/codex_flow/api/app.py
+backend/tests/api/test_run_routes.py
+~~~
+
+### Endpoints
+
+~~~text
+POST /api/workflows/{workflow_id}/runs
+GET  /api/runs
+GET  /api/runs/{run_id}
+GET  /api/runs/{run_id}/tasks
+GET  /api/runs/{run_id}/tasks/{task_id}
+GET  /api/runs/{run_id}/tasks/{task_id}/attempts
+~~~
+
+POST start returns HTTP 202 with run_id.
+
+Requirements:
+
+- starting a run must not block until Codex/Fake completion;
+- all reads come from SQLite;
+- history remains readable after app/runtime task completion;
+- missing resource and active-run conflict use the stable error envelope.
+
+### Acceptance
+
+- API start returns before background Fake workflow finishes;
+- polling run endpoint reaches terminal state;
+- task and attempt endpoints reflect durable state;
+- app restart against the same DB retains history.
+
+---
+
+## M6-EVENT-SVC-010 — Durable Event & Task-State Stream Service
+
+### Dependencies
+
+M6-RUN-API-009
+
+### Owned Files
+
+~~~text
+backend/src/codex_flow/application/events.py
+backend/src/codex_flow/application/event_stream.py
+backend/tests/unit/test_event_service.py
+backend/tests/integration/test_event_stream.py
+~~~
+
+### Implementation
+
+Build read-only streaming primitives over durable state.
+
+Requirements:
+
+- durable events come from SQLite, never an in-memory-only event bus;
+- support a stable after-event cursor;
+- deterministic order is created_at then id;
+- stream service can observe TaskRun state changes by polling durable task rows;
+- emit a task snapshot only when the durable snapshot changes;
+- emit Codex/runtime events without duplication;
+- polling interval is injectable for tests;
+- disconnected consumers do not affect workflow execution.
+
+Internal stream message kinds:
+
+~~~text
+snapshot
+event
+~~~
+
+No new persistent schema is required.
+
+### Acceptance
+
+- reconnect with cursor does not replay acknowledged events;
+- two events with equal timestamps retain deterministic ID ordering;
+- task status snapshot changes are observed;
+- stream consumer cancellation does not cancel runtime work.
+
+---
+
+## M6-WS-011 — WebSocket Run Stream
+
+### Dependencies
+
+M6-EVENT-SVC-010
+
+### Owned Files
+
+~~~text
+backend/src/codex_flow/api/routes/ws.py
+backend/src/codex_flow/api/app.py
+backend/tests/api/test_run_websocket.py
+~~~
+
+### Endpoint
+
+~~~text
+WS /ws/runs/{run_id}
+~~~
+
+Optional query:
+
+~~~text
+after=<event_id>
+~~~
+
+Behavior:
+
+- reject/close missing run deterministically;
+- send initial durable task snapshot;
+- send subsequent snapshot messages only when task state changes;
+- send persisted event messages in stable order;
+- reconnect after event ID resumes without duplicating acknowledged events;
+- client disconnect never changes scheduler/runtime state.
+
+No SDK event object may cross the WebSocket boundary; only internal API DTO payloads are sent.
+
+### Acceptance
+
+- Fake workflow produces observable START/RUNNING/terminal progression and persisted events;
+- reconnect cursor test passes;
+- two simultaneous WebSocket clients do not alter execution.
+
+---
+
+## M6-LIFECYCLE-012 — FastAPI Runtime Lifespan & Startup Recovery
+
+### Dependencies
+
+~~~text
+M6-RUNTIME-007
+M6-WS-011
+~~~
+
+### Owned Files
+
+~~~text
+backend/src/codex_flow/api/lifespan.py
+backend/src/codex_flow/api/app.py
+backend/src/codex_flow/runtime/manager.py
+backend/tests/api/test_app_lifecycle.py
+~~~
+
+### Implementation
+
+Wire the local service lifecycle:
+
+Startup order:
+
+~~~text
+open/migrate DB
+↓
+construct repository
+↓
+construct CodexAdapter
+↓
+run StartupReconciler
+↓
+construct RuntimeManager/application services
+↓
+accept requests
+~~~
+
+Requirements:
+
+- startup recovery occurs before any API run start can execute;
+- recovery must not resend an ambiguous existing Prompt;
+- recovered runs/tasks remain queryable through API;
+- app state contains only the current process service objects;
+- SQLite remains authoritative;
+- shutdown stops accepting new work and closes resources deterministically;
+- shutdown must not mark unfinished external work SUCCESS;
+- if local background execution is interrupted by shutdown, durable state must remain recoverable on next startup.
+
+For tests, create_app must support an injected adapter or adapter factory so API tests never use live Codex.
+
+### Acceptance
+
+- startup recovery ordering is proven;
+- same DB reopened by a new app instance retains run history;
+- recovered ambiguous task remains non-releasing;
+- adapter close and DB close occur exactly once.
+
+---
+
+## M6-SYSTEM-013 — Health & Local Runtime Status API
+
+### Dependencies
+
+M6-LIFECYCLE-012
+
+### Owned Files
+
+~~~text
+backend/src/codex_flow/api/routes/system.py
+backend/src/codex_flow/api/app.py
+backend/tests/api/test_system_routes.py
+~~~
+
+### Endpoints
+
+~~~text
+GET /healthz
+GET /api/system/status
+~~~
+
+/healthz:
+
+- lightweight local process health;
+- no Codex network call.
+
+/api/system/status returns SDK-independent local status only:
+
+~~~text
+service status
+DB reachable
+schema version
+active local runtime count
+~~~
+
+Must not expose:
+
+- tokens;
+- credentials;
+- private Codex config;
+- Desktop DB/config state.
+
+### Acceptance
+
+- health works with an empty migrated DB;
+- status reflects active Fake runtime count;
+- no secrets are present in serialized output.
+
+---
+
+## M6-INTEGRATE-014 — Local API End-to-End Integration
+
+### Dependencies
+
+~~~text
+M6-WF-API-006
+M6-RUN-API-009
+M6-WS-011
+M6-SYSTEM-013
+~~~
+
+### Owned Files
+
+~~~text
+backend/src/codex_flow/api/app.py
+backend/src/codex_flow/api/lifespan.py
+backend/src/codex_flow/api/routes/workflows.py
+backend/src/codex_flow/api/routes/runs.py
+backend/src/codex_flow/api/routes/ws.py
+backend/src/codex_flow/application/workflows.py
+backend/src/codex_flow/application/runs.py
+backend/src/codex_flow/application/events.py
+backend/src/codex_flow/application/event_stream.py
+backend/src/codex_flow/runtime/manager.py
+backend/src/codex_flow/runtime/runner.py
+backend/src/codex_flow/storage/repositories.py
+backend/tests/api/test_api_integration.py
+~~~
+
+### Integration Scenario
+
+Using temp SQLite + FakeCodexAdapter:
+
+~~~text
+start app
+↓
+save A -> B workflow through REST
+↓
+GET workflow confirms persistence
+↓
+POST run returns 202 + run_id without waiting for completion
+↓
+WebSocket observes durable state/event progression
+↓
+poll run/task/attempt endpoints
+↓
+run reaches SUCCESS
+↓
+restart FastAPI app with same DB
+↓
+workflow + run + tasks + attempts + events still queryable
+~~~
+
+Also execute a failed-parent workflow and verify:
+
+~~~text
+parent FAILED
+child BLOCKED
+no downstream external execution
+API reflects durable states
+~~~
+
+This task may make bounded repairs inside its Owned Files to satisfy the already-defined M6 contracts. It must not change architecture, public domain states, SDK version, or M0–M5 semantics.
+
+### Acceptance
+
+- complete integration scenario passes;
+- M4/M5 persistence and restart suites remain green;
+- no API route imports openai_codex;
+- Ruff and strict mypy pass for affected packages.
+
+---
+
+## M6-GATE-015 — Local API Acceptance Matrix
+
+### Dependencies
+
+M6-INTEGRATE-014
+
+### Owned Files
+
+~~~text
+backend/src/codex_flow/api/**
+backend/src/codex_flow/application/**
+backend/src/codex_flow/runtime/manager.py
+backend/src/codex_flow/runtime/runner.py
+backend/src/codex_flow/storage/repositories.py
+backend/tests/api/test_local_api_matrix.py
+~~~
+
+### Required Matrix
+
+All use temp SQLite and FakeCodexAdapter unless otherwise stated:
+
+~~~text
+app boot / shutdown
+DB migration / reopen
+workflow create
+workflow update
+workflow list / get
+invalid workflow rejected
+run start is non-blocking
+second active run conflict
+run list / get
+task list / get
+attempt history
+successful dependency release
+failed parent blocks child
+history survives app restart
+startup recovery runs before new execution
+recovered ambiguous task does not release child
+event order deterministic
+event cursor reconnect
+WebSocket initial snapshot
+WebSocket live state change
+WebSocket durable event delivery
+multiple WebSocket clients
+health endpoint
+system status
+no SDK objects in API contract
+no direct Codex SDK import from API/application layers
+M5 headless regression suite
+~~~
+
+This is a gate-and-repair task: bounded implementation repairs are allowed only within the Owned Files above when required by an existing M6 contract.
+
+Do not weaken assertions to obtain PASS.
+
+### Acceptance
+
+- complete matrix passes;
+- relevant M0–M5 regression suites pass;
+- Ruff passes;
+- strict mypy passes;
+- no live Codex usage is required for this gate.
+
+---
+
+## M6-REPORT-016 — Local API Milestone Gate Report
+
+### Dependencies
+
+M6-GATE-015
+
+### Owned Files
+
+~~~text
+docs/local-api-test-report.md
+~~~
+
+### Required Results
+
+Record each as PASS / FAIL with concrete evidence:
+
+~~~text
+FastAPI bootstrap
+deterministic local DB configuration
+workflow save/update/list/get
+non-blocking run start
+run/task/attempt history
+durable state after app restart
+startup recovery before new starts
+no duplicate active workflow run
+failed dependency blocking through API
+event ordering
+event cursor reconnect
+WebSocket task status stream
+WebSocket persisted Codex/runtime events
+health/status endpoints
+SQLite remains authoritative
+CodexAdapter boundary preserved
+no master LLM control
+M5 regression
+~~~
+
+All must PASS before M7 Visual DAG UI begins.
+
+On PASS:
+
+- mark M6-REPORT-016 COMPLETE;
+- set next_task = null unless an authoritative M7 concrete task plan already exists;
+- update docs/current-progress.md to state M6 complete / M7 awaiting concrete task definitions.
+
+---
+
+# 12. 现在应该怎么开跑
 
 ## 情况 A：Codex Flow repo 还没建
 
@@ -2446,7 +3349,7 @@ M0-ACCEPT-005
 
 ---
 
-# 12. 每次向我反馈 Codex 结果时的格式
+# 13. 每次向我反馈 Codex 结果时的格式
 
 以后完成 Task 后，只需要提供：
 
@@ -2478,7 +3381,7 @@ Codex final note:
 
 ---
 
-# 13. 当前技术基线来源
+# 14. 当前技术基线来源
 
 本 Task Plan 按 2026-10-15 已确认的公开稳定能力制定：
 
