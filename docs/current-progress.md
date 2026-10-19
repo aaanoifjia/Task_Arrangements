@@ -65,6 +65,6 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M3-TEST-008`
+`M3-TEST-008` — BLOCKED
 
-Continuation semantics passed 56 scheduler/domain unit tests, Ruff, and strict mypy. The next task is the deterministic scheduler matrix.
+The required scheduler matrix cannot be implemented within its owned test file alone. Its pause/resume, retry-release, and scheduler-dispatched continuation scenarios require changes to `scheduler/engine.py`, `scheduler/actions.py`, and `scheduler/continuation.py`, none of which are owned by this task. A remediation task with ownership of those files is required before the matrix can proceed.
