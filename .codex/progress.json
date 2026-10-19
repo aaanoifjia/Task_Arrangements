@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-WF-010",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T14:56:36.6145604Z",
-    "note": "Build workflow list page with loading, empty, error, refresh, and editor navigation states."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-WF-011",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -84,7 +79,8 @@
     "M7-FE-006",
     "M7-FE-007",
     "M7-FE-008",
-    "M7-WF-009"
+    "M7-WF-009",
+    "M7-WF-010"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -230,5 +226,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-WF-009 PASS: independent workflow resource layer maps list/get/create/update to all four M6 workflow endpoints; typecheck, ESLint, and Vitest (10 tests) passed. M7-WF-010 is next."
+  "last_validation_note": "M7-WF-010 PASS: workflow list page covers loading, empty, error, explicit refresh, id/name rendering, and editor navigation; typecheck, ESLint, and Vitest (12 tests) passed. M7-WF-011 is next."
 }

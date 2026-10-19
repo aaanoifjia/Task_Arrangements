@@ -1,9 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import AppShell from './AppShell'
-
-function HomePage() {
-  return <section aria-labelledby="home-heading"><h1 id="home-heading">Codex Flow</h1><p>Choose a workflow to begin.</p></section>
-}
+import WorkflowListPage from '../features/workflows/WorkflowListPage'
 
 function WorkflowPage() {
   return <section aria-labelledby="workflow-heading"><h1 id="workflow-heading">Workflow editor</h1><p>Workflow details will appear here.</p></section>
@@ -26,7 +23,7 @@ export function AppRouter() {
     <BrowserRouter>
       <AppShell>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<WorkflowListPage />} />
           <Route path="/workflows/:workflowId" element={<WorkflowPage />} />
           <Route path="/runs" element={<RunsPage />} />
           <Route path="/runs/:runId" element={<RunDetailPage />} />
