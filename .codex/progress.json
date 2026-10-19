@@ -11,8 +11,13 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": null,
-  "next_task": "M5-FORKJOIN-004",
+  "active_task": {
+    "id": "M5-FORKJOIN-004",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-19",
+    "note": "Running real Codex fork/join and failure-blocking end-to-end probes."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
