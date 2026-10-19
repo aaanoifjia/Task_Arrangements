@@ -179,9 +179,10 @@ M3-SCHED-005 ──────────── M3-MANUAL-006
 M3-SCHED-005 ──────────── M3-CONTINUE-007
 
 M3-MANUAL-006 ─┐
-M3-CONTINUE-007 ├──────── M3-TEST-008
+M3-CONTINUE-007 ├──────── M3-INTEGRATE-008A
 M3-SCHED-005 ───┘
 
+M3-INTEGRATE-008A ─────── M3-TEST-008
 M3-TEST-008 ───────────── M4-SCHEMA-001
 M4-SCHEMA-001 ─────────── M4-REPO-002
 M4-REPO-002 ───────────── M4-SNAPSHOT-003
@@ -1732,13 +1733,66 @@ execution_mode = CONTINUE_THREAD
 
 ---
 
+## M3-INTEGRATE-008A — Scheduler Feature Integration
+
+### Dependencies
+
+```text
+M3-SCHED-005
+M3-MANUAL-006
+M3-CONTINUE-007
+```
+
+### Owned Files
+
+```text
+backend/src/codex_flow/scheduler/engine.py
+backend/src/codex_flow/scheduler/actions.py
+backend/src/codex_flow/scheduler/continuation.py
+backend/tests/unit/test_scheduler_integration.py
+```
+
+### Goal
+
+Integrate the scheduler core, manual controls, and continuation semantics so the
+existing M3-TEST-008 scheduler matrix can exercise them without modifying
+implementation files.
+
+### Required Behavior
+
+- `pause_workflow` prevents new READY tasks from starting; `resume_workflow`
+  deterministically permits ready work to start again.
+- Retry follows the existing legal retry path. After a subsequent parent
+  success, readiness is recalculated and a child may become READY.
+- `SKIPPED` does not release a dependent child. Explicit `mark_success` must
+  recalculate readiness and may release a dependent child.
+- `CONTINUE_THREAD` validates its source via `continuation.py`, resumes the
+  source thread, preserves its thread id, and starts a new turn. `NEW_THREAD`
+  behavior remains unchanged.
+- Preserve deterministic topological selection, global capacity, workspace
+  write locking, one active turn per thread, fail-closed behavior, and the
+  `CodexAdapter` boundary.
+
+Do not redesign the scheduler, add dependencies, bypass `readiness.py` or
+`state_machine.py`, or change FakeCodexAdapter contracts. A real adapter
+contract defect must be recorded as BLOCKED.
+
+### Acceptance
+
+`backend/tests/unit/test_scheduler_integration.py` covers pause/resume,
+failed-parent retry followed by child release, skip blocking, mark-success
+release, `CONTINUE_THREAD` resume/reused thread id, and unchanged `NEW_THREAD`.
+Run the scheduler core, manual actions, continuation, readiness, locks, and
+state-machine tests, plus Ruff for owned files and strict scheduler mypy.
+
+---
+
 ## M3-TEST-008 — Scheduler Matrix
 
 ### Dependencies
 
 ```text
-M3-MANUAL-006
-M3-CONTINUE-007
+M3-INTEGRATE-008A
 ```
 
 ### Owned Files

@@ -65,6 +65,6 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M3-TEST-008` — BLOCKED
+`M3-INTEGRATE-008A`
 
-The required scheduler matrix cannot be implemented within its owned test file alone. Its pause/resume, retry-release, and scheduler-dispatched continuation scenarios require changes to `scheduler/engine.py`, `scheduler/actions.py`, and `scheduler/continuation.py`, none of which are owned by this task. A remediation task with ownership of those files is required before the matrix can proceed.
+The prior M3-TEST-008 ownership blocker is resolved by the authoritative M3-INTEGRATE-008A repair task. It will integrate pause/resume, retry/readiness, and scheduler-dispatched continuation before the test-only matrix runs.

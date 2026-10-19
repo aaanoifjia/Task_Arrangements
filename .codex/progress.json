@@ -12,7 +12,7 @@
     "task_selection": "next_task_only"
   },
   "active_task": null,
-  "next_task": "M3-TEST-008",
+  "next_task": "M3-INTEGRATE-008A",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -36,13 +36,7 @@
     "M3-MANUAL-006",
     "M3-CONTINUE-007"
   ],
-  "blocked_tasks": {
-    "M3-TEST-008": {
-      "reason": "Required matrix scenarios need scheduler integration not owned by this task: pause/resume must gate engine starts, retry must create a new attempt and release dependencies, and CONTINUE_THREAD must dispatch through the scheduler.",
-      "last_successful_validation": "M3-CONTINUE-007 passed: 56 scheduler/domain unit tests, Ruff, and strict scheduler mypy passed.",
-      "next_action": "Authorize a remediation task with ownership of scheduler/engine.py, scheduler/actions.py, and scheduler/continuation.py before resuming M3-TEST-008."
-    }
-  },
+  "blocked_tasks": {},
   "task_queue_after_current": [
     "M1-PACK-005",
     "M1-DESKTOP-004",
@@ -54,6 +48,7 @@
     "M3-SCHED-005",
     "M3-MANUAL-006",
     "M3-CONTINUE-007",
+    "M3-INTEGRATE-008A",
     "M3-TEST-008",
     "M4-SCHEMA-001",
     "M4-REPO-002",
@@ -90,5 +85,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M3-TEST-008 blocked before test implementation: required matrix behavior needs non-owned scheduler integration files."
+  "last_validation_note": "M3-TEST-008 ownership blocker superseded by authoritative repair task M3-INTEGRATE-008A."
 }
