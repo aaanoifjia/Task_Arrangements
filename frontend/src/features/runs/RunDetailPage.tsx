@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import type { RunDetail, TaskRunView } from '../../api/types'
+import type { EventView, RunDetail, TaskRunView } from '../../api/types'
 import { createRunApi, type RunApi } from './api'
+import EventLog from './EventLog'
 import RunGraph from './RunGraph'
 import { useRunStream, type UseRunStreamOptions } from './useRunStream'
 import './RunDetailPage.css'
@@ -20,9 +21,20 @@ function RunDetailPage({ api, streamOptions }: RunDetailPageProps) {
   const stream = useRunStream(runId, streamOptions)
   const [run, setRun] = useState<RunDetail | null>(null)
   const [tasks, setTasks] = useState<TaskRunView[]>([])
+  const [events, setEvents] = useState<EventView[]>([])
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    setEvents([])
+  }, [runId])
+
+  useEffect(() => {
+    const event = stream.latestEvent
+    if (!event) return
+    setEvents((current) => current.some((item) => item.id === event.id) ? current : [...current, event])
+  }, [stream.latestEvent])
 
   useEffect(() => {
     let mounted = true
@@ -84,6 +96,7 @@ function RunDetailPage({ api, streamOptions }: RunDetailPageProps) {
             ))}
           </ul>}
       </section>
+      <EventLog events={events} />
     </section>
   )
 }
