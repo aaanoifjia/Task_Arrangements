@@ -12,7 +12,7 @@
     "task_selection": "next_task_only"
   },
   "active_task": null,
-  "next_task": null,
+  "next_task": "M6-API-001",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -31,7 +31,10 @@
     "M1-PACK-005",
     "M1-DESKTOP-004",
     "M1-REPORT-006",
-    "M2-INTERFACE-001", "M2-FAKE-002", "M2-SDK-003", "M2-CONTRACT-004",
+    "M2-INTERFACE-001",
+    "M2-FAKE-002",
+    "M2-SDK-003",
+    "M2-CONTRACT-004",
     "M3-SCHED-005",
     "M3-MANUAL-006",
     "M3-CONTINUE-007",
@@ -98,7 +101,23 @@
     "M5-FORKJOIN-004",
     "M5-RUNNER-005A",
     "M5-RESTART-005",
-    "M5-REPORT-006"
+    "M5-REPORT-006",
+    "M6-API-001",
+    "M6-CONFIG-002",
+    "M6-SCHEMA-003",
+    "M6-STORE-004",
+    "M6-WF-SVC-005",
+    "M6-WF-API-006",
+    "M6-RUNTIME-007",
+    "M6-RUN-SVC-008",
+    "M6-RUN-API-009",
+    "M6-EVENT-SVC-010",
+    "M6-WS-011",
+    "M6-LIFECYCLE-012",
+    "M6-SYSTEM-013",
+    "M6-INTEGRATE-014",
+    "M6-GATE-015",
+    "M6-REPORT-016"
   ],
   "manual_gates": [
     {
@@ -122,5 +141,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M5-REPORT-006 PASS: all required headless MVP gate results are recorded as PASS; M5 is complete and the roadmap advances to M6 Local API."
+  "last_validation_note": "M5 is complete. Authoritative M6 Local API & Runtime Service plan is now defined with 16 deterministic tasks; M6-API-001 is READY."
 }
