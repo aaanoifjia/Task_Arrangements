@@ -107,7 +107,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M8-CONTROL-024` — Mark-Success REST Endpoint
+`M8-CONTROL-024` — Mark-Success REST Endpoint (IN_PROGRESS)
 
 The late-phase plan contains 120 sequential tasks:
 - M8: 44 tasks
