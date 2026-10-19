@@ -41,6 +41,7 @@ The deterministic local core is implemented through graph validation, state tran
 - M4-SNAPSHOT-003 — immutable workflow-run definition snapshots
 - M4-ATTEMPT-004 — transactional local Attempt/STARTING persistence before adapter calls
 - M4-RECOVERY-005 — fail-closed startup reconciliation for uncertain active external executions
+- M4-DUP-006 — crash-point duplicate-execution prevention matrix
 
 ## Verified Codex Runtime
 
@@ -72,6 +73,6 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M4-DUP-006`
+`M5-CLI-001`
 
-Fail-closed startup recovery passed integration testing, Ruff, and strict mypy. The next task verifies duplicate-execution protection.
+Duplicate-execution prevention passed five crash-point integration tests, Ruff, and strict mypy. The next task creates the headless CLI runner.
