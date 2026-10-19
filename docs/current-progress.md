@@ -36,6 +36,7 @@ The deterministic local core is implemented through graph validation, state tran
 - M3-CONTINUE-007 — validated successful-source existing-thread resume with a distinct new turn
 - M3-INTEGRATE-008A — integrated pause/resume, retry/readiness, and scheduler-dispatched existing-thread execution
 - M3-TEST-008 — deterministic scheduler matrix covering DAG, failure, retry, controls, locks, concurrency, continuation, and cycles
+- M4-SCHEMA-001 — SQLite migration 0001 with durable workflow, run, attempt, event, and settings tables
 
 ## Verified Codex Runtime
 
@@ -67,6 +68,6 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M4-SCHEMA-001`
+`M4-REPO-002`
 
-The M3 scheduler matrix passed 75 scheduler/domain unit tests, Ruff, and strict mypy. The next task creates SQLite schema migration 0001.
+SQLite migration 0001 passed its integration tests, Ruff, and strict mypy. The next task implements storage repositories.
