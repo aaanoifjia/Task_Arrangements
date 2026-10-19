@@ -53,11 +53,15 @@ unexpected_files = []
 
 ## Current Task
 
-The next deterministic task is:
+The next deterministic task was:
 
 `M1-PACK-005`
 
-The control probe now verifies resumed context using the exact marker and observes a real interrupted terminal event.
+The control probe now verifies resumed context using the exact marker and observes a real interrupted terminal event. Autonomous execution is blocked before M1-PACK-005 begins because its task definition is absent from both the local and up-to-date remote plan.
+
+## Current Blocker
+
+`M1-PACK-005` appears only in the dependency graph of the 713-line Early Phase Task Plan. The required “Frozen Backend Feasibility Probe” section, including owned files, steps, and acceptance criteria, is not present locally or on `origin/master`. The protocol therefore prohibits implementing it by inference.
 
 ## Waiting After M1-PACK-005
 

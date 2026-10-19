@@ -12,7 +12,7 @@
     "task_selection": "next_task_only"
   },
   "active_task": null,
-  "next_task": "M1-PACK-005",
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -29,7 +29,13 @@
     "M1-RUN-002",
     "M1-CTRL-003"
   ],
-  "blocked_tasks": {},
+  "blocked_tasks": {
+    "M1-PACK-005": {
+      "reason": "The local and origin/master copies of docs/reference/Codex_Flow_Early_Phase_Task_Plan.md are 713 lines and reference M1-PACK-005 only in the dependency graph; neither contains an authoritative Frozen Backend Feasibility Probe section with owned files, steps, or acceptance criteria.",
+      "last_successful_validation": "M1-CTRL-003 passed: resumed response contained CODEX_FLOW_RESUME_MARKER_7F31 and interrupt reached an interrupted terminal event.",
+      "remediation": "Commit or provide the restored authoritative M1-PACK-005 task section, then set it as next_task and resume."
+    }
+  },
   "task_queue_after_current": [
     "M1-PACK-005",
     "M1-DESKTOP-004",
@@ -77,5 +83,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M1-CTRL-003 passed with .venv\\Scripts\\python.exe spikes\\codex_execution_probe\\resume_interrupt_probe.py: exit code 0, completed first turn, non-empty resumed second turn containing CODEX_FLOW_RESUME_MARKER_7F31, and a real interrupted terminal event. M1-PACK-005 is restored as the next deterministic task."
+  "last_validation_note": "M1-CTRL-003 passed with .venv\\Scripts\\python.exe spikes\\codex_execution_probe\\resume_interrupt_probe.py: exit code 0, completed first turn, non-empty resumed second turn containing CODEX_FLOW_RESUME_MARKER_7F31, and a real interrupted terminal event. M1-PACK-005 cannot be started because its authoritative plan section is absent locally and on origin/master."
 }
