@@ -13,12 +13,12 @@
     "automatic_pull": "safe_when_clean"
   },
   "active_task": {
-    "id": "M6-INTEGRATE-014",
+    "id": "M6-GATE-015",
     "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T14:30:04.2638086Z",
-    "note": "Execute full local API end-to-end integration and bounded contract repairs."
+    "started_at": "2026-10-19T14:33:37.4361148Z",
+    "note": "Run the complete local API acceptance matrix and bounded repairs only within gate-owned files."
   },
-  "next_task": "M6-GATE-015",
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
