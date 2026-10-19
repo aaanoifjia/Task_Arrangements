@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M6-RUNTIME-007",
+  "active_task": {
+    "id": "M6-RUNTIME-007",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-19",
+    "note": "Add non-blocking RuntimeManager while preserving DurableRunner CLI and durable semantics."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
