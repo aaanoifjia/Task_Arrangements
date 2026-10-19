@@ -3300,7 +3300,1675 @@ On PASS:
 
 ---
 
-# 12. 现在应该怎么开跑
+# 12. M7 — Visual DAG UI
+
+## M7 Goal
+
+Build the first usable local visual client over the completed M6 API. M7 is React + TypeScript + React Flow only; SQLite and the backend remain authoritative.
+
+This plan intentionally targets roughly five times the implementation workload of M6. Tasks remain small enough for durable checkpoints, but the milestone includes a complete frontend from an empty directory through an integrated DAG editor and live run monitor.
+
+### Frozen boundaries
+
+- React + TypeScript + Vite.
+- React Flow package: `@xyflow/react`.
+- Local M6 REST/WebSocket API is the only runtime/backend interface.
+- UI never calls Codex SDK directly.
+- UI never decides scheduler progression, retry eligibility or failure propagation.
+- No prompt rewriting or automatic dependency inference.
+- No private Codex Desktop DB/config access.
+- No Tauri/Desktop packaging in M7.
+- No durable manual Retry/Pause/Resume runtime controls in M7; those are M8 human-in-the-loop/reliability work.
+- Open-in-Codex is implemented as the documented `codex://threads/<thread_id>` URI contract; full manual Desktop UX verification is deferred to the desktop/manual gate.
+- Prefer plain CSS and React primitives. Do not add a design-system framework.
+- Frontend tests must not consume live Codex.
+
+## M7 Deterministic Task Order
+
+```text
+M7-FE-001
+↓
+M7-FE-002
+↓
+M7-FE-003
+↓
+M7-FE-004
+↓
+M7-FE-005
+↓
+M7-FE-006
+↓
+M7-FE-007
+↓
+M7-FE-008
+↓
+M7-WF-009
+↓
+M7-WF-010
+↓
+M7-WF-011
+↓
+M7-EDIT-012
+↓
+M7-EDIT-013
+↓
+M7-EDIT-014
+↓
+M7-EDIT-015
+↓
+M7-EDIT-016
+↓
+M7-EDIT-017
+↓
+M7-EDIT-018
+↓
+M7-EDIT-019
+↓
+M7-EDIT-020
+↓
+M7-EDIT-021
+↓
+M7-EDIT-022
+↓
+M7-EDIT-023
+↓
+M7-EDIT-024
+↓
+M7-EDIT-025
+↓
+M7-EDIT-026
+↓
+M7-EDIT-027
+↓
+M7-EDIT-028
+↓
+M7-EDIT-029
+↓
+M7-EDIT-030
+↓
+M7-EDIT-031
+↓
+M7-EDIT-032
+↓
+M7-EDIT-033
+↓
+M7-EDIT-034
+↓
+M7-EDIT-035
+↓
+M7-EDIT-036
+↓
+M7-EDIT-037
+↓
+M7-RUN-038
+↓
+M7-RUN-039
+↓
+M7-RUN-040
+↓
+M7-RUN-041
+↓
+M7-RUN-042
+↓
+M7-RUN-043
+↓
+M7-RUN-044
+↓
+M7-RUN-045
+↓
+M7-RUN-046
+↓
+M7-RUN-047
+↓
+M7-RUN-048
+↓
+M7-RUN-049
+↓
+M7-RUN-050
+↓
+M7-RUN-051
+↓
+M7-RUN-052
+↓
+M7-RUN-053
+↓
+M7-NAV-054
+↓
+M7-UX-055
+↓
+M7-INTEGRATE-056
+↓
+M7-GATE-057
+↓
+M7-REPORT-058
+```
+
+Execute in exactly this order even when later tasks could technically be dependency-ready.
+
+---
+
+## M7-FE-001 — Frontend React/Vite Bootstrap
+
+### Dependencies
+
+```text
+M6-REPORT-016
+```
+
+### Owned Files
+
+```text
+frontend/package.json
+frontend/package-lock.json
+frontend/index.html
+frontend/vite.config.ts
+frontend/src/main.tsx
+frontend/src/App.tsx
+```
+
+### Implementation
+
+- Initialize React + TypeScript + Vite. Add react, react-dom, @xyflow/react, react-router-dom. Add dev dependencies for TypeScript, Vite, Vitest, jsdom, Testing Library, user-event, ESLint and React/TS plugins. Scripts: dev, build, test, test:run, typecheck, lint. No Tailwind/design-system dependency.
+
+### Acceptance
+
+- npm install succeeds; npm run build succeeds; app mounts without backend dependency.
+
+---
+
+## M7-FE-002 — Strict TypeScript, Test & Lint Baseline
+
+### Dependencies
+
+```text
+M7-FE-001
+```
+
+### Owned Files
+
+```text
+frontend/tsconfig.json
+frontend/tsconfig.app.json
+frontend/tsconfig.node.json
+frontend/eslint.config.js
+frontend/src/test/setup.ts
+frontend/src/App.test.tsx
+```
+
+### Implementation
+
+- Enable strict TypeScript and deterministic Vitest/jsdom setup. Configure ESLint for React hooks and TypeScript. Keep generated/build artifacts out of source.
+
+### Acceptance
+
+- typecheck, lint and first Vitest test pass.
+
+---
+
+## M7-FE-003 — Visual Tokens & Global CSS Foundation
+
+### Dependencies
+
+```text
+M7-FE-002
+```
+
+### Owned Files
+
+```text
+frontend/src/styles/tokens.css
+frontend/src/styles/global.css
+frontend/src/main.tsx
+```
+
+### Implementation
+
+- Create plain CSS variables for spacing, typography, borders, surfaces, statuses and focus states. Desktop-first neutral UI. No hard-coded task-status logic in CSS beyond presentation tokens.
+
+### Acceptance
+
+- App renders with global styles; no inline global style duplication.
+
+---
+
+## M7-FE-004 — Application Router & Shell
+
+### Dependencies
+
+```text
+M7-FE-003
+```
+
+### Owned Files
+
+```text
+frontend/src/app/router.tsx
+frontend/src/app/AppShell.tsx
+frontend/src/app/AppShell.css
+frontend/src/App.tsx
+frontend/src/main.tsx
+```
+
+### Implementation
+
+- Create routes for /, /workflows/:workflowId, /runs, /runs/:runId. Add persistent navigation and content shell. Unknown route shows local Not Found view.
+
+### Acceptance
+
+- Router navigation tests pass and direct route rendering works.
+
+---
+
+## M7-FE-005 — Public API Type Models
+
+### Dependencies
+
+```text
+M7-FE-004
+```
+
+### Owned Files
+
+```text
+frontend/src/api/types.ts
+frontend/src/api/types.test.ts
+```
+
+### Implementation
+
+- Mirror only the public M6 REST/WebSocket contract: WorkflowDefinition, TaskDefinition, Edge, RunSummary/Detail, TaskRunView, AttemptView, EventView, error envelope and stream messages. Do not import backend or SDK code.
+
+### Acceptance
+
+- Representative payloads typecheck; status/execution/sandbox values are constrained string unions.
+
+---
+
+## M7-FE-006 — HTTP API Client Foundation
+
+### Dependencies
+
+```text
+M7-FE-005
+```
+
+### Owned Files
+
+```text
+frontend/src/api/http.ts
+frontend/src/api/client.ts
+frontend/src/api/client.test.ts
+```
+
+### Implementation
+
+- Create typed fetch wrapper using relative /api paths. Parse stable error envelope into ApiError. Support AbortSignal. No hidden retries and no business-state inference.
+
+### Acceptance
+
+- Success, 404, 409, 500 and malformed response tests pass.
+
+---
+
+## M7-FE-007 — WebSocket Client Foundation
+
+### Dependencies
+
+```text
+M7-FE-006
+```
+
+### Owned Files
+
+```text
+frontend/src/api/ws.ts
+frontend/src/api/ws.test.ts
+```
+
+### Implementation
+
+- Create SDK-independent run WebSocket client for /ws/runs/{runId}?after=. Expose message/close/error hooks and explicit close. Do not mutate workflow state inside transport code.
+
+### Acceptance
+
+- URL/cursor/message parsing/close tests pass with fake WebSocket.
+
+---
+
+## M7-FE-008 — Frontend Test Fixtures & Network Mocks
+
+### Dependencies
+
+```text
+M7-FE-007
+```
+
+### Owned Files
+
+```text
+frontend/src/test/fixtures.ts
+frontend/src/test/mockFetch.ts
+frontend/src/test/mockWebSocket.ts
+```
+
+### Implementation
+
+- Add deterministic workflow/run/task/attempt/event fixtures and lightweight fetch/WebSocket mocks used by later UI tests. No production dependency on test code.
+
+### Acceptance
+
+- Fixtures conform to API types and mocks support ordered assertions.
+
+---
+
+## M7-WF-009 — Workflow API Resource Layer
+
+### Dependencies
+
+```text
+M7-FE-008
+```
+
+### Owned Files
+
+```text
+frontend/src/features/workflows/api.ts
+frontend/src/features/workflows/api.test.ts
+```
+
+### Implementation
+
+- Implement list/get/create/update calls over ApiClient. Keep transport separate from React components.
+
+### Acceptance
+
+- All four M6 workflow endpoints mapped and tested.
+
+---
+
+## M7-WF-010 — Workflow List Page
+
+### Dependencies
+
+```text
+M7-WF-009
+```
+
+### Owned Files
+
+```text
+frontend/src/features/workflows/WorkflowListPage.tsx
+frontend/src/features/workflows/WorkflowListPage.css
+frontend/src/app/router.tsx
+frontend/src/features/workflows/WorkflowListPage.test.tsx
+```
+
+### Implementation
+
+- Load workflows, display id/name, open editor link, loading/empty/error states and explicit refresh.
+
+### Acceptance
+
+- List/empty/error/navigation tests pass.
+
+---
+
+## M7-WF-011 — Create Workflow Flow
+
+### Dependencies
+
+```text
+M7-WF-010
+```
+
+### Owned Files
+
+```text
+frontend/src/features/workflows/NewWorkflowForm.tsx
+frontend/src/features/workflows/NewWorkflowForm.css
+frontend/src/features/workflows/NewWorkflowForm.test.tsx
+frontend/src/features/workflows/WorkflowListPage.tsx
+```
+
+### Implementation
+
+- Add deterministic create form for workflow id, name and optional description. Initial workflow has empty tasks/edges. Validate nonblank id/name before POST. Navigate to editor only after successful persistence.
+
+### Acceptance
+
+- Validation, successful create and API error tests pass.
+
+---
+
+## M7-EDIT-012 — Editor Graph Domain Mapping
+
+### Dependencies
+
+```text
+M7-WF-011
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/graphModel.ts
+frontend/src/features/editor/graphModel.test.ts
+```
+
+### Implementation
+
+- Define UI graph types and pure conversion WorkflowDefinition <-> editor nodes/edges. Preserve all task execution fields. Dependencies and Edge objects must serialize consistently.
+
+### Acceptance
+
+- Round-trip fixture equality passes; no task field is lost.
+
+---
+
+## M7-EDIT-013 — Editor Reducer & Dirty State
+
+### Dependencies
+
+```text
+M7-EDIT-012
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/editorState.ts
+frontend/src/features/editor/editorState.test.ts
+```
+
+### Implementation
+
+- Pure reducer for load, add/remove/update task, connect/disconnect edge, selection, mark-saved. Track dirty flag and selected task id. No API calls in reducer.
+
+### Acceptance
+
+- Reducer matrix and immutable-state tests pass.
+
+---
+
+## M7-EDIT-014 — React Flow Canvas Bootstrap
+
+### Dependencies
+
+```text
+M7-EDIT-013
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/WorkflowCanvas.tsx
+frontend/src/features/editor/WorkflowCanvas.css
+frontend/src/features/editor/WorkflowCanvas.test.tsx
+```
+
+### Implementation
+
+- Render @xyflow/react canvas from editor state with Background, Controls and fit-view. Keep editor domain IDs stable.
+
+### Acceptance
+
+- Fixture nodes/edges render and canvas can mount under jsdom.
+
+---
+
+## M7-EDIT-015 — Task Node Visual Component
+
+### Dependencies
+
+```text
+M7-EDIT-014
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/TaskNode.tsx
+frontend/src/features/editor/TaskNode.css
+frontend/src/features/editor/TaskNode.test.tsx
+frontend/src/features/editor/WorkflowCanvas.tsx
+```
+
+### Implementation
+
+- Custom task node shows task name/id, execution mode, cwd summary and source/target handles. Selection is visually distinct and accessible.
+
+### Acceptance
+
+- Node fields and handles render; selected state test passes.
+
+---
+
+## M7-EDIT-016 — Add Task Node
+
+### Dependencies
+
+```text
+M7-EDIT-015
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/EditorToolbar.tsx
+frontend/src/features/editor/EditorToolbar.css
+frontend/src/features/editor/WorkflowCanvas.tsx
+frontend/src/features/editor/editorState.ts
+frontend/src/features/editor/EditorToolbar.test.tsx
+```
+
+### Implementation
+
+- Toolbar action adds a deterministic locally unique task with valid defaults and visible canvas position. No backend call until Save.
+
+### Acceptance
+
+- Add action creates one node and marks editor dirty.
+
+---
+
+## M7-EDIT-017 — Node Selection & Inspector Shell
+
+### Dependencies
+
+```text
+M7-EDIT-016
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/TaskInspector.tsx
+frontend/src/features/editor/TaskInspector.css
+frontend/src/features/editor/WorkflowEditorLayout.tsx
+frontend/src/features/editor/WorkflowEditorLayout.css
+frontend/src/features/editor/TaskInspector.test.tsx
+```
+
+### Implementation
+
+- Create canvas + inspector split layout. Clicking a task selects it; empty selection shows guidance.
+
+### Acceptance
+
+- Selection and empty inspector tests pass.
+
+---
+
+## M7-EDIT-018 — Task Identity, Name & CWD Editing
+
+### Dependencies
+
+```text
+M7-EDIT-017
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/TaskInspector.tsx
+frontend/src/features/editor/fields/TaskBasicsFields.tsx
+frontend/src/features/editor/fields/TaskBasicsFields.test.tsx
+```
+
+### Implementation
+
+- Edit stable task id, display name and cwd. Reject blank values and duplicate task IDs. Changing an ID must update associated edges/dependency references deterministically.
+
+### Acceptance
+
+- Rename/duplicate/edge-reference tests pass.
+
+---
+
+## M7-EDIT-019 — Full Prompt Editor
+
+### Dependencies
+
+```text
+M7-EDIT-018
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/fields/PromptField.tsx
+frontend/src/features/editor/fields/PromptField.css
+frontend/src/features/editor/TaskInspector.tsx
+frontend/src/features/editor/fields/PromptField.test.tsx
+```
+
+### Implementation
+
+- Multiline prompt editor with preserved whitespace and large-text usability. No prompt rewriting/summarization.
+
+### Acceptance
+
+- Exact prompt round-trip including newlines passes.
+
+---
+
+## M7-EDIT-020 — Model & Reasoning Configuration
+
+### Dependencies
+
+```text
+M7-EDIT-019
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/fields/ModelFields.tsx
+frontend/src/features/editor/TaskInspector.tsx
+frontend/src/features/editor/fields/ModelFields.test.tsx
+```
+
+### Implementation
+
+- Edit optional model and reasoning_effort as explicit user values. Empty values serialize to null; UI does not invent defaults not present in domain data.
+
+### Acceptance
+
+- Null/value serialization tests pass.
+
+---
+
+## M7-EDIT-021 — Sandbox & Approval Configuration
+
+### Dependencies
+
+```text
+M7-EDIT-020
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/fields/ExecutionFields.tsx
+frontend/src/features/editor/TaskInspector.tsx
+frontend/src/features/editor/fields/ExecutionFields.test.tsx
+```
+
+### Implementation
+
+- Expose sandbox enum and optional approval_mode. Preserve backend-supported string values and defaults.
+
+### Acceptance
+
+- All sandbox values and null approval round-trip.
+
+---
+
+## M7-EDIT-022 — Timeout & Retry Policy Editing
+
+### Dependencies
+
+```text
+M7-EDIT-021
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/fields/RetryFields.tsx
+frontend/src/features/editor/TaskInspector.tsx
+frontend/src/features/editor/fields/RetryFields.test.tsx
+```
+
+### Implementation
+
+- Edit timeout_seconds optional positive integer and retry_policy.max_attempts >=1. No automatic retry semantics are invented in UI.
+
+### Acceptance
+
+- Boundary validation and serialization pass.
+
+---
+
+## M7-EDIT-023 — Execution Mode & Continue-Thread Editing
+
+### Dependencies
+
+```text
+M7-EDIT-022
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/fields/ContinuationFields.tsx
+frontend/src/features/editor/TaskInspector.tsx
+frontend/src/features/editor/fields/ContinuationFields.test.tsx
+```
+
+### Implementation
+
+- Switch NEW_THREAD/CONTINUE_THREAD. CONTINUE_THREAD requires explicit continue_from_task_id chosen from another task. NEW_THREAD clears continuation source.
+
+### Acceptance
+
+- Mode transition and required-source tests pass.
+
+---
+
+## M7-EDIT-024 — Connect Dependency Edges
+
+### Dependencies
+
+```text
+M7-EDIT-023
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/WorkflowCanvas.tsx
+frontend/src/features/editor/editorState.ts
+frontend/src/features/editor/editorState.test.ts
+```
+
+### Implementation
+
+- React Flow connect action creates explicit dependency edge and updates target dependencies. Reject self-edge and exact duplicate edge client-side.
+
+### Acceptance
+
+- Connect/self/duplicate tests pass.
+
+---
+
+## M7-EDIT-025 — Delete Edges
+
+### Dependencies
+
+```text
+M7-EDIT-024
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/WorkflowCanvas.tsx
+frontend/src/features/editor/editorState.ts
+frontend/src/features/editor/editorState.test.ts
+```
+
+### Implementation
+
+- Deleting an edge removes matching target dependency and leaves unrelated dependencies unchanged.
+
+### Acceptance
+
+- Single/multiple edge deletion tests pass.
+
+---
+
+## M7-EDIT-026 — Delete Task Nodes Safely
+
+### Dependencies
+
+```text
+M7-EDIT-025
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/EditorToolbar.tsx
+frontend/src/features/editor/editorState.ts
+frontend/src/features/editor/TaskInspector.tsx
+frontend/src/features/editor/editorState.test.ts
+```
+
+### Implementation
+
+- Delete selected task only after explicit confirmation UI. Remove incident edges and dependency references. Clear invalid continue_from_task_id references and surface validation afterward.
+
+### Acceptance
+
+- Node deletion cleanup matrix passes.
+
+---
+
+## M7-EDIT-027 — Client Graph Validation
+
+### Dependencies
+
+```text
+M7-EDIT-026
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/validation.ts
+frontend/src/features/editor/validation.test.ts
+```
+
+### Implementation
+
+- Pure editor preflight validation: unique IDs, nonblank required fields, dependency targets exist, edge/dependency consistency, duplicate edges, self edges, cycle detection, continuation source exists/is not self. Backend remains authoritative on save.
+
+### Acceptance
+
+- Valid DAG and each invalid class tested.
+
+---
+
+## M7-EDIT-028 — Validation Summary UI
+
+### Dependencies
+
+```text
+M7-EDIT-027
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/ValidationPanel.tsx
+frontend/src/features/editor/ValidationPanel.css
+frontend/src/features/editor/WorkflowEditorLayout.tsx
+frontend/src/features/editor/ValidationPanel.test.tsx
+```
+
+### Implementation
+
+- Display deterministic validation issues with task/edge references. Clicking a task issue selects that node. Save disabled while blocking issues exist.
+
+### Acceptance
+
+- Issue rendering, selection and Save-disable tests pass.
+
+---
+
+## M7-EDIT-029 — Workflow Metadata Editing
+
+### Dependencies
+
+```text
+M7-EDIT-028
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/WorkflowMetadataPanel.tsx
+frontend/src/features/editor/WorkflowMetadataPanel.css
+frontend/src/features/editor/WorkflowEditorLayout.tsx
+frontend/src/features/editor/WorkflowMetadataPanel.test.tsx
+```
+
+### Implementation
+
+- Edit workflow name and optional description; workflow id remains stable on existing workflow.
+
+### Acceptance
+
+- Metadata update and dirty-state tests pass.
+
+---
+
+## M7-EDIT-030 — Workflow Serialization
+
+### Dependencies
+
+```text
+M7-EDIT-029
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/serialize.ts
+frontend/src/features/editor/serialize.test.ts
+```
+
+### Implementation
+
+- Create exact WorkflowDefinition payload from editor state. Stable ordering: nodes in current editor order, edges deterministic by source then target. Derive task.dependencies from explicit edges exactly once.
+
+### Acceptance
+
+- Golden payload tests pass.
+
+---
+
+## M7-EDIT-031 — Save Existing Workflow
+
+### Dependencies
+
+```text
+M7-EDIT-030
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/SaveWorkflowButton.tsx
+frontend/src/features/editor/SaveWorkflowButton.test.tsx
+frontend/src/features/editor/WorkflowEditorLayout.tsx
+```
+
+### Implementation
+
+- PUT existing workflow after local validation. Disable duplicate submissions. On success mark editor clean; on failure keep dirty state and surface API error.
+
+### Acceptance
+
+- Success/double-click/error tests pass.
+
+---
+
+## M7-EDIT-032 — Load Existing Workflow Editor Page
+
+### Dependencies
+
+```text
+M7-EDIT-031
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/WorkflowEditorPage.tsx
+frontend/src/features/editor/WorkflowEditorPage.test.tsx
+frontend/src/app/router.tsx
+```
+
+### Implementation
+
+- GET workflow by route id, convert to editor state and render editor. Handle loading/404/other errors without losing navigation shell.
+
+### Acceptance
+
+- Load, 404 and API error tests pass.
+
+---
+
+## M7-EDIT-033 — Unsaved Changes Indicator
+
+### Dependencies
+
+```text
+M7-EDIT-032
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/UnsavedIndicator.tsx
+frontend/src/features/editor/WorkflowEditorLayout.tsx
+frontend/src/features/editor/UnsavedIndicator.test.tsx
+```
+
+### Implementation
+
+- Show Saved/Unsaved state. Browser beforeunload warning only while dirty. Do not create custom router blocking complexity in this task.
+
+### Acceptance
+
+- Dirty/saved and beforeunload registration tests pass.
+
+---
+
+## M7-EDIT-034 — Editor Keyboard Operations
+
+### Dependencies
+
+```text
+M7-EDIT-033
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/useEditorShortcuts.ts
+frontend/src/features/editor/WorkflowEditorLayout.tsx
+frontend/src/features/editor/useEditorShortcuts.test.tsx
+```
+
+### Implementation
+
+- Implement Ctrl/Cmd+S Save, Delete/Backspace selected node only when focus is not inside an editable field, Escape clears selection.
+
+### Acceptance
+
+- Shortcut focus-safety tests pass.
+
+---
+
+## M7-EDIT-035 — Canvas Navigation & View Controls
+
+### Dependencies
+
+```text
+M7-EDIT-034
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/WorkflowCanvas.tsx
+frontend/src/features/editor/WorkflowCanvas.css
+frontend/src/features/editor/WorkflowCanvas.test.tsx
+```
+
+### Implementation
+
+- Add MiniMap, fit-view action and explicit zoom controls using React Flow primitives. No custom graph layout algorithm.
+
+### Acceptance
+
+- Controls render and fit action is invokable.
+
+---
+
+## M7-EDIT-036 — Editor Empty State & Onboarding Hint
+
+### Dependencies
+
+```text
+M7-EDIT-035
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/EditorEmptyState.tsx
+frontend/src/features/editor/EditorEmptyState.css
+frontend/src/features/editor/WorkflowEditorLayout.tsx
+frontend/src/features/editor/EditorEmptyState.test.tsx
+```
+
+### Implementation
+
+- For empty workflow show concise instructions: Add Task, edit Prompt/CWD, connect dependencies, Save, Run. One action adds first node.
+
+### Acceptance
+
+- Empty/non-empty states tested.
+
+---
+
+## M7-EDIT-037 — Editor Regression Matrix
+
+### Dependencies
+
+```text
+M7-EDIT-036
+```
+
+### Owned Files
+
+```text
+frontend/src/features/editor/WorkflowEditorMatrix.test.tsx
+```
+
+### Implementation
+
+- Test create 4-node fork/join, rename node, connect/disconnect, delete node, continuation config, invalid cycle, save serialization and reload round-trip using mocks.
+
+### Acceptance
+
+- Full editor matrix passes without backend process.
+
+---
+
+## M7-RUN-038 — Run API Resource Layer
+
+### Dependencies
+
+```text
+M7-EDIT-037
+```
+
+### Owned Files
+
+```text
+frontend/src/features/runs/api.ts
+frontend/src/features/runs/api.test.ts
+```
+
+### Implementation
+
+- Implement start run, list/get run, list/get tasks and attempts over public M6 API.
+
+### Acceptance
+
+- Endpoint mapping and ApiError propagation tests pass.
+
+---
+
+## M7-RUN-039 — Start Run from Workflow Editor
+
+### Dependencies
+
+```text
+M7-RUN-038
+```
+
+### Owned Files
+
+```text
+frontend/src/features/runs/StartRunButton.tsx
+frontend/src/features/runs/StartRunButton.test.tsx
+frontend/src/features/editor/WorkflowEditorLayout.tsx
+```
+
+### Implementation
+
+- Run action allowed only when editor is saved and valid. POST run returns run_id and navigates to run detail. Handle ACTIVE_RUN conflict explicitly.
+
+### Acceptance
+
+- Saved/dirty/invalid/success/conflict tests pass.
+
+---
+
+## M7-RUN-040 — Run History List Page
+
+### Dependencies
+
+```text
+M7-RUN-039
+```
+
+### Owned Files
+
+```text
+frontend/src/features/runs/RunListPage.tsx
+frontend/src/features/runs/RunListPage.css
+frontend/src/features/runs/RunListPage.test.tsx
+frontend/src/app/router.tsx
+```
+
+### Implementation
+
+- List durable runs with workflow id, status, created_at and link to detail. Add optional workflow_id filter from URL query.
+
+### Acceptance
+
+- List/filter/empty/error tests pass.
+
+---
+
+## M7-RUN-041 — Run Detail Page Foundation
+
+### Dependencies
+
+```text
+M7-RUN-040
+```
+
+### Owned Files
+
+```text
+frontend/src/features/runs/RunDetailPage.tsx
+frontend/src/features/runs/RunDetailPage.css
+frontend/src/features/runs/RunDetailPage.test.tsx
+frontend/src/app/router.tsx
+```
+
+### Implementation
+
+- Load run detail and task snapshot. Show run status, workflow id, creation time and task list. Handle 404.
+
+### Acceptance
+
+- Success/loading/404 tests pass.
+
+---
+
+## M7-RUN-042 — Run DAG Read-only Visualization
+
+### Dependencies
+
+```text
+M7-RUN-041
+```
+
+### Owned Files
+
+```text
+frontend/src/features/runs/RunGraph.tsx
+frontend/src/features/runs/RunGraph.css
+frontend/src/features/runs/RunGraph.test.tsx
+frontend/src/features/runs/RunDetailPage.tsx
+```
+
+### Implementation
+
+- Render immutable run.snapshot DAG with React Flow in read-only mode. No node/edge editing. Match task definitions by task_id.
+
+### Acceptance
+
+- Snapshot graph renders and editing gestures are disabled.
+
+---
+
+## M7-RUN-043 — Task Status Visual Mapping
+
+### Dependencies
+
+```text
+M7-RUN-042
+```
+
+### Owned Files
+
+```text
+frontend/src/features/runs/status.ts
+frontend/src/features/runs/RunTaskNode.tsx
+frontend/src/features/runs/RunTaskNode.css
+frontend/src/features/runs/status.test.ts
+```
+
+### Implementation
+
+- Map every canonical TaskStatus to label/presentation token. Unknown status fails visibly as UNKNOWN instead of guessed success.
+
+### Acceptance
+
+- All canonical states plus unknown case tested.
+
+---
+
+## M7-RUN-044 — Run Graph Status Overlay
+
+### Dependencies
+
+```text
+M7-RUN-043
+```
+
+### Owned Files
+
+```text
+frontend/src/features/runs/RunGraph.tsx
+frontend/src/features/runs/RunTaskNode.tsx
+frontend/src/features/runs/RunGraph.test.tsx
+```
+
+### Implementation
+
+- Decorate run nodes using durable TaskRun status. Preserve snapshot node identity and thread/turn references.
+
+### Acceptance
+
+- Mixed-state DAG rendering tests pass.
+
+---
+
+## M7-RUN-045 — Run WebSocket State Hook
+
+### Dependencies
+
+```text
+M7-RUN-044
+```
+
+### Owned Files
+
+```text
+frontend/src/features/runs/useRunStream.ts
+frontend/src/features/runs/useRunStream.test.ts
+```
+
+### Implementation
+
+- Wrap WebSocket client for one run. Maintain task snapshot and latest event cursor. Clean up on unmount/run change. No state changes are sent to backend.
+
+### Acceptance
+
+- snapshot/event/cleanup tests pass.
+
+---
+
+## M7-RUN-046 — Live Task Snapshot Application
+
+### Dependencies
+
+```text
+M7-RUN-045
+```
+
+### Owned Files
+
+```text
+frontend/src/features/runs/RunDetailPage.tsx
+frontend/src/features/runs/useRunStream.ts
+frontend/src/features/runs/RunDetailPage.test.tsx
+```
+
+### Implementation
+
+- Apply WebSocket snapshot messages to run graph/task list. REST initial load remains fallback/source for first render.
+
+### Acceptance
+
+- PENDING→RUNNING→SUCCESS UI transition test passes.
+
+---
+
+## M7-RUN-047 — Durable Event Log Panel
+
+### Dependencies
+
+```text
+M7-RUN-046
+```
+
+### Owned Files
+
+```text
+frontend/src/features/runs/EventLog.tsx
+frontend/src/features/runs/EventLog.css
+frontend/src/features/runs/EventLog.test.tsx
+frontend/src/features/runs/RunDetailPage.tsx
+```
+
+### Implementation
+
+- Display persisted events in arrival order with timestamp, type, task/attempt references and compact JSON payload disclosure. No SDK object assumptions.
+
+### Acceptance
+
+- Ordering and payload rendering tests pass.
+
+---
+
+## M7-RUN-048 — WebSocket Cursor Reconnect
+
+### Dependencies
+
+```text
+M7-RUN-047
+```
+
+### Owned Files
+
+```text
+frontend/src/features/runs/useRunStream.ts
+frontend/src/features/runs/useRunStream.test.ts
+```
+
+### Implementation
+
+- On unexpected close while run is nonterminal, reconnect with last acknowledged event id using bounded deterministic backoff. Do not reconnect after explicit unmount/terminal run.
+
+### Acceptance
+
+- Cursor, no-duplication, terminal and cleanup tests pass with fake timers.
+
+---
+
+## M7-RUN-049 — Task Detail Drawer
+
+### Dependencies
+
+```text
+M7-RUN-048
+```
+
+### Owned Files
+
+```text
+frontend/src/features/runs/TaskRunDrawer.tsx
+frontend/src/features/runs/TaskRunDrawer.css
+frontend/src/features/runs/TaskRunDrawer.test.tsx
+frontend/src/features/runs/RunGraph.tsx
+```
+
+### Implementation
+
+- Selecting run node opens task detail: task id, status, thread_id, turn_id, created_at. Missing optional IDs render clearly.
+
+### Acceptance
+
+- Selection/details/missing metadata tests pass.
+
+---
+
+## M7-RUN-050 — Attempt History in Task Drawer
+
+### Dependencies
+
+```text
+M7-RUN-049
+```
+
+### Owned Files
+
+```text
+frontend/src/features/runs/AttemptHistory.tsx
+frontend/src/features/runs/AttemptHistory.test.tsx
+frontend/src/features/runs/TaskRunDrawer.tsx
+```
+
+### Implementation
+
+- Load attempts lazily for selected task. Show immutable attempt id/status/thread/turn/time in API order.
+
+### Acceptance
+
+- Loading/history/empty/error tests pass.
+
+---
+
+## M7-RUN-051 — Open in Codex Action
+
+### Dependencies
+
+```text
+M7-RUN-050
+```
+
+### Owned Files
+
+```text
+frontend/src/features/runs/OpenInCodex.tsx
+frontend/src/features/runs/OpenInCodex.test.tsx
+frontend/src/features/runs/TaskRunDrawer.tsx
+```
+
+### Implementation
+
+- When thread_id exists expose explicit codex://threads/{encoded-thread-id} link. No Desktop private DB/config access. When absent show unavailable. Automated tests verify URI only; manual desktop opening is deferred to desktop/manual UX milestone.
+
+### Acceptance
+
+- Exact URI, encoding and missing-thread tests pass.
+
+---
+
+## M7-RUN-052 — Failure & Needs-Attention Presentation
+
+### Dependencies
+
+```text
+M7-RUN-051
+```
+
+### Owned Files
+
+```text
+frontend/src/features/runs/TaskStateNotice.tsx
+frontend/src/features/runs/TaskStateNotice.css
+frontend/src/features/runs/TaskRunDrawer.tsx
+frontend/src/features/runs/TaskStateNotice.test.tsx
+```
+
+### Implementation
+
+- Present FAILED, INTERRUPTED, BLOCKED and NEEDS_ATTENTION distinctly with non-speculative explanation. Do not expose Retry/Pause/Resume controls yet; those belong to M8 human-in-the-loop/runtime control work.
+
+### Acceptance
+
+- Each state renders deterministic copy and no unsupported action button.
+
+---
+
+## M7-RUN-053 — Run Completion Summary
+
+### Dependencies
+
+```text
+M7-RUN-052
+```
+
+### Owned Files
+
+```text
+frontend/src/features/runs/RunSummaryPanel.tsx
+frontend/src/features/runs/RunSummaryPanel.test.tsx
+frontend/src/features/runs/RunDetailPage.tsx
+```
+
+### Implementation
+
+- Summarize task status counts and terminal run result from durable API data only. No inference that SUCCESS implies code correctness.
+
+### Acceptance
+
+- Mixed counts and terminal/nonterminal tests pass.
+
+---
+
+## M7-NAV-054 — Workflow-to-Run History Navigation
+
+### Dependencies
+
+```text
+M7-RUN-053
+```
+
+### Owned Files
+
+```text
+frontend/src/features/workflows/WorkflowListPage.tsx
+frontend/src/features/editor/WorkflowEditorLayout.tsx
+frontend/src/features/runs/RunListPage.tsx
+frontend/src/features/runs/RunDetailPage.tsx
+frontend/src/features/runs/navigation.test.tsx
+```
+
+### Implementation
+
+- Add consistent links among workflow list/editor, filtered run history and run detail/back-to-workflow.
+
+### Acceptance
+
+- Cross-page navigation and URL filter tests pass.
+
+---
+
+## M7-UX-055 — Accessible Interaction Pass
+
+### Dependencies
+
+```text
+M7-NAV-054
+```
+
+### Owned Files
+
+```text
+frontend/src/**/*.tsx
+frontend/src/**/*.css
+frontend/src/ux/accessibility.test.tsx
+```
+
+### Implementation
+
+- Add semantic labels, keyboard-focus visibility, button/input labels, dialog roles and status text where already implemented. Do not redesign UI. Ensure canvas-adjacent controls remain reachable.
+
+### Acceptance
+
+- Focused accessibility interaction tests pass; typecheck/lint remain green.
+
+---
+
+## M7-INTEGRATE-056 — Visual DAG UI Integration & Repair
+
+### Dependencies
+
+```text
+M7-UX-055
+```
+
+### Owned Files
+
+```text
+frontend/**
+```
+
+### Implementation
+
+- Run the complete M7 user flow with mocked M6 API/WebSocket: list workflows → create → edit multi-node DAG → validate → save → reload → start run → navigate run detail → receive snapshots/events → inspect attempt → open Codex URI → terminal summary. This is a bounded repair task: fix any M7 implementation defect within frontend/** but do not alter backend contracts or architecture.
+
+### Acceptance
+
+- Integrated user-flow test passes; npm test/typecheck/lint/build pass.
+
+---
+
+## M7-GATE-057 — M7 Acceptance Matrix & Backend Regression
+
+### Dependencies
+
+```text
+M7-INTEGRATE-056
+```
+
+### Owned Files
+
+```text
+frontend/**
+backend/tests/api/**
+backend/tests/integration/**
+```
+
+### Implementation
+
+- Execute and, only within owned test/frontend files, repair M7 contract issues. Matrix: app routing; workflow create/get/update/list; DAG node add/edit/delete; edge connect/delete; cycle validation; full Prompt/CWD/config preservation; save/reload; start run; run history; read-only run DAG; all task statuses; WS snapshot/events; reconnect cursor; attempt history; failure/needs-attention display; Open-in-Codex URI; keyboard basics; empty/error/loading states; M6 API contract regressions; complete non-live backend regression. Do not weaken tests or change production backend semantics.
+
+### Acceptance
+
+- All frontend tests, build, typecheck, lint and complete non-live backend tests pass.
+
+---
+
+## M7-REPORT-058 — Visual DAG UI Milestone Report
+
+### Dependencies
+
+```text
+M7-GATE-057
+```
+
+### Owned Files
+
+```text
+docs/visual-dag-ui-test-report.md
+```
+
+### Implementation
+
+- Record PASS/FAIL with evidence for: frontend bootstrap; workflow list/create/edit/save; multi-task nodes; complete Prompt; cwd/config fields; dependency edge editing; cycle prevention; run launch; run history; run DAG statuses; WebSocket updates; event log; attempt history; failure/needs-attention presentation; Open-in-Codex URI contract; M6/M5 regression; no master LLM control. On PASS mark M7 complete and leave next_task null unless an authoritative M8 plan exists.
+
+### Acceptance
+
+- Every listed M7 automated gate PASS; report names exact commands/counts and known manual verification deferred to M9 where applicable.
+
+---
+
+# 13. 现在应该怎么开跑
 
 ## 情况 A：Codex Flow repo 还没建
 
@@ -3349,7 +5017,7 @@ M0-ACCEPT-005
 
 ---
 
-# 13. 每次向我反馈 Codex 结果时的格式
+# 14. 每次向我反馈 Codex 结果时的格式
 
 以后完成 Task 后，只需要提供：
 
@@ -3381,7 +5049,7 @@ Codex final note:
 
 ---
 
-# 14. 当前技术基线来源
+# 15. 当前技术基线来源
 
 本 Task Plan 按 2026-10-15 已确认的公开稳定能力制定：
 
