@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M8-CONTROL-029",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T06:30:00.0000000Z",
-    "note": "Verify retry creates immutable distinct Attempts and fresh thread/turn references."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M8-CONTROL-030",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -161,7 +156,8 @@
     "M8-CONTROL-025",
     "M8-CONTROL-026",
     "M8-CONTROL-027",
-    "M8-CONTROL-028"
+    "M8-CONTROL-028",
+    "M8-CONTROL-029"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -427,5 +423,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-029 IN_PROGRESS: adding retry attempt identity and reference-isolation integration coverage."
+  "last_validation_note": "M8-CONTROL-029 COMPLETE: retry attempt identity/reference integration, Ruff, and strict mypy PASS."
 }

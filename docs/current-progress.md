@@ -81,6 +81,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M8-CONTROL-026 — manual pause/retry/cancel audit events through durable ordered stream with cursor reconnect; integration test, Ruff, and strict mypy PASS
 - M8-CONTROL-027 — restart restores active workflow snapshots without starting paused work; reconciliation/resume integration 2/2 PASS, Ruff, and strict mypy PASS
 - M8-CONTROL-028 — failed-parent retry releases blocked descendants exactly once; dependency-release and retry regression 2/2 PASS
+- M8-CONTROL-029 — retry creates distinct immutable Attempts with fresh thread/turn references; identity integration, Ruff, and strict mypy PASS
 
 ## Verified Codex Runtime
 
@@ -112,7 +113,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M8-CONTROL-029` — Retry Attempt Identity (IN_PROGRESS)
+`M8-CONTROL-030` — Cancellation Race Matrix
 
 The late-phase plan contains 120 sequential tasks:
 - M8: 44 tasks
