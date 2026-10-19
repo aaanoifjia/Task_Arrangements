@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M8-CONTROL-016",
+  "active_task": {
+    "id": "M8-CONTROL-016",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-20T03:30:00.0000000Z",
+    "note": "Cover deterministic NEEDS_ATTENTION retry/cancel actions without implicit success or downstream release."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -409,5 +414,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-015 PASS: mark-success/readiness/skip/retry regression 11 passed; READY override released child successfully and was audited; invalid states rejected; Ruff and strict mypy passed. M8-CONTROL-016 is next."
+  "last_validation_note": "M8-CONTROL-016 IN_PROGRESS: implementing NEEDS_ATTENTION action matrix."
 }
