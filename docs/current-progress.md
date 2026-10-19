@@ -59,40 +59,12 @@ The next deterministic task was:
 
 The control probe now verifies resumed context using the exact marker and observes a real interrupted terminal event. Autonomous execution is blocked before M1-PACK-005 begins because its task definition is absent from both the local and up-to-date remote plan.
 
-## Current Blocker
+## Current Task
 
-`M1-PACK-005` appears only in the dependency graph of the 713-line Early Phase Task Plan. The required “Frozen Backend Feasibility Probe” section, including owned files, steps, and acceptance criteria, is not present locally or on `origin/master`. The protocol therefore prohibits implementing it by inference.
+The complete 2322-line Early Phase Task Plan is now present on `master` and contains the authoritative `M1-PACK-005 — Frozen Backend Feasibility Probe` specification.
 
-## Waiting After M1-PACK-005
+Current deterministic next task:
 
-Once M1-PACK-005 passes:
+`M1-PACK-005`
 
-```text
-M1-DESKTOP-004 (manual user observation gate)
-→ M1-REPORT-006
-→ M2-INTERFACE-001
-→ M2-FAKE-002 + M2-SDK-003
-→ M2-CONTRACT-004
-→ M3-SCHED-005
-→ M3-MANUAL-006 + M3-CONTINUE-007
-→ M3-TEST-008
-→ M4 persistence/recovery
-→ M5 headless end-to-end MVP
-```
-
-M1-DESKTOP-004 remains an intentional manual gate because Desktop thread/sidebar behavior must be observed by the user.
-
-## Durable Progress Rule
-
-Each small task is committed only after its acceptance checks pass.
-
-Before implementation starts, Codex records the task as `IN_PROGRESS` in `.codex/progress.json` and creates the required progress checkpoint commit.
-
-If quota/context ends during a task:
-
-- earlier completed tasks remain committed;
-- the current task remains recorded as active;
-- local dirty files are preserved;
-- the next session resumes the active task instead of selecting another task.
-
-See `AGENTS.md` and `.codex/AUTO_EXECUTION.md`.
+The previous missing-spec blocker is resolved. Resume autonomous execution from `.codex/progress.json`.
