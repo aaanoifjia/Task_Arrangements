@@ -1,16 +1,19 @@
 import type { TaskRunView } from '../../api/types'
+import type { RunApi } from './api'
+import AttemptHistory from './AttemptHistory'
 import './TaskRunDrawer.css'
 
 export type TaskRunDrawerProps = {
   task: TaskRunView | null
   onClose: () => void
+  attemptApi?: Pick<RunApi, 'attempts'>
 }
 
 function optionalValue(value: string | null): string {
   return value ?? 'Not available'
 }
 
-function TaskRunDrawer({ task, onClose }: TaskRunDrawerProps) {
+function TaskRunDrawer({ task, onClose, attemptApi }: TaskRunDrawerProps) {
   if (!task) return null
   return (
     <aside className="task-run-drawer" aria-labelledby="task-run-drawer-heading" data-testid="task-run-drawer">
@@ -25,6 +28,7 @@ function TaskRunDrawer({ task, onClose }: TaskRunDrawerProps) {
         <div><dt>Turn ID</dt><dd>{optionalValue(task.turn_id)}</dd></div>
         <div><dt>Created</dt><dd><time dateTime={task.created_at}>{task.created_at}</time></dd></div>
       </dl>
+      <AttemptHistory runId={task.workflow_run_id} taskId={task.task_id} api={attemptApi} />
     </aside>
   )
 }

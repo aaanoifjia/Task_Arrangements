@@ -4,11 +4,13 @@ import { describe, expect, it, vi } from 'vitest'
 import { fixtureTaskRun } from '../../test/fixtures'
 import TaskRunDrawer from './TaskRunDrawer'
 
+const attemptApi = { attempts: vi.fn().mockResolvedValue([]) }
+
 describe('TaskRunDrawer', () => {
   it('shows task metadata and closes on request', async () => {
     const onClose = vi.fn()
     const user = userEvent.setup()
-    render(<TaskRunDrawer task={fixtureTaskRun} onClose={onClose} />)
+    render(<TaskRunDrawer task={fixtureTaskRun} onClose={onClose} attemptApi={attemptApi} />)
     expect(screen.getByRole('heading', { name: 'Task A' })).toBeInTheDocument()
     expect(screen.getByText('RUNNING')).toBeInTheDocument()
     expect(screen.getByText('thread-1')).toBeInTheDocument()
@@ -18,9 +20,10 @@ describe('TaskRunDrawer', () => {
     expect(onClose).toHaveBeenCalledOnce()
   })
 
-  it('renders missing optional execution IDs clearly', () => {
-    render(<TaskRunDrawer task={{ ...fixtureTaskRun, thread_id: null, turn_id: null }} onClose={vi.fn()} />)
+  it('renders missing optional execution IDs clearly', async () => {
+    render(<TaskRunDrawer task={{ ...fixtureTaskRun, thread_id: null, turn_id: null }} onClose={vi.fn()} attemptApi={attemptApi} />)
     expect(screen.getAllByText('Not available')).toHaveLength(2)
+    expect(await screen.findByText('No attempts recorded.')).toBeInTheDocument()
   })
 
   it('renders nothing without a selected task', () => {
