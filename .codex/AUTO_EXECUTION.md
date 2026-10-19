@@ -1,6 +1,6 @@
 # Codex Flow — Autonomous Execution Protocol
 
-This file defines how a Codex session can advance the project across many small tasks without losing progress when quota or context ends.
+This file defines how a Codex invocation advances the project across many small tasks while preserving durable recovery if the host/runtime forcibly interrupts execution.
 
 ## Core Principle
 
@@ -17,7 +17,9 @@ checkpoint active task
 → continue
 ```
 
-If quota ends during implementation, all earlier successful tasks are already committed, and `.codex/progress.json` records which task is active.
+If the host/runtime forcibly ends execution during implementation, all earlier successful tasks are already committed and `.codex/progress.json` records which task is active.
+
+Codex must not predict or estimate quota, context, time, turn budget, execution budget, or session budget. Those are host-level constraints. As long as the invocation is still running and no genuine blocker exists, continue executing the next deterministic task.
 
 ## Session Startup
 
@@ -70,7 +72,7 @@ Before implementation:
 chore(progress): start <TASK_ID>
 ```
 
-This checkpoint is what makes an abrupt quota stop recoverable.
+This checkpoint makes any externally forced interruption recoverable. It is not a reason to stop voluntarily.
 
 ## Executing a Task
 
@@ -111,7 +113,9 @@ Then:
 task(<TASK_ID>): complete <short title>
 ```
 
-5. Continue with the next task while resources remain.
+5. Immediately continue with the next deterministic dependency-ready task.
+
+Do not stop to report a successfully completed individual task. Do not decide that "resources", "budget", "time", "context", or "quota" may be running low. Continue until a genuine stop condition occurs or the host/runtime actually terminates the invocation.
 
 ## Blocking a Task
 
@@ -144,9 +148,32 @@ Then stop autonomous progression unless another independent task is explicitly m
 
 `FAILED`: implementation or acceptance checks failed and the task requires repair.
 
-`IN_PROGRESS`: session/quota ended before task completion.
+`IN_PROGRESS`: execution was externally interrupted before task completion, or the host/runtime forcibly terminated the invocation.
 
-An abrupt end requires no special cleanup. The next session resumes the active task.
+Codex must not set or preserve `IN_PROGRESS` merely because it predicts that quota, context, time, or an execution/session budget may be low.
+
+An abrupt externally forced end requires no special cleanup. The next invocation resumes the active task.
+
+## Host-Level Budget Rule
+
+Budget handling is not part of project planning.
+
+Codex must never voluntarily stop because it estimates or suspects any of the following:
+
+- remaining quota;
+- remaining tokens/context;
+- elapsed or remaining wall-clock time;
+- turn budget;
+- execution budget;
+- session budget;
+- "enough work for this turn";
+- likelihood that the host may stop soon.
+
+There is no project-defined numeric execution budget.
+
+If the host/runtime has not actually terminated the invocation, continue. The durable checkpoint/commit protocol exists specifically so an actual external termination is safe.
+
+A message such as "execution budget ended", "turn budget is exhausted", or similar must not be used as a self-selected stop reason unless the host/runtime has in fact already forced termination.
 
 ## Task Selection
 
