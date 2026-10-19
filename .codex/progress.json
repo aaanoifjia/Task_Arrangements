@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-EDIT-028",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T16:25:00.0000000Z",
-    "note": "Display deterministic validation issues, select referenced tasks, and disable Save while issues exist."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-EDIT-029",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -102,7 +97,8 @@
     "M7-EDIT-024",
     "M7-EDIT-025",
     "M7-EDIT-026",
-    "M7-EDIT-027"
+    "M7-EDIT-027",
+    "M7-EDIT-028"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -248,5 +244,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-EDIT-027 PASS: pure client preflight covers valid DAGs, required fields, unique IDs, targets, edge/dependency consistency, duplicates, self edges, cycles, and continuation source rules; typecheck, ESLint, and Vitest (41 tests) passed. M7-EDIT-028 is next."
+  "last_validation_note": "M7-EDIT-028 PASS: validation panel renders deterministic issues, selects referenced tasks, reports valid state, and disables Save while issues exist; typecheck, ESLint, and Vitest (43 tests) passed. M7-EDIT-029 is next."
 }

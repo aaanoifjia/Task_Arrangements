@@ -2,15 +2,19 @@ import { useState } from 'react'
 import type { EditorGraph } from './graphModel'
 import TaskInspector from './TaskInspector'
 import WorkflowCanvas from './WorkflowCanvas'
+import ValidationPanel from './ValidationPanel'
+import type { ValidationIssue } from './validation'
 import './WorkflowEditorLayout.css'
 
 export type WorkflowEditorLayoutProps = {
   graph: EditorGraph
   selectedTaskId?: string | null
   onSelectTask?: (taskId: string | null) => void
+  validationIssues?: ValidationIssue[]
+  onSave?: () => void
 }
 
-function WorkflowEditorLayout({ graph, selectedTaskId, onSelectTask }: WorkflowEditorLayoutProps) {
+function WorkflowEditorLayout({ graph, selectedTaskId, onSelectTask, validationIssues = [], onSave }: WorkflowEditorLayoutProps) {
   const [internalSelectedTaskId, setInternalSelectedTaskId] = useState<string | null>(null)
   const activeTaskId = selectedTaskId === undefined ? internalSelectedTaskId : selectedTaskId
   const activeTask = graph.nodes.find((node) => node.id === activeTaskId)?.data.task ?? null
@@ -20,11 +24,14 @@ function WorkflowEditorLayout({ graph, selectedTaskId, onSelectTask }: WorkflowE
   }
 
   return (
-    <div className="workflow-editor-layout">
-      <section className="workflow-editor-layout__canvas" aria-label="Workflow editor canvas panel">
-        <WorkflowCanvas graph={graph} selectedTaskId={activeTaskId} onSelectTask={selectTask} />
-      </section>
-      <TaskInspector task={activeTask} />
+    <div>
+      <div className="workflow-editor-layout">
+        <section className="workflow-editor-layout__canvas" aria-label="Workflow editor canvas panel">
+          <WorkflowCanvas graph={graph} selectedTaskId={activeTaskId} onSelectTask={selectTask} />
+        </section>
+        <TaskInspector task={activeTask} />
+      </div>
+      <ValidationPanel issues={validationIssues} onSelectTask={selectTask} onSave={onSave} />
     </div>
   )
 }

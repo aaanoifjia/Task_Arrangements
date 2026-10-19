@@ -1,0 +1,57 @@
+.validation-panel {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--surface-panel);
+  color: var(--text-primary);
+}
+
+.validation-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.validation-panel h2 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+}
+
+.validation-panel__header button {
+  border: 1px solid var(--focus-ring);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  color: #ffffff;
+  background: var(--focus-ring);
+  cursor: pointer;
+}
+
+.validation-panel__header button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.validation-panel__issues {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+  padding-left: var(--space-5);
+  color: var(--status-failure);
+}
+
+.validation-panel__issues button {
+  border: 0;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  text-align: left;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.validation-panel p {
+  margin: var(--space-3) 0 0;
+  color: var(--status-success);
+}
