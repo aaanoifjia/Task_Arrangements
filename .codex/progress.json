@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M7-EDIT-036",
+  "active_task": {
+    "id": "M7-EDIT-036",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-19T17:45:00.0000000Z",
+    "note": "Add empty-workflow onboarding guidance with a first-task action while preserving the non-empty canvas."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
