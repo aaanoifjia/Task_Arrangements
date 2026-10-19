@@ -109,13 +109,15 @@ A task is not COMPLETE until its acceptance checks pass.
 - TaskRun != Attempt.
 - Retry creates a new Attempt.
 
-## 8. Current Special Blocker
+## 8. Dynamic Progress Rule
 
-The real Codex execution probe currently fails before thread creation with:
+Do not hard-code a current task or blocker in this file.
 
-`Could not find home directory`
+The authoritative current execution state is always:
 
-Do not bypass this with UI automation, a different SDK, WSL, or a redesigned transport. Execute the recorded remediation task `M1-HOME-FIX-001` first.
+`.codex/progress.json`
+
+Use `active_task`, `next_task`, `completed_tasks`, and `blocked_tasks` from that file. Historical blockers that have already been resolved must not stop later tasks.
 
 ## 9. Test Discipline
 
