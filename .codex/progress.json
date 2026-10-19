@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-EDIT-035",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T17:35:00.0000000Z",
-    "note": "Add React Flow MiniMap and verify native zoom and fit-view controls."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-EDIT-036",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -109,7 +104,8 @@
     "M7-EDIT-031",
     "M7-EDIT-032",
     "M7-EDIT-033",
-    "M7-EDIT-034"
+    "M7-EDIT-034",
+    "M7-EDIT-035"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -255,5 +251,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-EDIT-034 PASS: Ctrl/Cmd+S, Escape, and focus-safe Delete/Backspace shortcuts are integrated into the editor layout; typecheck, ESLint, and Vitest (57 tests) passed. M7-EDIT-035 is next."
+  "last_validation_note": "M7-EDIT-035 PASS: React Flow MiniMap, native zoom controls, and invokable Fit View control render without custom layout logic; typecheck, ESLint, and Vitest (57 tests) passed. M7-EDIT-036 is next."
 }

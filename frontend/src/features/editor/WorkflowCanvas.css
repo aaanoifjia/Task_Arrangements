@@ -6,3 +6,9 @@
   border-radius: var(--radius-md);
   background: var(--surface-panel);
 }
+
+.workflow-canvas .react-flow__minimap {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--surface-muted);
+}

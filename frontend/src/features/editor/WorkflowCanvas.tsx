@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Background, Controls, ReactFlow, type Connection, type Edge, type Node } from '@xyflow/react'
+import { Background, Controls, MiniMap, ReactFlow, type Connection, type Edge, type Node } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import type { EditorGraph } from './graphModel'
 import TaskNode from './TaskNode'
@@ -42,6 +42,7 @@ function WorkflowCanvas({ graph, selectedTaskId, onSelectTask, onConnect, onDisc
       >
         <Background />
         <Controls />
+        <MiniMap />
       </ReactFlow>
     </div>
   )

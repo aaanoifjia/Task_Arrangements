@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { fixtureWorkflow } from '../../test/fixtures'
 import { workflowToGraph } from './graphModel'
@@ -17,5 +17,7 @@ describe('WorkflowCanvas', () => {
     expect(screen.getByTestId('workflow-canvas')).toBeInTheDocument()
     expect(screen.getByText('First task')).toBeInTheDocument()
     expect(screen.getByText('Second task')).toBeInTheDocument()
+    expect(screen.getByTestId('rf__minimap')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Fit View' }))
   })
 })
