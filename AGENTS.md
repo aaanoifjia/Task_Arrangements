@@ -24,23 +24,26 @@ When two sources conflict, use this precedence:
 
 When the user tells you to continue the project automatically:
 
-1. Read `.codex/progress.json`.
-2. Run `git status --short`.
-3. If `active_task` is non-null, resume that task only. Do not start another task.
-4. If `active_task` is null, execute `next_task`.
-5. Before changing implementation files for a new task, mark that task `IN_PROGRESS` in `.codex/progress.json` and commit that progress checkpoint.
-6. Execute only the task's explicit steps and Owned Files.
-7. Run the task's required tests/checks.
-8. Only after acceptance passes:
+1. Run `git status --short` and `git log --oneline -10`.
+2. Read `.codex/progress.json`.
+3. If the working tree is clean and `active_task` is null, run `git pull --ff-only origin master` before selecting work, then re-read `.codex/progress.json` and the authoritative task plan.
+4. If `active_task` is non-null, do not pull; resume that task only. Do not start another task.
+5. If the working tree contains legitimate active-task changes, do not pull/reset/stash; resume the active task from those changes.
+6. If `active_task` is null, execute `next_task`.
+7. Before changing implementation files for a new task, mark that task `IN_PROGRESS` in `.codex/progress.json` and commit that progress checkpoint.
+8. Push each autonomous checkpoint/block/completion commit to `origin master` immediately after the local commit succeeds.
+9. Execute only the task's explicit steps and Owned Files.
+10. Run the task's required tests/checks.
+11. Only after acceptance passes:
    - mark the task COMPLETE in `.codex/progress.json`;
    - clear `active_task`;
    - compute/set the next deterministic task from the recorded dependency plan;
    - update `docs/current-progress.md`;
    - commit the completed task and progress update together.
-9. After a task completes, immediately continue to the next deterministic dependency-ready task.
-10. Do not estimate, infer, or reason about remaining quota, context, time, turn budget, execution budget, or session budget. These are host-level constraints, not project stopping conditions.
-11. Never voluntarily stop because you believe such a budget may be low or nearly exhausted. If the host actually terminates execution, the checkpoint/progress mechanism handles recovery.
-12. If a task requires user interaction, credentials, GUI confirmation, or a decision not encoded in the task spec, mark it BLOCKED and stop at that task.
+12. After a task completes, immediately continue to the next deterministic dependency-ready task.
+13. Do not estimate, infer, or reason about remaining quota, context, time, turn budget, execution budget, or session budget. These are host-level constraints, not project stopping conditions.
+14. Never voluntarily stop because you believe such a budget may be low or nearly exhausted. If the host actually terminates execution, the checkpoint/progress mechanism handles recovery.
+15. If a task requires user interaction, credentials, GUI confirmation, or a decision not encoded in the task spec, mark it BLOCKED and stop at that task.
 
 Never skip a failed/blocked prerequisite.
 
@@ -92,10 +95,17 @@ Allowed:
 - `git diff`
 - `git add <explicit paths>`
 - `git commit -m "..."`
-- `git pull --ff-only` only when the working tree is clean and no task is active
+- `git pull --ff-only origin master` only when the working tree is clean and no task is active
+- `git push origin master` after every autonomous checkpoint, blocker, and completed-task commit
+
+Automatic Git policy:
+- pull mode: `safe_when_clean`
+- push mode: enabled
+- never pull while `active_task` is non-null or legitimate active-task work is dirty
+- if pull is rejected because histories diverged, stop and report the conflict; do not merge/rebase automatically
+- if push is rejected, stop and report the remote-state conflict; do not force-push
 
 Do not:
-- `git push` unless the user explicitly asks
 - `git rebase`
 - `git reset --hard`
 - `git clean -fd`
