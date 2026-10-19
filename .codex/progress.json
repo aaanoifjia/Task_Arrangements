@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M8-CONTROL-010",
+  "active_task": {
+    "id": "M8-CONTROL-010",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-20T02:30:00.0000000Z",
+    "note": "Expose durable resume that re-enters unfinished execution once without duplicate background runners."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -403,5 +408,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-009 PASS: runtime pause integration 6 passed; durable pause/audit, active-turn preservation, no interrupt, and terminal rejection verified; Ruff and strict mypy passed. M8-CONTROL-010 is next."
+  "last_validation_note": "M8-CONTROL-010 IN_PROGRESS: implementing runtime resume and duplicate-runner guard."
 }
