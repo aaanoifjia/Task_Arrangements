@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-EDIT-020",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T15:45:00.0000000Z",
-    "note": "Add explicit model and reasoning-effort fields with empty values serialized as null."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-EDIT-021",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -94,7 +89,8 @@
     "M7-EDIT-016",
     "M7-EDIT-017",
     "M7-EDIT-018",
-    "M7-EDIT-019"
+    "M7-EDIT-019",
+    "M7-EDIT-020"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -240,5 +236,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-EDIT-019 PASS: multiline PromptField preserves exact whitespace/newlines and supports large text; typecheck, ESLint, and Vitest (27 tests) passed. M7-EDIT-020 is next."
+  "last_validation_note": "M7-EDIT-020 PASS: model and reasoning fields preserve explicit values and serialize empty inputs as null without invented defaults; typecheck, ESLint, and Vitest (29 tests) passed. M7-EDIT-021 is next."
 }

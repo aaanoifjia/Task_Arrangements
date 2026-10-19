@@ -79,3 +79,40 @@
   color: var(--status-failure);
   font-size: var(--font-size-sm);
 }
+
+.model-fields {
+  display: grid;
+  gap: var(--space-3);
+  margin: var(--space-4) 0 0;
+  padding: var(--space-3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.model-fields legend {
+  padding: 0 var(--space-1);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.model-fields label {
+  display: grid;
+  gap: var(--space-1);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.model-fields input {
+  min-width: 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2);
+  color: var(--text-primary);
+  background: var(--surface-page);
+  font: inherit;
+}
+
+.model-fields input:focus {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+}

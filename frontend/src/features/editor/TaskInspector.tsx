@@ -1,6 +1,7 @@
 import type { TaskDefinition } from '../../api/types'
 import TaskBasicsFields, { renameTaskInGraph, type TaskBasicsChanges } from './fields/TaskBasicsFields'
 import PromptField from './fields/PromptField'
+import ModelFields from './fields/ModelFields'
 import type { EditorGraph } from './graphModel'
 import './TaskInspector.css'
 
@@ -48,6 +49,11 @@ function TaskInspector({ task, existingTaskIds, graph, onTaskChange, onGraphChan
         onChange={handleTaskChange}
       />
       <PromptField value={task.prompt} onChange={(prompt) => handleTaskChange({ prompt })} />
+      <ModelFields
+        model={task.model}
+        reasoningEffort={task.reasoning_effort}
+        onChange={handleTaskChange}
+      />
     </aside>
   )
 }
