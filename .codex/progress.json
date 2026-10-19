@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-RUN-040",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T23:49:00.0000000Z",
-    "note": "Build the durable run history list with workflow filter, status metadata, empty/error states, and run-detail links."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-RUN-041",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -114,7 +109,8 @@
     "M7-EDIT-036",
     "M7-EDIT-037",
     "M7-RUN-038",
-    "M7-RUN-039"
+    "M7-RUN-039",
+    "M7-RUN-040"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -260,5 +256,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-RUN-039 PASS: saved and valid editor start-run action navigates to encoded run detail and reports ACTIVE_RUN conflicts; typecheck, ESLint, and Vitest (65 tests) passed. M7-RUN-040 is next."
+  "last_validation_note": "M7-RUN-040 PASS: run history lists durable run metadata, filters by workflow_id, links run details, and handles empty/error/refresh states; typecheck, ESLint, and Vitest (68 tests) passed. M7-RUN-041 is next."
 }
