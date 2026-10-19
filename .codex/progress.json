@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M7-EDIT-017",
+  "active_task": {
+    "id": "M7-EDIT-017",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-19T15:18:00.0000000Z",
+    "note": "Add the editor canvas and inspector split layout with deterministic task selection and empty-selection guidance."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
