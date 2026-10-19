@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M8-CONTROL-005",
+  "active_task": {
+    "id": "M8-CONTROL-005",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-20T01:40:00.0000000Z",
+    "note": "Implement transactional retry reset for eligible terminal task states with preserved attempt history."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -398,5 +403,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-004 PASS: accepted/rejected audit integration and repository regression 5 passed with deterministic credential-free payloads; Ruff and strict mypy passed. M8-CONTROL-005 is next."
+  "last_validation_note": "M8-CONTROL-005 IN_PROGRESS: implementing transactional retry reset."
 }
