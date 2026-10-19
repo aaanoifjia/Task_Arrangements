@@ -12,13 +12,14 @@ Read these before making implementation decisions:
 
 1. `.codex/progress.json` — authoritative local execution progress.
 2. `.codex/AUTO_EXECUTION.md` — autonomous execution and commit protocol.
-3. `docs/reference/Codex_Flow_Early_Phase_Task_Plan.md` — concrete task definitions and dependencies through M7.
-4. `docs/reference/Codex_Flow_Master_Roadmap.md` — milestone-level roadmap.
-5. `docs/reference/codex_task_dag方案.md` — product and scheduler design rationale.
-6. `docs/domain-model.md` and `docs/state-machine.md` — canonical domain/state contracts.
+3. `docs/reference/Codex_Flow_Late_Phase_Task_Plan.md` — authoritative concrete task definitions for M8–M10.
+4. `docs/reference/Codex_Flow_Early_Phase_Task_Plan.md` — completed concrete task definitions through M7.
+5. `docs/reference/Codex_Flow_Master_Roadmap.md` — milestone-level roadmap.
+6. `docs/reference/codex_task_dag方案.md` — product and scheduler design rationale.
+7. `docs/domain-model.md` and `docs/state-machine.md` — canonical domain/state contracts.
 
 When two sources conflict, use this precedence:
-`.codex/progress.json` for current status, then the concrete Early Phase Task Plan, then the Master Roadmap. Do not silently reconcile architectural conflicts; stop the affected task and record the conflict.
+`.codex/progress.json` for current status, then the Late Phase Task Plan for M8–M10, then the Early Phase Task Plan for M0–M7, then the Master Roadmap. Do not silently reconcile architectural conflicts; stop the affected task and record the conflict.
 
 ## 3. Autonomous Execution Mode
 
