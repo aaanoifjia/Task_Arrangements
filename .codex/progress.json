@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M6-SCHEMA-003",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19",
-    "note": "Define stable SDK-independent public API DTOs and error helpers."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M6-STORE-004",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -61,7 +56,8 @@
     "M5-RESTART-005",
     "M5-REPORT-006",
     "M6-API-001",
-    "M6-CONFIG-002"
+    "M6-CONFIG-002",
+    "M6-SCHEMA-003"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -149,5 +145,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M6-CONFIG-002 PASS: 3 API tests passed; deterministic DB configuration/lifespan, Ruff, and strict API-package mypy passed. M6-SCHEMA-003 is next."
+  "last_validation_note": "M6-SCHEMA-003 PASS: 3 schema/error tests passed; public DTO serialization, error helpers, Ruff, and strict API-package mypy passed. M6-STORE-004 is next."
 }
