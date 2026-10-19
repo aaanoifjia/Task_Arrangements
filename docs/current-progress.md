@@ -69,6 +69,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M8-CONTROL-014 — canonical SKIP operation with downstream blocking; regression 9/9 PASS
 - M8-CONTROL-015 — READY→SUCCESS mark-success override with downstream readiness release and audit; regression 11/11 PASS
 - M8-CONTROL-016 — deterministic NEEDS_ATTENTION cancel/retry controls without implicit success; regression 5/5 PASS
+- M8-CONTROL-017 — control application service dispatch and stable error translation; matrix 24/24 PASS
 
 ## Verified Codex Runtime
 
@@ -100,7 +101,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M8-CONTROL-017` — Control Application Service (IN_PROGRESS)
+`M8-CONTROL-018` — Control API Schemas
 
 The late-phase plan contains 120 sequential tasks:
 - M8: 44 tasks
