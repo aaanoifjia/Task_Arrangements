@@ -76,6 +76,6 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M5-FORKJOIN-004`
+`M5-FORKJOIN-004` — BLOCKED
 
-The real A → B probe produced exact A_DONE and B_DONE after observed terminal events. The next task validates fork/join and failure behavior.
+The real fork/join probe produced exact B_DONE, C_DONE, and D_DONE. The real failure probe then revealed a safety blocker: the Codex SDK emitted `TURN_COMPLETED` after the required failing command, and the current adapter exposes no tool-failure outcome to scheduler propagation. A remediation task owning adapter/scheduler failure mapping is required; failure blocking must not be claimed until then.

@@ -11,13 +11,8 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": {
-    "id": "M5-FORKJOIN-004",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19",
-    "note": "Running real Codex fork/join and failure-blocking end-to-end probes."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M5-FORKJOIN-004",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -52,7 +47,13 @@
     "M5-EXAMPLES-002",
     "M5-LINEAR-003"
   ],
-  "blocked_tasks": {},
+  "blocked_tasks": {
+    "M5-FORKJOIN-004": {
+      "reason": "Real failure probe observed TURN_COMPLETED after the required failing command. The current SDK adapter exposes no tool-failure outcome to the scheduler, so failure blocking cannot be verified without a non-owned adapter/scheduler remediation.",
+      "last_successful_validation": "Real fork/join probe wrote exact B_DONE, C_DONE, and D_DONE in isolated workspaces.",
+      "next_action": "Authorize a remediation task owning the SDK adapter event mapping and scheduler failure propagation, then resume M5-FORKJOIN-004."
+    }
+  },
   "task_queue_after_current": [
     "M1-PACK-005",
     "M1-DESKTOP-004",
@@ -104,5 +105,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M5-LINEAR-003 passed: real isolated Codex A-to-B execution produced exact A_DONE and B_DONE after terminal events."
+  "last_validation_note": "M5-FORKJOIN-004 blocked: real failing command emitted TURN_COMPLETED, so the current adapter cannot safely prove failure blocking."
 }
