@@ -1,0 +1,36 @@
+@import './tokens.css';
+
+:root {
+  background: var(--surface-page);
+  color: var(--text-primary);
+  font-size: 16px;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 1024px;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--surface-page);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+#root {
+  min-height: 100vh;
+}

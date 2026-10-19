@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-FE-003",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T14:49:26.6127422Z",
-    "note": "Add plain CSS visual tokens and global desktop-first styles."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-FE-004",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -77,7 +72,8 @@
     "M6-GATE-015",
     "M6-REPORT-016",
     "M7-FE-001",
-    "M7-FE-002"
+    "M7-FE-002",
+    "M7-FE-003"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -223,5 +219,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-FE-002 PASS: strict TypeScript typecheck, ESLint, and Vitest/jsdom baseline passed (1 test). M7-FE-003 is next."
+  "last_validation_note": "M7-FE-003 PASS: global CSS tokens and desktop-first styles loaded through main.tsx; typecheck, ESLint, Vitest (1 test), and Vite build passed. M7-FE-004 is next."
 }
