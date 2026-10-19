@@ -101,7 +101,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M8-CONTROL-018` — Control API Schemas
+`M8-CONTROL-018` — Control API Schemas (IN_PROGRESS)
 
 The late-phase plan contains 120 sequential tasks:
 - M8: 44 tasks
