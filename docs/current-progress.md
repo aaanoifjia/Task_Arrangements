@@ -86,7 +86,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M8-CONTROL-003` — Control Repository Primitives
+`M8-CONTROL-003` — Control Repository Primitives (IN_PROGRESS)
 
 The late-phase plan contains 120 sequential tasks:
 - M8: 44 tasks
