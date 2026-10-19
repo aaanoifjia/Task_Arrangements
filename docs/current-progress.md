@@ -81,8 +81,8 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M6-EVENT-SVC-010` — Durable Event & Task-State Stream Service
+`M6-WS-011` — WebSocket Run Stream
 
 M6 has 16 concrete tasks queued in the authoritative Early Phase Task Plan. Autonomous execution should continue task-by-task through `M6-REPORT-016` unless a genuine blocker is reached.
 
-M5 remains complete; its headless MVP gate report is PASS and must not be reimplemented. M6 workflow/run APIs, runtime manager, and application services are complete. `M6-EVENT-SVC-010` is next.
+M5 remains complete; its headless MVP gate report is PASS and must not be reimplemented. M6 workflow/run APIs, runtime manager, application services, and durable event stream are complete. `M6-WS-011` is next.
