@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M6-API-001",
+  "active_task": {
+    "id": "M6-API-001",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-19",
+    "note": "Implement explicit side-effect-free FastAPI bootstrap and API package foundation."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
