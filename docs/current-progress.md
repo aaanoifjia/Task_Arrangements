@@ -63,6 +63,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M8-CONTROL-008 — atomic terminal-vs-control compare guard; cancel race matrix and runtime regression 6/6 PASS
 - M8-CONTROL-009 — durable runtime pause operation with audit and no active-turn interruption; regression 6/6 PASS
 - M8-CONTROL-010 — durable runtime resume with unfinished-work continuation and duplicate-runner guard; regression 7/7 PASS
+- M8-CONTROL-011 — runtime retry reopens failed run and preserves old Attempts while creating fresh scheduler Attempt; regression 12/12 PASS
 
 ## Verified Codex Runtime
 
@@ -94,7 +95,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M8-CONTROL-011` — Runtime Retry Operation (IN_PROGRESS)
+`M8-CONTROL-012` — Cancel Queued Task
 
 The late-phase plan contains 120 sequential tasks:
 - M8: 44 tasks

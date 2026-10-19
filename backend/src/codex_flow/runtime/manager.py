@@ -103,6 +103,55 @@ class RuntimeManager:
             task.add_done_callback(lambda _: self._tasks.pop(run_id, None))
         return result
 
+    async def retry(self, run_id: str, task_run_id: str) -> ControlResult:
+        """Reset a retryable task and reopen one durable run execution."""
+        command = ControlCommand(run_id=run_id, action=ControlAction.RETRY, task_id=task_run_id)
+        row = self._repository.get_workflow_run(run_id)
+        task_row = self._repository.get_task_run(task_run_id)
+        if row is None or task_row is None or str(task_row["workflow_run_id"]) != run_id:
+            return rejected_result(command, error_code="TASK_NOT_FOUND", message="task run not found")
+        status = TaskStatus(str(row["status"]))
+        if is_terminal(status) and status not in {
+            TaskStatus.FAILED,
+            TaskStatus.INTERRUPTED,
+        }:
+            result = rejected_result(
+                command,
+                error_code="RUN_NOT_RETRYABLE",
+                message=f"run is not retryable: {status.value}",
+            )
+            self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
+            return result
+        previous_status = TaskStatus(str(task_row["status"]))
+        if previous_status not in {
+            TaskStatus.FAILED,
+            TaskStatus.INTERRUPTED,
+            TaskStatus.NEEDS_ATTENTION,
+        }:
+            result = rejected_result(
+                command,
+                error_code="TASK_NOT_RETRYABLE",
+                message=f"task is not retryable: {previous_status.value}",
+            )
+            self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
+            return result
+
+        self._repository.reset_task_for_retry(task_run_id)
+        self._repository.update_workflow_run_state(run_id, TaskStatus.RUNNING.value)
+        result = accepted_result(command, previous_status=previous_status)
+        self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
+        task = self._tasks.get(run_id)
+        if task is not None and task.done():
+            self._tasks.pop(run_id, None)
+        if run_id not in self._tasks:
+            workflow = self._workflows.get(run_id)
+            if workflow is None:
+                raise ValueError(f"workflow definition not available for run: {run_id}")
+            task = asyncio.create_task(self._runner.execute_run(run_id, workflow))
+            self._tasks[run_id] = task
+            task.add_done_callback(lambda _: self._tasks.pop(run_id, None))
+        return result
+
     async def wait(self, run_id: str) -> None:
         task = self._tasks.get(run_id)
         if task is None:

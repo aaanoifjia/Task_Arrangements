@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M8-CONTROL-011",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T02:40:00.0000000Z",
-    "note": "Expose runtime retry using transactional reset and fresh scheduler-created attempt."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M8-CONTROL-012",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -143,7 +138,8 @@
     "M8-CONTROL-007",
     "M8-CONTROL-008",
     "M8-CONTROL-009",
-    "M8-CONTROL-010"
+    "M8-CONTROL-010",
+    "M8-CONTROL-011"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -409,5 +405,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-011 IN_PROGRESS: implementing runtime retry and fresh-attempt execution."
+  "last_validation_note": "M8-CONTROL-011 PASS: runtime retry/control regression 12 passed; failed parent reopened, child completed, old Attempt preserved and fresh Attempt scheduler-created; Ruff and strict mypy passed. M8-CONTROL-012 is next."
 }
