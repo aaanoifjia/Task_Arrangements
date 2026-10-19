@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-EDIT-023",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T15:35:00.0000000Z",
-    "note": "Add execution-mode and continue-thread source editing with explicit source validation."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-EDIT-024",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -97,7 +92,8 @@
     "M7-EDIT-019",
     "M7-EDIT-020",
     "M7-EDIT-021",
-    "M7-EDIT-022"
+    "M7-EDIT-022",
+    "M7-EDIT-023"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -243,5 +239,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-EDIT-022 PASS: timeout accepts null or positive integers and retry max_attempts enforces >=1 with boundary feedback; typecheck, ESLint, and Vitest (33 tests) passed. M7-EDIT-023 is next."
+  "last_validation_note": "M7-EDIT-023 PASS: execution mode transitions enforce an explicit other-task continuation source and NEW_THREAD clears it; typecheck, ESLint, and Vitest (35 tests) passed. M7-EDIT-024 is next."
 }

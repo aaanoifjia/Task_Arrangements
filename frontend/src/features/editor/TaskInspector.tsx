@@ -4,6 +4,7 @@ import PromptField from './fields/PromptField'
 import ModelFields from './fields/ModelFields'
 import ExecutionFields from './fields/ExecutionFields'
 import RetryFields from './fields/RetryFields'
+import ContinuationFields from './fields/ContinuationFields'
 import type { EditorGraph } from './graphModel'
 import './TaskInspector.css'
 
@@ -64,6 +65,13 @@ function TaskInspector({ task, existingTaskIds, graph, onTaskChange, onGraphChan
       <RetryFields
         timeoutSeconds={task.timeout_seconds}
         retryPolicy={task.retry_policy}
+        onChange={handleTaskChange}
+      />
+      <ContinuationFields
+        taskId={task.id}
+        executionMode={task.execution_mode}
+        continueFromTaskId={task.continue_from_task_id}
+        availableTaskIds={existingTaskIds ?? [task.id]}
         onChange={handleTaskChange}
       />
     </aside>
