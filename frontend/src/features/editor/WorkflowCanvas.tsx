@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Background, Controls, ReactFlow, type Edge, type Node } from '@xyflow/react'
+import { Background, Controls, ReactFlow, type Connection, type Edge, type Node } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import type { EditorGraph } from './graphModel'
 import TaskNode from './TaskNode'
@@ -10,9 +10,10 @@ type WorkflowCanvasProps = {
   graph: EditorGraph
   selectedTaskId?: string | null
   onSelectTask?: (taskId: string) => void
+  onConnect?: (source: string, target: string) => void
 }
 
-function WorkflowCanvas({ graph, selectedTaskId, onSelectTask }: WorkflowCanvasProps) {
+function WorkflowCanvas({ graph, selectedTaskId, onSelectTask, onConnect }: WorkflowCanvasProps) {
   const nodes = useMemo<Node[]>(() => graph.nodes.map((node) => ({
     id: node.id,
     type: 'task',
@@ -32,6 +33,9 @@ function WorkflowCanvas({ graph, selectedTaskId, onSelectTask }: WorkflowCanvasP
         nodeTypes={{ task: TaskNode }}
         fitView
         onNodeClick={(_, node) => onSelectTask?.(node.id)}
+        onConnect={(connection: Connection) => {
+          if (connection.source && connection.target) onConnect?.(connection.source, connection.target)
+        }}
         aria-label="Workflow graph canvas"
       >
         <Background />

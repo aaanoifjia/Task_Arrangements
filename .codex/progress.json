@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-EDIT-024",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T15:45:00.0000000Z",
-    "note": "Connect React Flow dependency events to deterministic editor edge creation and dirty state."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-EDIT-025",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -98,7 +93,8 @@
     "M7-EDIT-020",
     "M7-EDIT-021",
     "M7-EDIT-022",
-    "M7-EDIT-023"
+    "M7-EDIT-023",
+    "M7-EDIT-024"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -244,5 +240,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-EDIT-023 PASS: execution mode transitions enforce an explicit other-task continuation source and NEW_THREAD clears it; typecheck, ESLint, and Vitest (35 tests) passed. M7-EDIT-024 is next."
+  "last_validation_note": "M7-EDIT-024 PASS: React Flow connections create deterministic non-self edges, update target dependencies, reject duplicates/unknown nodes, and mark the editor dirty; typecheck, ESLint, and Vitest (35 tests) passed. M7-EDIT-025 is next."
 }

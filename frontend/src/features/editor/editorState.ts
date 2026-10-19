@@ -80,10 +80,15 @@ export function editorReducer(state: EditorState, action: EditorAction): EditorS
         dirty: true,
       }
     case 'connect': {
+      if (action.source === action.target) return state
+      if (!state.graph.nodes.some((node) => node.id === action.source) || !state.graph.nodes.some((node) => node.id === action.target)) return state
       const edgeId = `${action.source}->${action.target}`
       if (state.graph.edges.some((edge) => edge.id === edgeId)) return state
       const edge: EditorEdge = { id: edgeId, source: action.source, target: action.target }
-      return { ...state, graph: { ...state.graph, edges: [...state.graph.edges, edge] }, dirty: true }
+      const nodes = state.graph.nodes.map((node) => node.id === action.target
+        ? { ...node, data: { task: { ...node.data.task, dependencies: [...new Set([...node.data.task.dependencies, action.source])] } } }
+        : node)
+      return { ...state, graph: { nodes, edges: [...state.graph.edges, edge] }, dirty: true }
     }
     case 'disconnect':
       return { ...state, graph: { ...state.graph, edges: state.graph.edges.filter((edge) => edge.id !== action.edgeId) }, dirty: true }
