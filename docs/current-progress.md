@@ -34,6 +34,7 @@ The deterministic local core is implemented through graph validation, state tran
 - M3-SCHED-005 — deterministic async scheduler core with adapter boundary, capacity/workspace/thread locking, and fail-closed terminal handling
 - M3-MANUAL-006 — explicit retry, cancel, skip, mark-success, pause, and resume controls with clear action results
 - M3-CONTINUE-007 — validated successful-source existing-thread resume with a distinct new turn
+- M3-INTEGRATE-008A — integrated pause/resume, retry/readiness, and scheduler-dispatched existing-thread execution
 
 ## Verified Codex Runtime
 
@@ -65,6 +66,6 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M3-INTEGRATE-008A`
+`M3-TEST-008`
 
-The prior M3-TEST-008 ownership blocker is resolved by the authoritative M3-INTEGRATE-008A repair task. It will integrate pause/resume, retry/readiness, and scheduler-dispatched continuation before the test-only matrix runs.
+M3-INTEGRATE-008A passed 50 required scheduler unit tests, Ruff, and strict mypy. The next task is the scheduler matrix.

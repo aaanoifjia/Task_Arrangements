@@ -1,6 +1,6 @@
 """Explicit manual controls for scheduler task states."""
 
-from collections.abc import MutableMapping
+from collections.abc import Callable, MutableMapping
 from dataclasses import dataclass
 from enum import StrEnum
 
@@ -33,14 +33,21 @@ class ManualActionResult:
 class SchedulerActions:
     """Apply only valid user actions and expose each result to the caller."""
 
-    def __init__(self, statuses: MutableMapping[str, TaskStatus]) -> None:
+    def __init__(
+        self,
+        statuses: MutableMapping[str, TaskStatus],
+        on_retry: Callable[[str], None] | None = None,
+    ) -> None:
         self._statuses = statuses
+        self._on_retry = on_retry
         self.paused = False
 
     def retry(self, task_id: str) -> ManualActionResult:
         status = self._require_status(task_id)
         if status not in {TaskStatus.FAILED, TaskStatus.INTERRUPTED, TaskStatus.NEEDS_ATTENTION}:
             raise ManualActionError(f"retry is not allowed from {status}")
+        if self._on_retry is not None:
+            self._on_retry(task_id)
         return ManualActionResult(ManualAction.RETRY, task_id, status, status, retry_requested=True)
 
     def cancel(self, task_id: str) -> ManualActionResult:
