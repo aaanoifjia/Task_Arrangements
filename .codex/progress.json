@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-EDIT-018",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T15:25:00.0000000Z",
-    "note": "Add task identity, name, and cwd editing with blank/duplicate validation and deterministic edge reference updates."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-EDIT-019",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -92,7 +87,8 @@
     "M7-EDIT-014",
     "M7-EDIT-015",
     "M7-EDIT-016",
-    "M7-EDIT-017"
+    "M7-EDIT-017",
+    "M7-EDIT-018"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -238,5 +234,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-EDIT-017 PASS: editor canvas and inspector split layout supports task selection and empty-selection guidance; typecheck, ESLint, and Vitest (22 tests) passed. M7-EDIT-018 is next."
+  "last_validation_note": "M7-EDIT-018 PASS: task basics edit identity/name/cwd with blank and duplicate rejection; deterministic ID rename updates node, edge, and dependency references; typecheck, ESLint, and Vitest (25 tests) passed. M7-EDIT-019 is next."
 }

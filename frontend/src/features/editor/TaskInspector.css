@@ -36,3 +36,46 @@
   color: var(--text-secondary);
   text-align: center;
 }
+
+.task-basics-fields {
+  display: grid;
+  gap: var(--space-3);
+  margin: var(--space-5) 0 0;
+  padding: var(--space-3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.task-basics-fields legend {
+  padding: 0 var(--space-1);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.task-basics-fields label {
+  display: grid;
+  gap: var(--space-1);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.task-basics-fields input {
+  min-width: 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2);
+  color: var(--text-primary);
+  background: var(--surface-page);
+  font: inherit;
+}
+
+.task-basics-fields input:focus {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+}
+
+.task-basics-fields [role='alert'] {
+  margin: 0;
+  color: var(--status-failure);
+  font-size: var(--font-size-sm);
+}
