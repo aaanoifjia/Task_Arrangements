@@ -53,8 +53,9 @@ describe('RunDetailPage', () => {
     const initialTask = { ...fixtureTaskRun, status: 'PENDING' as const }
     const runApi = api({ tasks: vi.fn().mockResolvedValue([initialTask]) })
     renderPage(runApi, { webSocketFactory: FakeWebSocket })
-    expect(await screen.findByText('PENDING')).toBeInTheDocument()
+    await screen.findByRole('heading', { name: 'Tasks' })
     const taskSection = screen.getByRole('heading', { name: 'Tasks' }).parentElement!
+    expect(within(taskSection).getByText('PENDING')).toBeInTheDocument()
     const socket = FakeWebSocket.instances[0]!
     act(() => socket.onmessage?.({ data: JSON.stringify({ kind: 'snapshot', payload: { tasks: [{ ...initialTask, status: 'RUNNING' }] } }) } as MessageEvent))
     expect(await within(taskSection).findByText('RUNNING')).toBeInTheDocument()

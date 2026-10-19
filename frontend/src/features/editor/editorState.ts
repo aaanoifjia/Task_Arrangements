@@ -14,7 +14,9 @@ export type EditorAction =
   | { type: 'update_task'; taskId: string; changes: Partial<TaskDefinition> }
   | { type: 'connect'; source: string; target: string }
   | { type: 'disconnect'; edgeId: string }
+  | { type: 'replace_graph'; graph: EditorGraph }
   | { type: 'select'; taskId: string | null }
+  | { type: 'mark_dirty' }
   | { type: 'mark_saved' }
 
 export const emptyEditorState: EditorState = { graph: { nodes: [], edges: [] }, selectedTaskId: null, dirty: false }
@@ -112,9 +114,13 @@ export function editorReducer(state: EditorState, action: EditorAction): EditorS
         : node)
       return { ...state, graph: { nodes, edges: state.graph.edges.filter((edge) => edge.id !== action.edgeId) }, dirty: true }
     }
+    case 'replace_graph':
+      return { ...state, graph: structuredClone(action.graph), dirty: true }
     case 'select':
       return { ...state, selectedTaskId: action.taskId }
     case 'mark_saved':
       return { ...state, dirty: false }
+    case 'mark_dirty':
+      return { ...state, dirty: true }
   }
 }

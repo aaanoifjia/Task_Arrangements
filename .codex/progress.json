@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-INTEGRATE-056",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T00:28:00.0000000Z",
-    "note": "Exercise the complete mocked M7 user flow and repair only frontend integration defects within frontend/**."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-GATE-057",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -130,7 +125,8 @@
     "M7-RUN-052",
     "M7-RUN-053",
     "M7-NAV-054",
-    "M7-UX-055"
+    "M7-UX-055",
+    "M7-INTEGRATE-056"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -276,5 +272,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-UX-055 PASS: focused accessibility interaction checks cover labels, keyboard reachability, dialog semantics, status regions, and graph controls; typecheck, ESLint, and Vitest (110 tests) passed. M7-INTEGRATE-056 is next."
+  "last_validation_note": "M7-INTEGRATE-056 PASS: mocked list/create/edit/validate/save/start/stream/inspect/Open-in-Codex flow passed; frontend Vitest 45 files/111 tests, typecheck, ESLint, and production build passed. M7-GATE-057 is next."
 }

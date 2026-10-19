@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { EditorGraph } from './graphModel'
 import TaskInspector from './TaskInspector'
+import type { TaskBasicsChanges } from './fields/TaskBasicsFields'
 import WorkflowCanvas from './WorkflowCanvas'
 import ValidationPanel from './ValidationPanel'
 import type { ValidationIssue } from './validation'
@@ -27,6 +28,10 @@ export type WorkflowEditorLayoutProps = {
   dirty?: boolean
   onDeleteTask?: (taskId: string) => void
   onAddTask?: () => void
+  onTaskChange?: (taskId: string, changes: TaskBasicsChanges) => void
+  onGraphChange?: (graph: EditorGraph) => void
+  onConnect?: (source: string, target: string) => void
+  onDisconnect?: (edgeId: string) => void
 }
 
 function WorkflowEditorLayout({
@@ -44,6 +49,10 @@ function WorkflowEditorLayout({
   dirty = false,
   onDeleteTask,
   onAddTask,
+  onTaskChange,
+  onGraphChange,
+  onConnect,
+  onDisconnect,
 }: WorkflowEditorLayoutProps) {
   const [internalSelectedTaskId, setInternalSelectedTaskId] = useState<string | null>(null)
   const activeTaskId = selectedTaskId === undefined ? internalSelectedTaskId : selectedTaskId
@@ -72,13 +81,27 @@ function WorkflowEditorLayout({
       />
       <UnsavedIndicator dirty={dirty} />
       <p><a href={`/runs?workflow_id=${encodeURIComponent(workflowId)}`}>View workflow runs</a></p>
+      {onAddTask && <div role="toolbar" aria-label="Workflow editor actions"><button type="button" onClick={onAddTask}>Add task</button></div>}
       <div className="workflow-editor-layout">
         <section className="workflow-editor-layout__canvas" aria-label="Workflow editor canvas panel">
           {graph.nodes.length === 0
             ? <EditorEmptyState onAddTask={onAddTask} />
-            : <WorkflowCanvas graph={graph} selectedTaskId={activeTaskId} onSelectTask={selectTask} />}
+            : <WorkflowCanvas
+              graph={graph}
+              selectedTaskId={activeTaskId}
+              onSelectTask={selectTask}
+              onConnect={onConnect}
+              onDisconnect={onDisconnect}
+            />}
         </section>
-        <TaskInspector task={activeTask} />
+        <TaskInspector
+          task={activeTask}
+          existingTaskIds={graph.nodes.map((node) => node.id)}
+          graph={graph}
+          onTaskChange={(changes) => { if (activeTaskId) onTaskChange?.(activeTaskId, changes) }}
+          onGraphChange={onGraphChange}
+          onDeleteTask={() => { if (activeTaskId) deleteSelected(activeTaskId) }}
+        />
       </div>
       <ValidationPanel issues={validationIssues} onSelectTask={selectTask} onSave={onSave} />
       {saveConfig && <SaveWorkflowButton {...saveConfig} hasBlockingIssues={validationIssues.length > 0} />}

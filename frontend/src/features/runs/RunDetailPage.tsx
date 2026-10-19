@@ -86,7 +86,7 @@ function RunDetailPage({ api, streamOptions }: RunDetailPageProps) {
       <RunSummaryPanel runStatus={run.status} tasks={visibleTasks} />
       <section aria-labelledby="run-graph-heading">
         <h2 id="run-graph-heading">Snapshot graph</h2>
-        <RunGraph snapshot={run.snapshot} taskRuns={visibleTasks} />
+        <RunGraph snapshot={run.snapshot} taskRuns={visibleTasks} attemptApi={stableApi} />
       </section>
       <section aria-labelledby="run-tasks-heading">
         <h2 id="run-tasks-heading">Tasks</h2>
