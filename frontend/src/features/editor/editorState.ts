@@ -59,10 +59,24 @@ export function editorReducer(state: EditorState, action: EditorAction): EditorS
     case 'add_task':
       return { ...state, graph: { ...state.graph, nodes: [...state.graph.nodes, nodeFor(action.task, action.position)] }, dirty: true }
     case 'remove_task':
+      if (!state.graph.nodes.some((node) => node.id === action.taskId)) return state
       return {
         ...state,
         graph: {
-          nodes: state.graph.nodes.filter((node) => node.id !== action.taskId),
+          nodes: state.graph.nodes
+            .filter((node) => node.id !== action.taskId)
+            .map((node) => ({
+              ...node,
+              data: {
+                task: {
+                  ...node.data.task,
+                  dependencies: node.data.task.dependencies.filter((dependency) => dependency !== action.taskId),
+                  continue_from_task_id: node.data.task.continue_from_task_id === action.taskId
+                    ? null
+                    : node.data.task.continue_from_task_id,
+                },
+              },
+            })),
           edges: state.graph.edges.filter((edge) => edge.source !== action.taskId && edge.target !== action.taskId),
         },
         selectedTaskId: state.selectedTaskId === action.taskId ? null : state.selectedTaskId,

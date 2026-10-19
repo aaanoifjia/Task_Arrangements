@@ -30,5 +30,8 @@ describe('editor reducer', () => {
     const removed = editorReducer(same, { type: 'remove_task', taskId: 'A' })
     expect(removed.graph.nodes.map((node) => node.id)).toEqual(['B'])
     expect(removed.graph.edges).toEqual([])
+    expect(removed.graph.nodes[0]?.data.task.dependencies).toEqual([])
+    expect(removed.graph.nodes[0]?.data.task.continue_from_task_id).toBeNull()
+    expect(editorReducer(removed, { type: 'remove_task', taskId: 'missing' })).toBe(removed)
   })
 })

@@ -12,6 +12,15 @@
   font-size: var(--font-size-lg);
 }
 
+.task-inspector__delete {
+  border: 1px solid var(--status-failure);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  color: var(--status-failure);
+  background: var(--surface-panel);
+  cursor: pointer;
+}
+
 .task-inspector dl {
   margin: 0;
 }

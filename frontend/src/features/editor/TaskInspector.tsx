@@ -14,9 +14,10 @@ export type TaskInspectorProps = {
   graph?: EditorGraph
   onTaskChange?: (changes: TaskBasicsChanges) => void
   onGraphChange?: (graph: EditorGraph) => void
+  onDeleteTask?: () => void
 }
 
-function TaskInspector({ task, existingTaskIds, graph, onTaskChange, onGraphChange }: TaskInspectorProps) {
+function TaskInspector({ task, existingTaskIds, graph, onTaskChange, onGraphChange, onDeleteTask }: TaskInspectorProps) {
   if (!task) {
     return (
       <aside className="task-inspector task-inspector--empty" aria-label="Task inspector">
@@ -36,6 +37,15 @@ function TaskInspector({ task, existingTaskIds, graph, onTaskChange, onGraphChan
   return (
     <aside className="task-inspector" aria-label="Task inspector">
       <h2>Task inspector</h2>
+      {onDeleteTask && (
+        <button
+          className="task-inspector__delete"
+          type="button"
+          onClick={() => { if (window.confirm(`Delete task ${task.id}?`)) onDeleteTask() }}
+        >
+          Delete task
+        </button>
+      )}
       <dl>
         <div>
           <dt>Name</dt>
