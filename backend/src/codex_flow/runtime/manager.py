@@ -170,6 +170,8 @@ class RuntimeManager:
             self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
             return result
         previous_status = TaskStatus(str(task_row["status"]))
+        if previous_status in {TaskStatus.STARTING, TaskStatus.RUNNING}:
+            return await self._cancel_running(run_id, task_run_id, command, previous_status)
         if previous_status not in {TaskStatus.PENDING, TaskStatus.BLOCKED, TaskStatus.READY}:
             result = rejected_result(
                 command,
@@ -187,6 +189,49 @@ class RuntimeManager:
             )
             self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
             return result
+        result = accepted_result(command, previous_status=previous_status)
+        self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
+        return result
+
+    async def _cancel_running(
+        self,
+        run_id: str,
+        task_run_id: str,
+        command: ControlCommand,
+        previous_status: TaskStatus,
+    ) -> ControlResult:
+        turn = self._runner.active_turn(task_run_id)
+        if turn is None:
+            result = rejected_result(
+                command,
+                error_code="EXTERNAL_STATE_UNKNOWN",
+                message="running task has no active turn",
+            )
+            self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
+            return result
+        try:
+            await self._adapter.interrupt_turn(turn)
+        except Exception as error:  # noqa: BLE001 - adapter failures must fail closed
+            result = rejected_result(
+                command, error_code="INTERRUPT_FAILED", message=str(error) or "interrupt failed"
+            )
+            self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
+            return result
+        if not self._repository.compare_and_update_task_run_state(
+            task_run_id,
+            previous_status.value,
+            TaskStatus.CANCELLED.value,
+            turn.thread_id,
+            turn.turn_id,
+        ):
+            result = rejected_result(
+                command, error_code="STALE_STATE", message="task state changed before cancellation"
+            )
+            self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
+            return result
+        attempts = self._repository.load_attempts(task_run_id)
+        if attempts:
+            self._repository.update_attempt_state(str(attempts[-1]["id"]), TaskStatus.CANCELLED.value)
         result = accepted_result(command, previous_status=previous_status)
         self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
         return result
