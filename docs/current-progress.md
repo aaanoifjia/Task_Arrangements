@@ -81,8 +81,8 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M6-GATE-015` — Local API Acceptance Matrix
+`M6-REPORT-016` — Local API Milestone Gate Report
 
 M6 has 16 concrete tasks queued in the authoritative Early Phase Task Plan. Autonomous execution should continue task-by-task through `M6-REPORT-016` unless a genuine blocker is reached.
 
-M5 remains complete; its headless MVP gate report is PASS and must not be reimplemented. M6 workflow/run APIs, runtime manager, application services, durable event stream, WebSocket route, startup recovery lifecycle, health/status endpoints, and full API integration are complete. `M6-GATE-015` is next.
+M5 remains complete; its headless MVP gate report is PASS and must not be reimplemented. The complete M6 local API acceptance matrix is PASS: workflow/run APIs, runtime manager, application services, durable event stream, WebSocket route, startup recovery lifecycle, health/status endpoints, failure blocking, restart persistence, and M0–M5 regressions are green. `M6-REPORT-016` is the final report task.

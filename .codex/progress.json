@@ -18,7 +18,7 @@
     "started_at": "2026-10-19T14:33:37.4361148Z",
     "note": "Run the complete local API acceptance matrix and bounded repairs only within gate-owned files."
   },
-  "next_task": null,
+  "next_task": "M6-REPORT-016",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -73,7 +73,8 @@
     "M6-WS-011",
     "M6-LIFECYCLE-012",
     "M6-SYSTEM-013",
-    "M6-INTEGRATE-014"
+    "M6-INTEGRATE-014",
+    "M6-GATE-015"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -161,5 +162,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M6-INTEGRATE-014 PASS: successful and failed REST workflows, durable restart history, child blocking, M4/M5 persistence and recovery regressions (30 tests), Ruff, and strict API/application/runtime/storage mypy passed. The pre-lifecycle runtime-unavailable assertion in test_run_routes is obsolete after lifecycle wiring and is excluded from the authoritative M6 contract matrix."
+  "last_validation_note": "M6-GATE-015 PASS: 139 non-live tests passed across M0-M6, including local API boot, DB reopen, REST, runtime, recovery, failure blocking, event streams, WebSocket, health/status, and M5 regression coverage; Ruff and strict mypy passed; no API/application openai_codex imports found."
 }
