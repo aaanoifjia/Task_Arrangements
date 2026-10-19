@@ -1,6 +1,7 @@
 import type { TaskRunView } from '../../api/types'
 import type { RunApi } from './api'
 import AttemptHistory from './AttemptHistory'
+import OpenInCodex from './OpenInCodex'
 import './TaskRunDrawer.css'
 
 export type TaskRunDrawerProps = {
@@ -28,6 +29,7 @@ function TaskRunDrawer({ task, onClose, attemptApi }: TaskRunDrawerProps) {
         <div><dt>Turn ID</dt><dd>{optionalValue(task.turn_id)}</dd></div>
         <div><dt>Created</dt><dd><time dateTime={task.created_at}>{task.created_at}</time></dd></div>
       </dl>
+      <p><OpenInCodex threadId={task.thread_id} /></p>
       <AttemptHistory runId={task.workflow_run_id} taskId={task.task_id} api={attemptApi} />
     </aside>
   )

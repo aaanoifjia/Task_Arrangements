@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-RUN-051",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T00:18:00.0000000Z",
-    "note": "Add an explicit encoded codex://threads link for available TaskRun thread IDs without Desktop private state access."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-RUN-052",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -125,7 +120,8 @@
     "M7-RUN-047",
     "M7-RUN-048",
     "M7-RUN-049",
-    "M7-RUN-050"
+    "M7-RUN-050",
+    "M7-RUN-051"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -271,5 +267,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-RUN-050 PASS: selected TaskRun drawers lazily load API-ordered attempt history with loading, empty, error, and immutable metadata states; typecheck, ESLint, and Vitest (97 tests) passed. M7-RUN-051 is next."
+  "last_validation_note": "M7-RUN-051 PASS: Open in Codex exposes exact encoded codex://threads links and clear missing-thread fallback without private Desktop access; typecheck, ESLint, and Vitest (99 tests) passed. M7-RUN-052 is next."
 }
