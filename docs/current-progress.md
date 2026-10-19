@@ -78,8 +78,10 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M5-RESTART-005` — resumed real subprocess restart validation
+`M5-REPORT-006` — next deterministic task
 
 `M5-FORKJOIN-004` is complete. Its valid prior real fork/join probe produced exact B_DONE, C_DONE, and D_DONE. After `M5-FAILMAP-004A`, the real scheduler failure probe passed: a failed parent command was classified as `FAILED`, its dependent child remained `BLOCKED`, and no second Codex thread was created.
 
-`M5-RUNNER-005A` is complete: the CLI run path now uses a durable SQLite runner with transactional attempts, persisted stream outcomes, canonical readiness, restart reconciliation, and fresh-process SDK thread reads. Its offline integration/scheduler suite and the minimum live fresh-adapter thread-read check passed. `M5-RESTART-005` now resumes against that runner path.
+`M5-RUNNER-005A` is complete: the CLI run path now uses a durable SQLite runner with transactional attempts, persisted stream outcomes, canonical readiness, restart reconciliation, and fresh-process SDK thread reads. Its offline integration/scheduler suite and the minimum live fresh-adapter thread-read check passed.
+
+`M5-RESTART-005` is complete: its real subprocess runner reached durable `RUNNING`, was killed, and a fresh process reconciled the same run. The parent was not resent or duplicated, remained fail-closed as `NEEDS_ATTENTION`, and its dependent child remained `BLOCKED` without creating output. `M5-REPORT-006` is next.

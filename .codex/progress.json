@@ -11,13 +11,8 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": {
-    "id": "M5-RESTART-005",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19",
-    "note": "Run the authorized real subprocess kill/restart scenario through the durable CLI runner."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M5-REPORT-006",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -53,7 +48,8 @@
     "M5-LINEAR-003",
     "M5-FAILMAP-004A",
     "M5-FORKJOIN-004",
-    "M5-RUNNER-005A"
+    "M5-RUNNER-005A",
+    "M5-RESTART-005"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -125,5 +121,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M5-RUNNER-005A passed: 77 offline integration/scheduler tests, Ruff, strict affected-package mypy, and fresh-process live SDK thread read without a second turn. M5-RESTART-005 resumes."
+  "last_validation_note": "M5-RESTART-005 passed: real subprocess runner reached persisted RUNNING, was killed, then a fresh runner reconciled A to NEEDS_ATTENTION without a duplicate run/attempt/prompt or downstream B execution."
 }
