@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-UX-055",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T00:26:00.0000000Z",
-    "note": "Run a focused accessibility interaction pass over existing M7 controls, labels, focusable navigation, dialogs, and status regions."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-INTEGRATE-056",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -129,7 +124,8 @@
     "M7-RUN-051",
     "M7-RUN-052",
     "M7-RUN-053",
-    "M7-NAV-054"
+    "M7-NAV-054",
+    "M7-UX-055"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -275,5 +271,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-NAV-054 PASS: workflow, editor, run history, and run detail provide consistent cross-links with workflow_id URL filtering; typecheck, ESLint, and Vitest (108 tests) passed. M7-UX-055 is next."
+  "last_validation_note": "M7-UX-055 PASS: focused accessibility interaction checks cover labels, keyboard reachability, dialog semantics, status regions, and graph controls; typecheck, ESLint, and Vitest (110 tests) passed. M7-INTEGRATE-056 is next."
 }

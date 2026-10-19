@@ -18,7 +18,7 @@ function optionalValue(value: string | null): string {
 function TaskRunDrawer({ task, onClose, attemptApi }: TaskRunDrawerProps) {
   if (!task) return null
   return (
-    <aside className="task-run-drawer" aria-labelledby="task-run-drawer-heading" data-testid="task-run-drawer">
+    <aside className="task-run-drawer" role="dialog" aria-modal="false" aria-labelledby="task-run-drawer-heading" data-testid="task-run-drawer">
       <div className="task-run-drawer__header">
         <h2 id="task-run-drawer-heading">Task {task.task_id}</h2>
         <button type="button" onClick={onClose} aria-label="Close task details">Close</button>
