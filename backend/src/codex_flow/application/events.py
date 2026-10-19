@@ -1,8 +1,13 @@
 """Durable event and task-state query service."""
 
-import json
+from __future__ import annotations
 
-from codex_flow.api.schemas import EventView, TaskRunView
+import json
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from codex_flow.api.schemas import EventView, TaskRunView
+
 from codex_flow.storage.repositories import StorageRepositories
 
 
@@ -11,6 +16,8 @@ class EventApplicationService:
         self._repository = repository
 
     def list_events(self, run_id: str, after_event_id: str | None = None) -> list[EventView]:
+        from codex_flow.api.schemas import EventView
+
         rows = (
             self._repository.load_events_for_run(run_id)
             if after_event_id is None
@@ -30,6 +37,8 @@ class EventApplicationService:
         ]
 
     def task_snapshot(self, run_id: str) -> list[TaskRunView]:
+        from codex_flow.api.schemas import TaskRunView
+
         return [TaskRunView(**dict(row)) for row in self._repository.load_task_runs(run_id)]
 
     def run_is_terminal(self, run_id: str) -> bool:
