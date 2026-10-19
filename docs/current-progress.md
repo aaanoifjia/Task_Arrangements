@@ -61,6 +61,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M8-CONTROL-006 — process-local active Codex turn registry with terminal/error cleanup; runtime regression 7/7 PASS
 - M8-CONTROL-007 — durable pause checkpoint prevents new starts without interrupting active work; regression 6/6 PASS
 - M8-CONTROL-008 — atomic terminal-vs-control compare guard; cancel race matrix and runtime regression 6/6 PASS
+- M8-CONTROL-009 — durable runtime pause operation with audit and no active-turn interruption; regression 6/6 PASS
 
 ## Verified Codex Runtime
 
@@ -92,7 +93,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M8-CONTROL-009` — Runtime Pause Operation (IN_PROGRESS)
+`M8-CONTROL-010` — Runtime Resume Operation
 
 The late-phase plan contains 120 sequential tasks:
 - M8: 44 tasks

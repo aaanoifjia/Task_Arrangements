@@ -2,9 +2,17 @@
 
 import asyncio
 
+from codex_flow.application.control_contract import (
+    ControlAction,
+    ControlCommand,
+    ControlResult,
+    accepted_result,
+    rejected_result,
+)
 from codex_flow.codex_adapter.interface import CodexAdapter
 from codex_flow.codex_adapter.models import CodexTurnRef
 from codex_flow.domain.models import WorkflowDefinition
+from codex_flow.domain.status import TaskStatus, is_terminal
 from codex_flow.runtime.runner import DurableRunner
 from codex_flow.storage.repositories import StorageRepositories
 
@@ -25,6 +33,34 @@ class RuntimeManager:
         self._tasks[run_id] = task
         task.add_done_callback(lambda _: self._tasks.pop(run_id, None))
         return run_id
+
+    async def pause(self, run_id: str) -> ControlResult:
+        """Durably pause an active run without interrupting its current turn."""
+        command = ControlCommand(run_id=run_id, action=ControlAction.PAUSE)
+        row = self._repository.get_workflow_run(run_id)
+        if row is None:
+            return rejected_result(command, error_code="RUN_NOT_FOUND", message="run not found")
+        status = TaskStatus(str(row["status"]))
+        if is_terminal(status):
+            result = rejected_result(
+                command,
+                error_code="RUN_NOT_ACTIVE",
+                message=f"run is already terminal: {status.value}",
+            )
+            self._repository.append_manual_action_audit(result)
+            return result
+        if self._repository.get_workflow_run_paused(run_id):
+            result = rejected_result(
+                command,
+                error_code="ALREADY_PAUSED",
+                message="run is already paused",
+            )
+            self._repository.append_manual_action_audit(result)
+            return result
+        self._repository.set_workflow_run_paused(run_id, True)
+        result = accepted_result(command)
+        self._repository.append_manual_action_audit(result)
+        return result
 
     async def wait(self, run_id: str) -> None:
         task = self._tasks.get(run_id)

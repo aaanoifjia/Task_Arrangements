@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M8-CONTROL-009",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T02:20:00.0000000Z",
-    "note": "Expose durable runtime pause operation with active-run validation and audit event."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M8-CONTROL-010",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -141,7 +136,8 @@
     "M8-CONTROL-005",
     "M8-CONTROL-006",
     "M8-CONTROL-007",
-    "M8-CONTROL-008"
+    "M8-CONTROL-008",
+    "M8-CONTROL-009"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -407,5 +403,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-009 IN_PROGRESS: implementing RuntimeManager.pause with durable state and audit."
+  "last_validation_note": "M8-CONTROL-009 PASS: runtime pause integration 6 passed; durable pause/audit, active-turn preservation, no interrupt, and terminal rejection verified; Ruff and strict mypy passed. M8-CONTROL-010 is next."
 }
