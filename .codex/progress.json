@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-NAV-054",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T00:24:00.0000000Z",
-    "note": "Add consistent workflow/editor/run-history/run-detail links and workflow_id URL filtering coverage."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-UX-055",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -128,7 +123,8 @@
     "M7-RUN-050",
     "M7-RUN-051",
     "M7-RUN-052",
-    "M7-RUN-053"
+    "M7-RUN-053",
+    "M7-NAV-054"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -274,5 +270,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-RUN-053 PASS: durable task status counts and explicit terminal/nonterminal run result summary render without correctness inference; typecheck, ESLint, and Vitest (106 tests) passed. M7-NAV-054 is next."
+  "last_validation_note": "M7-NAV-054 PASS: workflow, editor, run history, and run detail provide consistent cross-links with workflow_id URL filtering; typecheck, ESLint, and Vitest (108 tests) passed. M7-UX-055 is next."
 }

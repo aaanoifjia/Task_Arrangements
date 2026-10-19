@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import type { EventView, RunDetail, TaskRunView } from '../../api/types'
 import { createRunApi, type RunApi } from './api'
 import EventLog from './EventLog'
@@ -74,6 +74,10 @@ function RunDetailPage({ api, streamOptions }: RunDetailPageProps) {
         </div>
         <strong data-testid="run-status">{run.status}</strong>
       </div>
+      <nav aria-label="Run navigation">
+        <Link to={`/workflows/${encodeURIComponent(run.workflow_id)}`}>Back to workflow</Link>
+        <Link to={`/runs?workflow_id=${encodeURIComponent(run.workflow_id)}`}>Workflow runs</Link>
+      </nav>
       <dl className="run-detail__metadata">
         <div><dt>Run ID</dt><dd>{run.id}</dd></div>
         <div><dt>Workflow ID</dt><dd>{run.workflow_id}</dd></div>

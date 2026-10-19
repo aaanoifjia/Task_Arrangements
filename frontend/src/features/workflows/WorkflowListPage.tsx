@@ -52,6 +52,7 @@ function WorkflowListPage({ api }: WorkflowListPageProps) {
               <Link to={`/workflows/${encodeURIComponent(workflow.id)}`}>
                 <strong>{workflow.name}</strong><span>{workflow.id}</span>
               </Link>
+              <Link to={`/runs?workflow_id=${encodeURIComponent(workflow.id)}`}>View runs</Link>
             </li>
           ))}
         </ul>

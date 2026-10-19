@@ -56,6 +56,7 @@ function RunListPage({ api }: RunListPageProps) {
                 <span>Status: {run.status}</span>
                 <time dateTime={run.created_at}>{run.created_at}</time>
               </Link>
+              <Link to={`/workflows/${encodeURIComponent(run.workflow_id)}`}>Open workflow</Link>
             </li>
           ))}
         </ul>

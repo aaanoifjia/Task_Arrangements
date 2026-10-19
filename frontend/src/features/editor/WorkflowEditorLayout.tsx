@@ -71,6 +71,7 @@ function WorkflowEditorLayout({
         onChange={onMetadataChange}
       />
       <UnsavedIndicator dirty={dirty} />
+      <p><a href={`/runs?workflow_id=${encodeURIComponent(workflowId)}`}>View workflow runs</a></p>
       <div className="workflow-editor-layout">
         <section className="workflow-editor-layout__canvas" aria-label="Workflow editor canvas panel">
           {graph.nodes.length === 0
