@@ -14,6 +14,7 @@ from codex_flow.codex_adapter.models import CodexTurnRef
 from codex_flow.domain.models import WorkflowDefinition
 from codex_flow.domain.status import TaskStatus, is_terminal
 from codex_flow.runtime.runner import DurableRunner
+from codex_flow.scheduler.state_machine import TransitionTrigger, transition
 from codex_flow.storage.repositories import StorageRepositories
 
 
@@ -150,6 +151,44 @@ class RuntimeManager:
             task = asyncio.create_task(self._runner.execute_run(run_id, workflow))
             self._tasks[run_id] = task
             task.add_done_callback(lambda _: self._tasks.pop(run_id, None))
+        return result
+
+    async def cancel(self, run_id: str, task_run_id: str) -> ControlResult:
+        """Cancel a queued task through the canonical user-action transition."""
+        command = ControlCommand(run_id=run_id, action=ControlAction.CANCEL, task_id=task_run_id)
+        run = self._repository.get_workflow_run(run_id)
+        task_row = self._repository.get_task_run(task_run_id)
+        if run is None or task_row is None or str(task_row["workflow_run_id"]) != run_id:
+            return rejected_result(command, error_code="TASK_NOT_FOUND", message="task run not found")
+        run_status = TaskStatus(str(run["status"]))
+        if is_terminal(run_status):
+            result = rejected_result(
+                command,
+                error_code="RUN_NOT_ACTIVE",
+                message=f"run is already terminal: {run_status.value}",
+            )
+            self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
+            return result
+        previous_status = TaskStatus(str(task_row["status"]))
+        if previous_status not in {TaskStatus.PENDING, TaskStatus.BLOCKED, TaskStatus.READY}:
+            result = rejected_result(
+                command,
+                error_code="TASK_NOT_QUEUED",
+                message=f"task is not queued: {previous_status.value}",
+            )
+            self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
+            return result
+        transition(previous_status, TaskStatus.CANCELLED, TransitionTrigger.USER_ACTION)
+        if not self._repository.compare_and_update_task_run_state(
+            task_run_id, previous_status.value, TaskStatus.CANCELLED.value
+        ):
+            result = rejected_result(
+                command, error_code="STALE_STATE", message="task state changed before cancellation"
+            )
+            self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
+            return result
+        result = accepted_result(command, previous_status=previous_status)
+        self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
         return result
 
     async def wait(self, run_id: str) -> None:

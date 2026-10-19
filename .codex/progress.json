@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M8-CONTROL-012",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T02:50:00.0000000Z",
-    "note": "Expose queued-task cancellation using canonical USER_ACTION transition and audit without external execution."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M8-CONTROL-013",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -144,7 +139,8 @@
     "M8-CONTROL-008",
     "M8-CONTROL-009",
     "M8-CONTROL-010",
-    "M8-CONTROL-011"
+    "M8-CONTROL-011",
+    "M8-CONTROL-012"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -410,5 +406,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-012 IN_PROGRESS: implementing queued task cancellation."
+  "last_validation_note": "M8-CONTROL-012 PASS: queued cancel matrix 3 passed for PENDING/BLOCKED/READY with no adapter execution; retry/race regression 6 passed; audit, Ruff, and strict mypy passed. M8-CONTROL-013 is next."
 }
