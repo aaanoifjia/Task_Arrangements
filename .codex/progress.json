@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-FE-007",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T14:53:31.0416769Z",
-    "note": "Implement SDK-independent run WebSocket transport with cursor and explicit close."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-FE-008",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -81,7 +76,8 @@
     "M7-FE-003",
     "M7-FE-004",
     "M7-FE-005",
-    "M7-FE-006"
+    "M7-FE-006",
+    "M7-FE-007"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -227,5 +223,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-FE-006 PASS: typed relative /api fetch client handles success, stable 404/409/500 envelopes, malformed JSON, AbortSignal-compatible RequestInit, and URL encoding; typecheck, ESLint, and Vitest (7 tests) passed. M7-FE-007 is next."
+  "last_validation_note": "M7-FE-007 PASS: SDK-independent run WebSocket URL/cursor construction, message parsing, close/error hooks, and explicit close passed; typecheck, ESLint, and Vitest (9 tests) passed. M7-FE-008 is next."
 }
