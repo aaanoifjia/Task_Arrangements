@@ -77,6 +77,26 @@ class StorageRepositories:
             )
         return run_id
 
+    def get_workflow_run_paused(self, workflow_run_id: str) -> bool:
+        """Read the durable pause flag, failing closed for an unknown run."""
+        row = self._connection.execute(
+            "SELECT paused FROM workflow_runs WHERE id = ?", (workflow_run_id,)
+        ).fetchone()
+        if row is None:
+            raise ValueError(f"workflow run not found: {workflow_run_id}")
+        return bool(row["paused"])
+
+    def set_workflow_run_paused(self, workflow_run_id: str, paused: bool) -> None:
+        """Persist pause state and metadata in one transaction."""
+        paused_at = _now() if paused else None
+        with self._connection:
+            cursor = self._connection.execute(
+                "UPDATE workflow_runs SET paused = ?, paused_at = ? WHERE id = ?",
+                (int(paused), paused_at, workflow_run_id),
+            )
+            if cursor.rowcount != 1:
+                raise ValueError(f"workflow run not found: {workflow_run_id}")
+
     def create_task_runs(self, workflow_run_id: str, task_ids: Iterable[str]) -> list[str]:
         task_ids = list(task_ids)
         task_run_ids = [str(uuid4()) for _ in task_ids]
@@ -104,6 +124,17 @@ class StorageRepositories:
                 "UPDATE task_runs SET status = ?, thread_id = ?, turn_id = ? WHERE id = ?",
                 (status, thread_id, turn_id, task_run_id),
             )
+
+    def compare_and_update_task_run_state(
+        self, task_run_id: str, expected_status: str, status: str
+    ) -> bool:
+        """Update a task only when its observed state still matches the expected state."""
+        with self._connection:
+            cursor = self._connection.execute(
+                "UPDATE task_runs SET status = ? WHERE id = ? AND status = ?",
+                (status, task_run_id, expected_status),
+            )
+            return cursor.rowcount == 1
 
     def append_event(
         self, event_type: str, payload: dict[str, object], *, workflow_run_id: str | None = None,

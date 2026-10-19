@@ -55,6 +55,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M7-REPORT-058 — Visual DAG UI milestone report; all M7 gates PASS
 - M8-CONTROL-001 — SDK-independent durable control command/result contract; 14 tests, Ruff, and strict mypy PASS
 - M8-CONTROL-002 — idempotent v1→v2 run-control pause metadata migration; migration regression 4/4 PASS
+- M8-CONTROL-003 — transactional pause persistence and stale-state compare updates; repository/migration regression 8/8 PASS
 
 ## Verified Codex Runtime
 
@@ -86,7 +87,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M8-CONTROL-003` — Control Repository Primitives (IN_PROGRESS)
+`M8-CONTROL-004` — Manual Action Audit Events
 
 The late-phase plan contains 120 sequential tasks:
 - M8: 44 tasks
