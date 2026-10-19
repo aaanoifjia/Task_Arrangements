@@ -81,7 +81,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M7-EDIT-025` — Delete Dependency Edges
+`M7-EDIT-026` — Delete Tasks Safely
 
 M7 contains 58 sequential concrete tasks and is intentionally sized at approximately five times the implementation workload of M6. Autonomous execution should continue through `M7-REPORT-058` unless a genuine blocker occurs.
 

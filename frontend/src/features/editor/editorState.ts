@@ -90,8 +90,14 @@ export function editorReducer(state: EditorState, action: EditorAction): EditorS
         : node)
       return { ...state, graph: { nodes, edges: [...state.graph.edges, edge] }, dirty: true }
     }
-    case 'disconnect':
-      return { ...state, graph: { ...state.graph, edges: state.graph.edges.filter((edge) => edge.id !== action.edgeId) }, dirty: true }
+    case 'disconnect': {
+      const removedEdge = state.graph.edges.find((edge) => edge.id === action.edgeId)
+      if (!removedEdge) return state
+      const nodes = state.graph.nodes.map((node) => node.id === removedEdge.target
+        ? { ...node, data: { task: { ...node.data.task, dependencies: node.data.task.dependencies.filter((dependency) => dependency !== removedEdge.source) } } }
+        : node)
+      return { ...state, graph: { nodes, edges: state.graph.edges.filter((edge) => edge.id !== action.edgeId) }, dirty: true }
+    }
     case 'select':
       return { ...state, selectedTaskId: action.taskId }
     case 'mark_saved':

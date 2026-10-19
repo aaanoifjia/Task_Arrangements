@@ -11,9 +11,10 @@ type WorkflowCanvasProps = {
   selectedTaskId?: string | null
   onSelectTask?: (taskId: string) => void
   onConnect?: (source: string, target: string) => void
+  onDisconnect?: (edgeId: string) => void
 }
 
-function WorkflowCanvas({ graph, selectedTaskId, onSelectTask, onConnect }: WorkflowCanvasProps) {
+function WorkflowCanvas({ graph, selectedTaskId, onSelectTask, onConnect, onDisconnect }: WorkflowCanvasProps) {
   const nodes = useMemo<Node[]>(() => graph.nodes.map((node) => ({
     id: node.id,
     type: 'task',
@@ -36,6 +37,7 @@ function WorkflowCanvas({ graph, selectedTaskId, onSelectTask, onConnect }: Work
         onConnect={(connection: Connection) => {
           if (connection.source && connection.target) onConnect?.(connection.source, connection.target)
         }}
+        onEdgesDelete={(deletedEdges) => deletedEdges.forEach((edge) => onDisconnect?.(edge.id))}
         aria-label="Workflow graph canvas"
       >
         <Background />

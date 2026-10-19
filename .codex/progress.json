@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-EDIT-025",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T15:55:00.0000000Z",
-    "note": "Connect React Flow edge deletion to deterministic edge and dependency-reference removal."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-EDIT-026",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -99,7 +94,8 @@
     "M7-EDIT-021",
     "M7-EDIT-022",
     "M7-EDIT-023",
-    "M7-EDIT-024"
+    "M7-EDIT-024",
+    "M7-EDIT-025"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -245,5 +241,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-EDIT-024 PASS: React Flow connections create deterministic non-self edges, update target dependencies, reject duplicates/unknown nodes, and mark the editor dirty; typecheck, ESLint, and Vitest (35 tests) passed. M7-EDIT-025 is next."
+  "last_validation_note": "M7-EDIT-025 PASS: React Flow edge deletion removes the edge and target dependency reference deterministically, with unknown deletions ignored; typecheck, ESLint, and Vitest (35 tests) passed. M7-EDIT-026 is next."
 }
