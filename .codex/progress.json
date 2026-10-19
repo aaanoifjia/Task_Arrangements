@@ -11,13 +11,8 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": {
-    "id": "M4-ATTEMPT-004",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19",
-    "note": "Implementing transactional attempt creation before external Codex calls."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M4-RECOVERY-005",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -44,7 +39,8 @@
     "M3-TEST-008",
     "M4-SCHEMA-001",
     "M4-REPO-002",
-    "M4-SNAPSHOT-003"
+    "M4-SNAPSHOT-003",
+    "M4-ATTEMPT-004"
   ],
   "blocked_tasks": {},
   "task_queue_after_current": [
@@ -98,5 +94,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M4-SNAPSHOT-003 passed: immutable snapshot test, Ruff, and strict storage mypy passed."
+  "last_validation_note": "M4-ATTEMPT-004 passed: transactional attempt integration tests, Ruff, and strict storage mypy passed."
 }

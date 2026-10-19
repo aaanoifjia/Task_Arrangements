@@ -39,6 +39,7 @@ The deterministic local core is implemented through graph validation, state tran
 - M4-SCHEMA-001 — SQLite migration 0001 with durable workflow, run, attempt, event, and settings tables
 - M4-REPO-002 — transactional SQLite repositories for definitions, runs, attempts, events, and active-run queries
 - M4-SNAPSHOT-003 — immutable workflow-run definition snapshots
+- M4-ATTEMPT-004 — transactional local Attempt/STARTING persistence before adapter calls
 
 ## Verified Codex Runtime
 
@@ -70,6 +71,6 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M4-ATTEMPT-004`
+`M4-RECOVERY-005`
 
-Immutable run snapshots passed integration testing, Ruff, and strict mypy. The next task implements transactional attempt start.
+Transactional attempt start passed integration testing, Ruff, and strict mypy. The next task implements startup reconciliation.
