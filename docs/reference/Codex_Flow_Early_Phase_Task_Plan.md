@@ -200,7 +200,8 @@ M5-EXAMPLES-002 ──┴────── M5-LINEAR-003
 
 M5-LINEAR-003 ─────────── M5-FAILMAP-004A
 M5-FAILMAP-004A ───────── M5-FORKJOIN-004
-M5-LINEAR-003 ─────────── M5-RESTART-005
+M5-LINEAR-003 ─────────── M5-RUNNER-005A
+M5-RUNNER-005A ────────── M5-RESTART-005
 
 M5-FORKJOIN-004 ─┐
 M5-RESTART-005 ──┴─────── M5-REPORT-006
@@ -2253,11 +2254,80 @@ A Prompt 明确要求运行一个必然失败的命令并停止。
 
 ---
 
+## M5-RUNNER-005A — Durable Headless Runner Integration
+
+### Dependencies
+
+```text
+M4-DUP-006
+M5-CLI-001
+M5-LINEAR-003
+```
+
+### Owned Files
+
+```text
+backend/src/codex_flow/runtime/__init__.py
+backend/src/codex_flow/runtime/runner.py
+backend/src/codex_flow/cli/main.py
+backend/src/codex_flow/storage/repositories.py
+backend/src/codex_flow/codex_adapter/sdk.py
+backend/src/codex_flow/scheduler/executor.py
+backend/tests/integration/test_persistent_runner.py
+backend/tests/integration/test_cli.py
+backend/tests/live/test_sdk_restart_read.py
+```
+
+### Goal
+
+Provide the minimum production headless runner that connects the frozen
+deterministic scheduler semantics to durable SQLite execution and startup recovery.
+
+### Required Behavior
+
+- `codex-flow run <workflow.json> [--db <path>]` opens/migrates SQLite, validates
+  and persists the frozen workflow, creates an immutable workflow-run snapshot and
+  task runs, then starts only dependency-ready tasks in deterministic order. The
+  default database is `.codex-flow.sqlite3` in the current directory.
+- A NEW_THREAD external start uses `AttemptStarter` so the persisted READY →
+  STARTING Attempt transaction completes before thread creation and turn start.
+  RUNNING is persisted only after a real `TURN_STARTED` event.
+- Consume each terminal stream using the existing executor failure mapping;
+  persist its canonical status and recalculate readiness using the existing rules.
+  Failed, interrupted, skipped, and ambiguous recovery states cannot release a
+  dependent task.
+- On an existing unfinished run, do not create another run, resend an already
+  started prompt, or create another Attempt. Reconcile with `StartupReconciler`
+  before any new execution, and fail closed if more than one active matching run
+  exists.
+- A fresh `SdkCodexAdapter` must read a persisted thread id through the supported
+  resume/read path, cache it, and never create a new turn or resend a prompt.
+- Keep SQLite behind repositories, retain all writes as transactions, and only
+  wire the existing CLI `run` command. Do not introduce a second DAG algorithm or
+  change the SDK version, adapter interface, EventType, or scheduler semantics.
+
+### Acceptance
+
+- Offline integration coverage proves fresh durable creation, immutable snapshots,
+  transactional attempts, STARTED/RUNNING/terminal persistence, dependency
+  progression, fail-closed failure behavior, and no duplicate run/attempt/prompt
+  across restart reconciliation.
+- A live fresh-adapter SDK check proves a persisted thread id can be read without
+  creating a turn.
+- Existing M4 repository, snapshot, attempt, recovery, and duplicate-prevention
+  tests; scheduler unit suite; CLI integration tests; Ruff on owned files; and
+  strict mypy on affected packages all pass.
+
+---
+
 ## M5-RESTART-005 — Real Restart Recovery
 
 ### Dependencies
 
-`M5-LINEAR-003`
+```text
+M5-LINEAR-003
+M5-RUNNER-005A
+```
 
 ### Owned Files
 

@@ -12,7 +12,7 @@
     "task_selection": "next_task_only"
   },
   "active_task": null,
-  "next_task": "M5-RESTART-005",
+  "next_task": "M5-RUNNER-005A",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -49,14 +49,15 @@
     "M5-FAILMAP-004A",
     "M5-FORKJOIN-004"
   ],
-  "blocked_tasks": {
-    "M5-RESTART-005": {
+  "blocked_tasks": {},
+  "blocker_history": [
+    {
+      "task": "M5-RESTART-005",
       "reason": "BLOCKED: requires change to backend/src/codex_flow/cli/main.py or a new non-owned runner module. The task requires a subprocess runner whose live task enters RUNNING, persists state, is killed, and restarts. The current CLI only parses a workflow and prints a request; it starts no persisted workflow/task run and invokes no recovery path.",
       "last_successful_validation": "Existing integration recovery and duplicate-prevention tests cover StartupReconciler fail-closed behavior, but they are not a real subprocess runner/restart scenario.",
-      "next_action": "Authorize a bounded runner implementation task with explicit owned production files, then resume M5-RESTART-005."
-    }
-  },
-  "blocker_history": [
+      "next_action": "Execute M5-RUNNER-005A, then resume M5-RESTART-005.",
+      "resolved_by": "M5-RUNNER-005A"
+    },
     {
       "task": "M5-FORKJOIN-004",
       "reason": "Real failure probe observed TURN_COMPLETED after the required failing command. The current SDK adapter exposes no tool-failure outcome to the scheduler, so failure blocking cannot be verified without a non-owned adapter/scheduler remediation.",
@@ -92,6 +93,7 @@
     "M5-LINEAR-003",
     "M5-FAILMAP-004A",
     "M5-FORKJOIN-004",
+    "M5-RUNNER-005A",
     "M5-RESTART-005",
     "M5-REPORT-006"
   ],
@@ -117,5 +119,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M5-RESTART-005 blocked: no production subprocess runner exists within its Owned Files; CLI is parse/print only and cannot create or recover durable running task state."
+  "last_validation_note": "M5-RESTART-005 blocker moved to history; M5-RUNNER-005A is next to add the bounded durable headless runner integration."
 }
