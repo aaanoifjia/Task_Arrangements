@@ -7,6 +7,7 @@ from datetime import UTC, datetime
 from typing import cast
 from uuid import uuid4
 
+from codex_flow.application.control_contract import ControlResult
 from codex_flow.domain.models import WorkflowDefinition
 
 
@@ -147,6 +148,33 @@ class StorageRepositories:
                 (event_id, workflow_run_id, task_run_id, attempt_id, event_type, json.dumps(payload, sort_keys=True), _now()),
             )
         return event_id
+
+    def append_manual_action_audit(
+        self, result: ControlResult, *, task_run_id: str | None = None
+    ) -> str:
+        """Append a credential-free audit event for an accepted or rejected control."""
+        payload: dict[str, object] = {
+            "run_id": result.run_id,
+            "task_id": result.task_id,
+            "action": result.action.value,
+            "accepted": result.accepted,
+            "previous_status": (
+                result.previous_status.value if result.previous_status is not None else None
+            ),
+            "target_status": result.status.value if result.status is not None else None,
+            "retry_requested": result.retry_requested,
+        }
+        if result.error_code is not None:
+            payload["error_code"] = result.error_code
+        if result.message is not None:
+            payload["message"] = result.message
+        event_type = "MANUAL_ACTION_ACCEPTED" if result.accepted else "MANUAL_ACTION_REJECTED"
+        return self.append_event(
+            event_type,
+            payload,
+            workflow_run_id=result.run_id,
+            task_run_id=task_run_id,
+        )
 
     def load_active_runs(self) -> list[sqlite3.Row]:
         return list(self._connection.execute("SELECT * FROM workflow_runs WHERE status NOT IN ('SUCCESS', 'FAILED', 'CANCELLED')"))
