@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M8-UI-031",
+  "active_task": {
+    "id": "M8-UI-031",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-20T07:00:00.0000000Z",
+    "note": "Mirror public M8 control response/error and paused-run TypeScript models."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -424,5 +429,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-030 COMPLETE: four-point cancel race matrix plus existing race regressions 8/8 PASS."
+  "last_validation_note": "M8-UI-031 IN_PROGRESS: adding frontend control types and public type coverage."
 }

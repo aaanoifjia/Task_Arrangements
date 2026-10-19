@@ -114,7 +114,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M8-UI-031` — Frontend Control Types
+`M8-UI-031` — Frontend Control Types (IN_PROGRESS)
 
 The late-phase plan contains 120 sequential tasks:
 - M8: 44 tasks
