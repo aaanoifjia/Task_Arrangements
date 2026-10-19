@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M6-LIFECYCLE-012",
+  "active_task": {
+    "id": "M6-LIFECYCLE-012",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-19T14:27:12.1939408Z",
+    "note": "Implement FastAPI runtime lifespan, injected adapter factory, and startup recovery."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
