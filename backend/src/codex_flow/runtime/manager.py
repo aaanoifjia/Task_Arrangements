@@ -27,6 +27,10 @@ class RuntimeManager:
         self._workflows: dict[str, WorkflowDefinition] = {}
         self._accepting = True
 
+    def restore_workflow(self, run_id: str, workflow: WorkflowDefinition) -> None:
+        """Register a durable run snapshot for controls after process restart."""
+        self._workflows[run_id] = workflow
+
     async def start(self, workflow: WorkflowDefinition) -> str:
         if not self._accepting:
             raise RuntimeError("runtime manager is shutting down")

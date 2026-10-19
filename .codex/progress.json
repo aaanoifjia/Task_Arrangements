@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M8-CONTROL-027",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T06:00:00.0000000Z",
-    "note": "Restore unfinished workflow snapshots on restart without releasing paused work before explicit Resume."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M8-CONTROL-028",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -159,7 +154,8 @@
     "M8-CONTROL-023",
     "M8-CONTROL-024",
     "M8-CONTROL-025",
-    "M8-CONTROL-026"
+    "M8-CONTROL-026",
+    "M8-CONTROL-027"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -425,5 +421,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-027 IN_PROGRESS: implementing restart snapshot restoration and paused-run recovery tests."
+  "last_validation_note": "M8-CONTROL-027 COMPLETE: paused restart/reconciliation tests, Ruff, and strict mypy PASS."
 }

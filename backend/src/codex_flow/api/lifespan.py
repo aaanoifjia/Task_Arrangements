@@ -9,6 +9,7 @@ from fastapi import FastAPI
 
 from codex_flow.api.config import ServiceConfig
 from codex_flow.codex_adapter.interface import CodexAdapter
+from codex_flow.domain.models import WorkflowDefinition
 from codex_flow.runtime.manager import RuntimeManager
 from codex_flow.storage.db import open_database
 from codex_flow.storage.recovery import StartupReconciler
@@ -36,6 +37,10 @@ async def lifespan(
     app.state.adapter = adapter
     await StartupReconciler(connection, adapter).reconcile()
     runtime = RuntimeManager(repositories, adapter)
+    for row in repositories.load_active_runs():
+        runtime.restore_workflow(
+            str(row["id"]), WorkflowDefinition.model_validate_json(row["snapshot_json"])
+        )
     app.state.runtime = runtime
     try:
         yield
