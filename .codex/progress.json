@@ -5,11 +5,12 @@
   "branch": "master",
   "updated_at": "2026-10-19",
   "execution_policy": {
-    "automatic_push": false,
+    "automatic_push": true,
     "commit_each_completed_task": true,
     "checkpoint_task_start": true,
     "fail_closed": true,
-    "task_selection": "next_task_only"
+    "task_selection": "next_task_only",
+    "automatic_pull": "safe_when_clean"
   },
   "active_task": null,
   "next_task": "M6-API-001",
@@ -141,5 +142,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M5 is complete. Authoritative M6 Local API & Runtime Service plan is now defined with 16 deterministic tasks; M6-API-001 is READY."
+  "last_validation_note": "M5 is complete. Authoritative M6 Local API & Runtime Service plan is now defined with 16 deterministic tasks; M6-API-001 is READY. Autonomous Git policy updated: safe clean-state pull and automatic push are enabled."
 }
