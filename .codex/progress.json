@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M8-CONTROL-015",
+  "active_task": {
+    "id": "M8-CONTROL-015",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-20T03:20:00.0000000Z",
+    "note": "Expose state-machine-valid Mark Success operation with audit and downstream readiness re-evaluation."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -408,5 +413,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-014 PASS: skip/readiness/control regression 9 passed; legal BLOCKED/READY skip, illegal states rejected, skipped dependency stayed blocking; Ruff and strict mypy passed. M8-CONTROL-015 is next."
+  "last_validation_note": "M8-CONTROL-015 IN_PROGRESS: implementing Mark Success operation and readiness release."
 }
