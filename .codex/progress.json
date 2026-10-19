@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-RUN-048",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T00:08:00.0000000Z",
-    "note": "Add cursor-based bounded WebSocket reconnect, duplicate suppression, and terminal/cleanup stop semantics."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-RUN-049",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -122,7 +117,8 @@
     "M7-RUN-044",
     "M7-RUN-045",
     "M7-RUN-046",
-    "M7-RUN-047"
+    "M7-RUN-047",
+    "M7-RUN-048"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -268,5 +264,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-RUN-047 PASS: arrival-ordered event log renders timestamps, event types, task/attempt references, and JSON payload disclosure; typecheck, ESLint, and Vitest (88 tests) passed. M7-RUN-048 is next."
+  "last_validation_note": "M7-RUN-048 PASS: WebSocket reconnects with the last event cursor using bounded backoff, suppresses duplicate events, and stops on cleanup or terminal snapshots; typecheck, ESLint, and Vitest (92 tests) passed. M7-RUN-049 is next."
 }
