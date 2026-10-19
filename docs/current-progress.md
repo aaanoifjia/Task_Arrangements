@@ -53,6 +53,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M7-INTEGRATE-056 — complete mocked visual DAG user flow; frontend Vitest 45 files/111 tests, typecheck, ESLint, and production build PASS
 - M7-GATE-057 — M7 acceptance matrix PASS; frontend gates and non-live backend regression 141 passed
 - M7-REPORT-058 — Visual DAG UI milestone report; all M7 gates PASS
+- M8-CONTROL-001 — SDK-independent durable control command/result contract; 14 tests, Ruff, and strict mypy PASS
 
 ## Verified Codex Runtime
 
@@ -84,7 +85,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M8-CONTROL-001` — Durable Control Contract (IN_PROGRESS)
+`M8-CONTROL-002` — Pause Persistence Migration
 
 The late-phase plan contains 120 sequential tasks:
 - M8: 44 tasks

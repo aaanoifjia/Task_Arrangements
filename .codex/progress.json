@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M8-CONTROL-001",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T01:00:00.0000000Z",
-    "note": "Define SDK-independent durable control command/result contracts and validation matrix."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M8-CONTROL-002",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -133,7 +128,8 @@
     "M7-UX-055",
     "M7-INTEGRATE-056",
     "M7-GATE-057",
-    "M7-REPORT-058"
+    "M7-REPORT-058",
+    "M8-CONTROL-001"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -399,5 +395,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-001 IN_PROGRESS: implementing the SDK-independent durable control contract."
+  "last_validation_note": "M8-CONTROL-001 PASS: SDK-independent control command/result validation matrix 14 passed; Ruff and strict mypy passed. M8-CONTROL-002 is next."
 }
