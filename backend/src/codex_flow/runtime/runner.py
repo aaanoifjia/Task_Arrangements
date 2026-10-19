@@ -4,7 +4,12 @@ from collections.abc import AsyncIterator, Mapping
 from typing import cast
 
 from codex_flow.codex_adapter.interface import CodexAdapter
-from codex_flow.codex_adapter.models import CodexEvent, CodexExecutionConfig, EventType
+from codex_flow.codex_adapter.models import (
+    CodexEvent,
+    CodexExecutionConfig,
+    CodexTurnRef,
+    EventType,
+)
 from codex_flow.domain.models import TaskDefinition, WorkflowDefinition
 from codex_flow.domain.status import TaskStatus
 from codex_flow.scheduler.executor import command_completion_failed, terminal_status
@@ -22,6 +27,16 @@ class DurableRunner:
     def __init__(self, repository: StorageRepositories, adapter: CodexAdapter) -> None:
         self._repository = repository
         self._adapter = adapter
+        self._active_turns: dict[str, CodexTurnRef] = {}
+
+    def active_turn(self, task_run_id: str) -> CodexTurnRef | None:
+        """Return the in-memory turn currently executing for a task run."""
+        return self._active_turns.get(task_run_id)
+
+    @property
+    def active_turns(self) -> dict[str, CodexTurnRef]:
+        """Return a snapshot of active turns without exposing mutable registry state."""
+        return dict(self._active_turns)
 
     async def run(self, workflow: WorkflowDefinition) -> str:
         order = topological_order(workflow)
@@ -82,28 +97,32 @@ class DurableRunner:
         attempt_id, turn = await AttemptStarter(self._repository._connection, self._adapter).start(
             task_run_id, config, task.prompt
         )
+        self._active_turns[task_run_id] = turn
         failed_command_observed = False
-        stream = cast("AsyncIterator[CodexEvent]", self._adapter.stream_turn(turn))
-        async for event in stream:
-            self._repository.append_event(
-                event.event_type.value,
-                event.details,
-                task_run_id=task_run_id,
-                attempt_id=attempt_id,
-            )
-            if event.event_type is EventType.TURN_STARTED:
-                self._repository.update_task_run_state(task_run_id, TaskStatus.RUNNING.value, turn.thread_id, turn.turn_id)
-                self._repository.update_attempt_state(attempt_id, TaskStatus.RUNNING.value)
-            elif command_completion_failed(event):
-                failed_command_observed = True
-            else:
-                status = terminal_status(event, failed_command_observed)
-                if status is not None:
-                    self._repository.update_task_run_state(task_run_id, status.value, turn.thread_id, turn.turn_id)
-                    self._repository.update_attempt_state(attempt_id, status.value)
-                    return
-        self._repository.update_task_run_state(task_run_id, TaskStatus.FAILED.value, turn.thread_id, turn.turn_id)
-        self._repository.update_attempt_state(attempt_id, TaskStatus.FAILED.value)
+        try:
+            stream = cast("AsyncIterator[CodexEvent]", self._adapter.stream_turn(turn))
+            async for event in stream:
+                self._repository.append_event(
+                    event.event_type.value,
+                    event.details,
+                    task_run_id=task_run_id,
+                    attempt_id=attempt_id,
+                )
+                if event.event_type is EventType.TURN_STARTED:
+                    self._repository.update_task_run_state(task_run_id, TaskStatus.RUNNING.value, turn.thread_id, turn.turn_id)
+                    self._repository.update_attempt_state(attempt_id, TaskStatus.RUNNING.value)
+                elif command_completion_failed(event):
+                    failed_command_observed = True
+                else:
+                    status = terminal_status(event, failed_command_observed)
+                    if status is not None:
+                        self._repository.update_task_run_state(task_run_id, status.value, turn.thread_id, turn.turn_id)
+                        self._repository.update_attempt_state(attempt_id, status.value)
+                        return
+            self._repository.update_task_run_state(task_run_id, TaskStatus.FAILED.value, turn.thread_id, turn.turn_id)
+            self._repository.update_attempt_state(attempt_id, TaskStatus.FAILED.value)
+        finally:
+            self._active_turns.pop(task_run_id, None)
 
     def _finish_run(self, run_id: str, statuses: Mapping[str, TaskStatus]) -> None:
         if all(status is TaskStatus.SUCCESS for status in statuses.values()):

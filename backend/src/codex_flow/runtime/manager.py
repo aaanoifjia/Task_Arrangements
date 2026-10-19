@@ -3,6 +3,7 @@
 import asyncio
 
 from codex_flow.codex_adapter.interface import CodexAdapter
+from codex_flow.codex_adapter.models import CodexTurnRef
 from codex_flow.domain.models import WorkflowDefinition
 from codex_flow.runtime.runner import DurableRunner
 from codex_flow.storage.repositories import StorageRepositories
@@ -37,6 +38,14 @@ class RuntimeManager:
     @property
     def active_count(self) -> int:
         return len(self._tasks)
+
+    def active_turn(self, task_run_id: str) -> CodexTurnRef | None:
+        """Expose the runner's process-local active turn for explicit controls."""
+        return self._runner.active_turn(task_run_id)
+
+    @property
+    def active_turns(self) -> dict[str, CodexTurnRef]:
+        return self._runner.active_turns
 
     async def shutdown(self) -> None:
         self._accepting = False
