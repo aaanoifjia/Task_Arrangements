@@ -11,8 +11,13 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": null,
-  "next_task": "M4-REPO-002",
+  "active_task": {
+    "id": "M4-REPO-002",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-19",
+    "note": "Implementing transactional SQLite repositories for the current storage stage."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
