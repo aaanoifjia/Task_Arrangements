@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M8-CONTROL-008",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T02:10:00.0000000Z",
-    "note": "Guard terminal result persistence with execution-state compare updates so cancel wins races."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M8-CONTROL-009",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -140,7 +135,8 @@
     "M8-CONTROL-004",
     "M8-CONTROL-005",
     "M8-CONTROL-006",
-    "M8-CONTROL-007"
+    "M8-CONTROL-007",
+    "M8-CONTROL-008"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -406,5 +402,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-008 IN_PROGRESS: implementing fail-closed terminal-vs-control race handling."
+  "last_validation_note": "M8-CONTROL-008 PASS: cancel-vs-terminal race plus pause/persistent runtime regression 6 passed; atomic compare/status/ref update prevents late SUCCESS/FAILED overwrite; Ruff and strict mypy passed. M8-CONTROL-009 is next."
 }

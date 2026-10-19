@@ -111,20 +111,36 @@ class DurableRunner:
                     attempt_id=attempt_id,
                 )
                 if event.event_type is EventType.TURN_STARTED:
-                    self._repository.update_task_run_state(task_run_id, TaskStatus.RUNNING.value, turn.thread_id, turn.turn_id)
-                    self._repository.update_attempt_state(attempt_id, TaskStatus.RUNNING.value)
+                    if self._update_execution_state(
+                        task_run_id, TaskStatus.RUNNING.value, turn.thread_id, turn.turn_id
+                    ):
+                        self._repository.update_attempt_state(attempt_id, TaskStatus.RUNNING.value)
                 elif command_completion_failed(event):
                     failed_command_observed = True
                 else:
                     status = terminal_status(event, failed_command_observed)
                     if status is not None:
-                        self._repository.update_task_run_state(task_run_id, status.value, turn.thread_id, turn.turn_id)
-                        self._repository.update_attempt_state(attempt_id, status.value)
+                        if self._update_execution_state(
+                            task_run_id, status.value, turn.thread_id, turn.turn_id
+                        ):
+                            self._repository.update_attempt_state(attempt_id, status.value)
                         return
-            self._repository.update_task_run_state(task_run_id, TaskStatus.FAILED.value, turn.thread_id, turn.turn_id)
-            self._repository.update_attempt_state(attempt_id, TaskStatus.FAILED.value)
+            if self._update_execution_state(
+                task_run_id, TaskStatus.FAILED.value, turn.thread_id, turn.turn_id
+            ):
+                self._repository.update_attempt_state(attempt_id, TaskStatus.FAILED.value)
         finally:
             self._active_turns.pop(task_run_id, None)
+
+    def _update_execution_state(
+        self, task_run_id: str, status: str, thread_id: str, turn_id: str
+    ) -> bool:
+        for expected_status in (TaskStatus.STARTING.value, TaskStatus.RUNNING.value):
+            if self._repository.compare_and_update_task_run_state(
+                task_run_id, expected_status, status, thread_id, turn_id
+            ):
+                return True
+        return False
 
     def _finish_run(self, run_id: str, statuses: Mapping[str, TaskStatus]) -> None:
         if all(status is TaskStatus.SUCCESS for status in statuses.values()):

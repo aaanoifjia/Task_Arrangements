@@ -130,14 +130,29 @@ class StorageRepositories:
             )
 
     def compare_and_update_task_run_state(
-        self, task_run_id: str, expected_status: str, status: str
+        self,
+        task_run_id: str,
+        expected_status: str,
+        status: str,
+        thread_id: str | None = None,
+        turn_id: str | None = None,
     ) -> bool:
         """Update a task only when its observed state still matches the expected state."""
         with self._connection:
-            cursor = self._connection.execute(
-                "UPDATE task_runs SET status = ? WHERE id = ? AND status = ?",
-                (status, task_run_id, expected_status),
-            )
+            if thread_id is None and turn_id is None:
+                cursor = self._connection.execute(
+                    "UPDATE task_runs SET status = ? WHERE id = ? AND status = ?",
+                    (status, task_run_id, expected_status),
+                )
+            else:
+                cursor = self._connection.execute(
+                    """
+                    UPDATE task_runs
+                    SET status = ?, thread_id = ?, turn_id = ?
+                    WHERE id = ? AND status = ?
+                    """,
+                    (status, thread_id, turn_id, task_run_id, expected_status),
+                )
             return cursor.rowcount == 1
 
     def reset_task_for_retry(self, task_run_id: str) -> str:
