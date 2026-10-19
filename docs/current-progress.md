@@ -47,6 +47,9 @@ The deterministic local core is implemented through graph validation, state tran
 - M5-LINEAR-003 — real isolated A → B Codex execution with exact output verification
 - M5-FAILMAP-004A — command-execution failure details and terminal-stream failure propagation
 - M5-FORKJOIN-004 — real fork/join evidence plus repaired scheduler failure blocking validation
+- M5-RUNNER-005A — durable headless runner integration, CLI run wiring, and fresh-process SDK thread reads
+- M5-RESTART-005 — real subprocess kill/restart recovery without duplicate prompts or downstream execution
+- M5-REPORT-006 — headless MVP gate report; all required results PASS
 
 ## Verified Codex Runtime
 
@@ -78,10 +81,8 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M5-REPORT-006` — next deterministic task
+M5 is complete. The next roadmap milestone is M6 Local API; no M6 concrete task is defined by the authoritative Early Phase Task Plan.
 
 `M5-FORKJOIN-004` is complete. Its valid prior real fork/join probe produced exact B_DONE, C_DONE, and D_DONE. After `M5-FAILMAP-004A`, the real scheduler failure probe passed: a failed parent command was classified as `FAILED`, its dependent child remained `BLOCKED`, and no second Codex thread was created.
 
-`M5-RUNNER-005A` is complete: the CLI run path now uses a durable SQLite runner with transactional attempts, persisted stream outcomes, canonical readiness, restart reconciliation, and fresh-process SDK thread reads. Its offline integration/scheduler suite and the minimum live fresh-adapter thread-read check passed.
-
-`M5-RESTART-005` is complete: its real subprocess runner reached durable `RUNNING`, was killed, and a fresh process reconciled the same run. The parent was not resent or duplicated, remained fail-closed as `NEEDS_ATTENTION`, and its dependent child remained `BLOCKED` without creating output. `M5-REPORT-006` is next.
+`M5-RUNNER-005A` added the durable CLI runner path. `M5-RESTART-005` then proved real subprocess recovery without duplicate external work. `M5-REPORT-006` records every required headless-MVP gate result as PASS. The Early Phase Task Plan ends at M5, so execution now awaits an authoritative M6 task specification.
