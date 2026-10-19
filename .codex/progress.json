@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-EDIT-022",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T15:25:00.0000000Z",
-    "note": "Add positive timeout and retry-policy editing with strict integer boundaries."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-EDIT-023",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -96,7 +91,8 @@
     "M7-EDIT-018",
     "M7-EDIT-019",
     "M7-EDIT-020",
-    "M7-EDIT-021"
+    "M7-EDIT-021",
+    "M7-EDIT-022"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -242,5 +238,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-EDIT-021 PASS: all sandbox enum values and nullable approval mode round-trip through the inspector fields; typecheck, ESLint, and Vitest (31 tests) passed. M7-EDIT-022 is next."
+  "last_validation_note": "M7-EDIT-022 PASS: timeout accepts null or positive integers and retry max_attempts enforces >=1 with boundary feedback; typecheck, ESLint, and Vitest (33 tests) passed. M7-EDIT-023 is next."
 }

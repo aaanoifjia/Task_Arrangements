@@ -3,6 +3,7 @@ import TaskBasicsFields, { renameTaskInGraph, type TaskBasicsChanges } from './f
 import PromptField from './fields/PromptField'
 import ModelFields from './fields/ModelFields'
 import ExecutionFields from './fields/ExecutionFields'
+import RetryFields from './fields/RetryFields'
 import type { EditorGraph } from './graphModel'
 import './TaskInspector.css'
 
@@ -58,6 +59,11 @@ function TaskInspector({ task, existingTaskIds, graph, onTaskChange, onGraphChan
       <ExecutionFields
         sandbox={task.sandbox}
         approvalMode={task.approval_mode}
+        onChange={handleTaskChange}
+      />
+      <RetryFields
+        timeoutSeconds={task.timeout_seconds}
+        retryPolicy={task.retry_policy}
         onChange={handleTaskChange}
       />
     </aside>
