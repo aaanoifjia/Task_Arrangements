@@ -11,13 +11,8 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": {
-    "id": "M3-CONTINUE-007",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19",
-    "note": "Implementing deterministic existing-thread continuation checks."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M3-TEST-008",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -38,7 +33,8 @@
     "M1-REPORT-006",
     "M2-INTERFACE-001", "M2-FAKE-002", "M2-SDK-003", "M2-CONTRACT-004",
     "M3-SCHED-005",
-    "M3-MANUAL-006"
+    "M3-MANUAL-006",
+    "M3-CONTINUE-007"
   ],
   "blocked_tasks": {},
   "task_queue_after_current": [
@@ -88,5 +84,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M3-MANUAL-006 passed: 51 relevant scheduler/domain unit tests, Ruff, and strict scheduler mypy passed."
+  "last_validation_note": "M3-CONTINUE-007 passed: 56 scheduler/domain unit tests, Ruff, and strict scheduler mypy passed."
 }

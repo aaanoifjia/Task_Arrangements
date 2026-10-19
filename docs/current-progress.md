@@ -33,6 +33,7 @@ The deterministic local core is implemented through graph validation, state tran
 - M2-CONTRACT-004 — shared adapter contract suite; fake contract test passed
 - M3-SCHED-005 — deterministic async scheduler core with adapter boundary, capacity/workspace/thread locking, and fail-closed terminal handling
 - M3-MANUAL-006 — explicit retry, cancel, skip, mark-success, pause, and resume controls with clear action results
+- M3-CONTINUE-007 — validated successful-source existing-thread resume with a distinct new turn
 
 ## Verified Codex Runtime
 
@@ -64,6 +65,6 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M3-CONTINUE-007`
+`M3-TEST-008`
 
-Manual controls passed 51 relevant unit tests, Ruff, and strict mypy. The next task adds existing-thread continuation semantics.
+Continuation semantics passed 56 scheduler/domain unit tests, Ruff, and strict mypy. The next task is the deterministic scheduler matrix.
