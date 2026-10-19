@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M7-REPORT-058",
+  "active_task": {
+    "id": "M7-REPORT-058",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-20T00:50:00.0000000Z",
+    "note": "Record the authoritative M7 visual DAG UI acceptance evidence and milestone report."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -273,5 +278,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-GATE-057 PASS: frontend Vitest 45 files/111 tests, typecheck, ESLint, and production build passed; non-live backend regression 141 passed with 6 live tests excluded. M7-REPORT-058 is next."
+  "last_validation_note": "M7-REPORT-058 IN_PROGRESS: compiling the final visual DAG UI milestone report from completed M7 and M6/M5 evidence."
 }
