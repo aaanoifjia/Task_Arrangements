@@ -37,10 +37,26 @@ When the user tells you to continue the project automatically:
    - compute/set the next deterministic task from the recorded dependency plan;
    - update `docs/current-progress.md`;
    - commit the completed task and progress update together.
-9. Continue to the next task while quota/time remains.
-10. If a task requires user interaction, credentials, GUI confirmation, or a decision not encoded in the task spec, mark it BLOCKED and stop at that task.
+9. After a task completes, immediately continue to the next deterministic dependency-ready task.
+10. Do not estimate, infer, or reason about remaining quota, context, time, turn budget, execution budget, or session budget. These are host-level constraints, not project stopping conditions.
+11. Never voluntarily stop because you believe such a budget may be low or nearly exhausted. If the host actually terminates execution, the checkpoint/progress mechanism handles recovery.
+12. If a task requires user interaction, credentials, GUI confirmation, or a decision not encoded in the task spec, mark it BLOCKED and stop at that task.
 
 Never skip a failed/blocked prerequisite.
+
+### Autonomous Stop Conditions
+
+In autonomous mode, Codex may stop voluntarily only when one of these is true:
+
+- the requested project target is complete;
+- a genuine user/manual gate is reached;
+- required credentials or external interaction are unavailable;
+- an authoritative task specification is missing;
+- a real blocker or architectural conflict prevents deterministic continuation.
+
+Completion of one task, elapsed wall-clock time, long context, token usage, perceived quota pressure, or a guessed execution/session budget are not stop conditions.
+
+If the host/runtime forcibly ends the invocation, do not attempt special cleanup. Durable progress already exists in Git and `.codex/progress.json`; the next invocation resumes from that state.
 
 ## 4. Resume After Interruption
 
