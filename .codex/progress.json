@@ -11,8 +11,13 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": null,
-  "next_task": "M5-CLI-001",
+  "active_task": {
+    "id": "M5-CLI-001",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-19",
+    "note": "Implementing the standard-library headless CLI command surface."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
