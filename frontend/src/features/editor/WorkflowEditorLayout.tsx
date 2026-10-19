@@ -5,6 +5,7 @@ import WorkflowCanvas from './WorkflowCanvas'
 import ValidationPanel from './ValidationPanel'
 import type { ValidationIssue } from './validation'
 import WorkflowMetadataPanel, { type WorkflowMetadataChanges } from './WorkflowMetadataPanel'
+import SaveWorkflowButton, { type SaveWorkflowButtonProps } from './SaveWorkflowButton'
 import './WorkflowEditorLayout.css'
 
 export type WorkflowEditorLayoutProps = {
@@ -17,6 +18,7 @@ export type WorkflowEditorLayoutProps = {
   workflowName?: string
   workflowDescription?: string | null
   onMetadataChange?: (changes: WorkflowMetadataChanges) => void
+  saveConfig?: Omit<SaveWorkflowButtonProps, 'hasBlockingIssues'>
 }
 
 function WorkflowEditorLayout({
@@ -29,6 +31,7 @@ function WorkflowEditorLayout({
   workflowName = 'Untitled workflow',
   workflowDescription = null,
   onMetadataChange,
+  saveConfig,
 }: WorkflowEditorLayoutProps) {
   const [internalSelectedTaskId, setInternalSelectedTaskId] = useState<string | null>(null)
   const activeTaskId = selectedTaskId === undefined ? internalSelectedTaskId : selectedTaskId
@@ -53,6 +56,7 @@ function WorkflowEditorLayout({
         <TaskInspector task={activeTask} />
       </div>
       <ValidationPanel issues={validationIssues} onSelectTask={selectTask} onSave={onSave} />
+      {saveConfig && <SaveWorkflowButton {...saveConfig} hasBlockingIssues={validationIssues.length > 0} />}
     </div>
   )
 }
