@@ -1,13 +1,16 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { WorkflowSummary } from '../../api/types'
 import { createWorkflowApi } from './api'
 import type { WorkflowApi } from './api'
+import NewWorkflowForm from './NewWorkflowForm'
 import './WorkflowListPage.css'
 
 type WorkflowListPageProps = { api?: WorkflowApi }
 
-function WorkflowListPage({ api = createWorkflowApi() }: WorkflowListPageProps) {
+function WorkflowListPage({ api }: WorkflowListPageProps) {
+  const stableApi = useMemo(() => api ?? createWorkflowApi(), [api])
+  const [showCreate, setShowCreate] = useState(false)
   const [workflows, setWorkflows] = useState<WorkflowSummary[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -16,13 +19,13 @@ function WorkflowListPage({ api = createWorkflowApi() }: WorkflowListPageProps) 
     setLoading(true)
     setError(null)
     try {
-      setWorkflows(await api.list())
+      setWorkflows(await stableApi.list())
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Unable to load workflows')
     } finally {
       setLoading(false)
     }
-  }, [api])
+  }, [stableApi])
 
   useEffect(() => { void refresh() }, [refresh])
 
@@ -33,8 +36,12 @@ function WorkflowListPage({ api = createWorkflowApi() }: WorkflowListPageProps) 
           <h1 id="workflow-list-heading">Codex Flow</h1>
           <p>Workflows</p>
         </div>
-        <button type="button" onClick={() => void refresh()} disabled={loading}>Refresh</button>
+        <div>
+          <button type="button" onClick={() => setShowCreate((visible) => !visible)}>New workflow</button>
+          <button type="button" onClick={() => void refresh()} disabled={loading}>Refresh</button>
+        </div>
       </div>
+      {showCreate && <NewWorkflowForm api={stableApi} onCreated={() => setShowCreate(false)} />}
       {loading && <p role="status">Loading workflows…</p>}
       {error && <p role="alert">{error}</p>}
       {!loading && !error && workflows.length === 0 && <p>No workflows yet.</p>}
