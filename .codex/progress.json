@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M8-CONTROL-004",
+  "active_task": {
+    "id": "M8-CONTROL-004",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-20T01:30:00.0000000Z",
+    "note": "Persist append-only accepted/rejected manual-action audit events with deterministic metadata."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -397,5 +402,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-003 PASS: control/repository/migration integration regression 8 passed; stale compare update fails closed; Ruff and strict mypy passed. M8-CONTROL-004 is next."
+  "last_validation_note": "M8-CONTROL-004 IN_PROGRESS: implementing append-only manual action audit persistence."
 }
