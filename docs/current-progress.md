@@ -4,9 +4,9 @@ Updated: 2026-10-19
 
 ## Current Phase
 
-M7 — Visual DAG UI.
+M8 — Human-in-the-loop & Reliability.
 
-M6 Local API is complete with all gates PASS. The authoritative task plan now defines 58 deterministic M7 tasks, taking the frontend from an empty directory through React/Vite bootstrap, workflow DAG editing, persistence, run launch/history, live WebSocket status/events, attempt inspection, Open-in-Codex URI support, integration gates, and the M7 report.
+M7 Visual DAG UI is complete with all automated gates PASS. The authoritative late-phase task plan now defines 120 deterministic autonomous tasks across M8–M10: durable human controls and reliability, Windows Tauri/Python-sidecar desktop packaging, then real-world hardening and automated beta gates.
 
 ## Completed
 
@@ -84,8 +84,13 @@ unexpected_files = []
 
 Current deterministic next task:
 
-M7 Visual DAG UI milestone COMPLETE. No authoritative M8 task plan is present; `next_task` is null.
+`M8-CONTROL-001` — Durable Control Contract
 
-M7 contains 58 sequential concrete tasks and is intentionally sized at approximately five times the implementation workload of M6. M7 is complete.
+The late-phase plan contains 120 sequential tasks:
+- M8: 44 tasks
+- M9: 40 tasks
+- M10: 36 tasks
 
-M6 remains complete and must not be reimplemented.
+It is intentionally sized for a long autonomous run (roughly 7–9 hours at recent project velocity). Codex should continue through `M10-REPORT-036` unless a genuine blocker or actual host termination occurs.
+
+All user/manual Desktop checks are deferred until after M10 automated completion so they do not interrupt autonomous execution.
