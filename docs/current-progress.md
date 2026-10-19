@@ -59,3 +59,7 @@ Current deterministic next task:
 `M1-DESKTOP-004`
 
 The frozen package probe built and ran successfully. The next task is the explicitly defined Desktop deep-link/sidebar observation gate.
+
+## Current Blocker
+
+`M1-DESKTOP-004` launched the deep link for the real basic-probe thread and generated its checklist. The remaining verification is a user observation of the Desktop opening, correct thread, sidebar visibility, searchability, and project association. See [desktop_interop_checklist.md](D:/fiona/Codex_Projects/Task_Arrangements/spikes/codex_execution_probe/results/desktop_interop_checklist.md).

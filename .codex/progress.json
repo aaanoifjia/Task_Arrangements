@@ -11,12 +11,7 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": {
-    "id": "M1-DESKTOP-004",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19",
-    "note": "Generating the Desktop interop checklist and launching the specified thread deep link for user observation."
-  },
+  "active_task": null,
   "next_task": null,
   "completed_tasks": [
     "PREP-000",
@@ -35,7 +30,14 @@
     "M1-CTRL-003",
     "M1-PACK-005"
   ],
-  "blocked_tasks": {},
+  "blocked_tasks": {
+    "M1-DESKTOP-004": {
+      "requires_user": true,
+      "reason": "The Desktop deep link was launched and the checklist was generated, but visible Desktop/sidebar behavior must be observed and confirmed by the user.",
+      "checklist": "spikes/codex_execution_probe/results/desktop_interop_checklist.md",
+      "remediation": "User confirms the checklist observations, then resume M1-DESKTOP-004."
+    }
+  },
   "task_queue_after_current": [
     "M1-PACK-005",
     "M1-DESKTOP-004",
@@ -83,5 +85,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M1-PACK-005 passed: PyInstaller 6.22.3 built dist/codex-flow-package-probe/codex-flow-package-probe.exe with openai_codex and codex_cli_bin collected; the executable exited 0 and printed sdk_version=0.162.1 and account_access_ok=true."
+  "last_validation_note": "M1-DESKTOP-004 generated spikes/codex_execution_probe/results/desktop_interop_checklist.md with the real basic-probe thread ID and launched its codex:// deep link. User observation is required before completion."
 }
