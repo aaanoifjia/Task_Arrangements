@@ -15,6 +15,9 @@ def _now() -> str:
     return datetime.now(UTC).isoformat()
 
 
+_RETRYABLE_TASK_STATUSES = frozenset({"FAILED", "INTERRUPTED", "NEEDS_ATTENTION"})
+
+
 class StorageRepositories:
     def __init__(self, connection: sqlite3.Connection) -> None:
         self._connection = connection
@@ -136,6 +139,53 @@ class StorageRepositories:
                 (status, task_run_id, expected_status),
             )
             return cursor.rowcount == 1
+
+    def reset_task_for_retry(self, task_run_id: str) -> str:
+        """Reset one retryable task and audit it atomically without creating an attempt."""
+        row = self._connection.execute(
+            "SELECT workflow_run_id, task_id, status FROM task_runs WHERE id = ?",
+            (task_run_id,),
+        ).fetchone()
+        if row is None:
+            raise ValueError(f"task run not found: {task_run_id}")
+        previous_status = str(row["status"])
+        if previous_status not in _RETRYABLE_TASK_STATUSES:
+            raise ValueError(f"retry reset is not allowed from {previous_status}")
+
+        event_id = str(uuid4())
+        with self._connection:
+            cursor = self._connection.execute(
+                """
+                UPDATE task_runs
+                SET status = 'PENDING', thread_id = NULL, turn_id = NULL
+                WHERE id = ? AND status = ?
+                """,
+                (task_run_id, previous_status),
+            )
+            if cursor.rowcount != 1:
+                raise ValueError("task run changed before retry reset")
+            self._connection.execute(
+                """
+                INSERT INTO events(
+                    id, workflow_run_id, task_run_id, event_type, payload_json, created_at
+                ) VALUES (?, ?, ?, 'RETRY_REQUESTED', ?, ?)
+                """,
+                (
+                    event_id,
+                    row["workflow_run_id"],
+                    task_run_id,
+                    json.dumps(
+                        {
+                            "previous_status": previous_status,
+                            "task_id": row["task_id"],
+                            "target_status": "PENDING",
+                        },
+                        sort_keys=True,
+                    ),
+                    _now(),
+                ),
+            )
+        return event_id
 
     def append_event(
         self, event_type: str, payload: dict[str, object], *, workflow_run_id: str | None = None,

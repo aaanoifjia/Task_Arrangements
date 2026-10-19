@@ -57,6 +57,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M8-CONTROL-002 — idempotent v1→v2 run-control pause metadata migration; migration regression 4/4 PASS
 - M8-CONTROL-003 — transactional pause persistence and stale-state compare updates; repository/migration regression 8/8 PASS
 - M8-CONTROL-004 — append-only accepted/rejected manual-action audit events; integration/repository regression 5/5 PASS
+- M8-CONTROL-005 — transactional retry reset with preserved attempts and RETRY_REQUESTED audit; regression 10/10 PASS
 
 ## Verified Codex Runtime
 
@@ -88,7 +89,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M8-CONTROL-005` — Transactional Retry Reset (IN_PROGRESS)
+`M8-CONTROL-006` — Runtime Active Turn Registry
 
 The late-phase plan contains 120 sequential tasks:
 - M8: 44 tasks
