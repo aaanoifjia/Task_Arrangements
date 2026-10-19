@@ -74,7 +74,8 @@
     "M6-LIFECYCLE-012",
     "M6-SYSTEM-013",
     "M6-INTEGRATE-014",
-    "M6-GATE-015"
+    "M6-GATE-015",
+    "M6-REPORT-016"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -162,5 +163,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M6-GATE-015 PASS: 139 non-live tests passed across M0-M6, including local API boot, DB reopen, REST, runtime, recovery, failure blocking, event streams, WebSocket, health/status, and M5 regression coverage; Ruff and strict mypy passed; no API/application openai_codex imports found."
+  "last_validation_note": "M6-REPORT-016 PASS: docs/local-api-test-report.md records PASS for all required local API gates. Evidence: 139 non-live tests, M6 integration/lifecycle/system suites, M0-M5 regressions, Ruff, strict mypy, and API/application SDK-boundary scan passed. M6 complete; no authoritative M7 concrete task plan exists."
 }
