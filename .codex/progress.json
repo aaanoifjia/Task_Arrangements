@@ -12,7 +12,7 @@
     "task_selection": "next_task_only"
   },
   "active_task": null,
-  "next_task": null,
+  "next_task": "M1-REPORT-006",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -28,16 +28,10 @@
     "M1-AUTH-001",
     "M1-RUN-002",
     "M1-CTRL-003",
-    "M1-PACK-005"
+    "M1-PACK-005",
+    "M1-DESKTOP-004"
   ],
-  "blocked_tasks": {
-    "M1-DESKTOP-004": {
-      "requires_user": true,
-      "reason": "The Desktop deep link was launched and the checklist was generated, but visible Desktop/sidebar behavior must be observed and confirmed by the user.",
-      "checklist": "spikes/codex_execution_probe/results/desktop_interop_checklist.md",
-      "remediation": "User confirms the checklist observations, then resume M1-DESKTOP-004."
-    }
-  },
+  "blocked_tasks": {},
   "task_queue_after_current": [
     "M1-PACK-005",
     "M1-DESKTOP-004",
@@ -85,5 +79,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M1-DESKTOP-004 generated spikes/codex_execution_probe/results/desktop_interop_checklist.md with the real basic-probe thread ID and launched its codex:// deep link. User observation is required before completion."
+  "last_validation_note": "M1-DESKTOP-004 passed: the user confirmed Codex Desktop opened the real basic-probe thread, it appeared in the sidebar without restart, was searchable, and was associated with the expected project."
 }

@@ -4,8 +4,10 @@
 - Test date: 2026-10-19
 - Deep link: codex://threads/01a150bf-f9d8-7dc3-a0a9-d08d188e265b
 
-- [ ] Codex Desktop opened
-- [ ] Correct thread opened
-- [ ] Thread appears in sidebar without restart
-- [ ] Thread is searchable
-- [ ] Thread is associated with expected project
+- [x] Codex Desktop opened
+- [x] Correct thread opened
+- [x] Thread appears in sidebar without restart
+- [x] Thread is searchable
+- [x] Thread is associated with expected project
+
+User verification: PASS

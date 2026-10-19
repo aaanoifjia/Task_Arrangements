@@ -25,6 +25,7 @@ The deterministic local core is implemented through graph validation, state tran
 - M1-RUN-002 — real Codex thread, turn, stream completion, workspace write, and exact output verification
 - M1-CTRL-003 — resumed-thread context verification and real turn interruption
 - M1-PACK-005 — frozen PyInstaller feasibility probe; executable SDK/account check passed
+- M1-DESKTOP-004 — user-verified Desktop deep link, sidebar visibility, searchability, and project association
 
 ## Verified Codex Runtime
 
@@ -56,10 +57,6 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M1-DESKTOP-004`
+`M1-REPORT-006`
 
-The frozen package probe built and ran successfully. The next task is the explicitly defined Desktop deep-link/sidebar observation gate.
-
-## Current Blocker
-
-`M1-DESKTOP-004` launched the deep link for the real basic-probe thread and generated its checklist. The remaining verification is a user observation of the Desktop opening, correct thread, sidebar visibility, searchability, and project association. See [desktop_interop_checklist.md](D:/fiona/Codex_Projects/Task_Arrangements/spikes/codex_execution_probe/results/desktop_interop_checklist.md).
+All Desktop checklist items were confirmed by the user. The next task consolidates the actual M1 probe evidence into the compatibility gate report.
