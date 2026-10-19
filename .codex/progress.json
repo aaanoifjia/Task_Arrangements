@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-WF-009",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T14:55:40.6277231Z",
-    "note": "Implement transport-independent workflow API resource operations."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-WF-010",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -83,7 +78,8 @@
     "M7-FE-005",
     "M7-FE-006",
     "M7-FE-007",
-    "M7-FE-008"
+    "M7-FE-008",
+    "M7-WF-009"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -229,5 +225,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-FE-008 PASS: deterministic workflow/run/task/attempt/event fixtures, ordered fetch response mock, and WebSocket mock added; typecheck, ESLint, and Vitest (9 tests) passed. M7-WF-009 is next."
+  "last_validation_note": "M7-WF-009 PASS: independent workflow resource layer maps list/get/create/update to all four M6 workflow endpoints; typecheck, ESLint, and Vitest (10 tests) passed. M7-WF-010 is next."
 }
