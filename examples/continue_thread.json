@@ -1,0 +1,1 @@
+{"id":"continue-thread","name":"Continue Thread","tasks":[{"id":"A","name":"A","prompt":"Establish context.","cwd":"examples"},{"id":"B","name":"B","prompt":"Continue the established context.","cwd":"examples","dependencies":["A"],"execution_mode":"CONTINUE_THREAD","continue_from_task_id":"A"}],"edges":[{"source_task_id":"A","target_task_id":"B"}]}

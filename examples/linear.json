@@ -1,0 +1,1 @@
+{"id":"linear","name":"Linear","tasks":[{"id":"A","name":"A","prompt":"Create A.txt containing exactly A_DONE","cwd":"examples/e2e_workspace_linear"},{"id":"B","name":"B","prompt":"Verify A.txt contains A_DONE. Create B.txt containing exactly B_DONE","cwd":"examples/e2e_workspace_linear","dependencies":["A"]}],"edges":[{"source_task_id":"A","target_task_id":"B"}]}

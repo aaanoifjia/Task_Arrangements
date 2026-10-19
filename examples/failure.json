@@ -1,0 +1,1 @@
+{"id":"failure","name":"Failure","tasks":[{"id":"A","name":"A","prompt":"Run a command that fails and stop.","cwd":"examples/e2e_workspace_failure"},{"id":"B","name":"B","prompt":"This must not run.","cwd":"examples/e2e_workspace_failure","dependencies":["A"]}],"edges":[{"source_task_id":"A","target_task_id":"B"}]}
