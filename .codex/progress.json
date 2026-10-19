@@ -11,8 +11,8 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": {"id": "M2-CONTRACT-004", "status": "IN_PROGRESS", "started_at": "2026-10-19", "note": "Adding the shared adapter contract suite."},
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M3-SCHED-005",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -31,7 +31,7 @@
     "M1-PACK-005",
     "M1-DESKTOP-004",
     "M1-REPORT-006",
-    "M2-INTERFACE-001", "M2-FAKE-002", "M2-SDK-003"
+    "M2-INTERFACE-001", "M2-FAKE-002", "M2-SDK-003", "M2-CONTRACT-004"
   ],
   "blocked_tasks": {},
   "task_queue_after_current": [
@@ -81,5 +81,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M2-SDK-003 passed: official SDK adapter strict mypy passed and its live temp-workspace exact-file-write smoke test passed."
+  "last_validation_note": "M2-CONTRACT-004 passed: shared fake-adapter contract test and adapter strict mypy passed. SDK live smoke remains marked live_codex."
 }
