@@ -11,13 +11,8 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": {
-    "id": "M5-RESTART-005",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19",
-    "note": "Assess real subprocess runner restart/recovery scenario using only the task-owned live test and workspace files."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M5-RESTART-005",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -54,7 +49,13 @@
     "M5-FAILMAP-004A",
     "M5-FORKJOIN-004"
   ],
-  "blocked_tasks": {},
+  "blocked_tasks": {
+    "M5-RESTART-005": {
+      "reason": "BLOCKED: requires change to backend/src/codex_flow/cli/main.py or a new non-owned runner module. The task requires a subprocess runner whose live task enters RUNNING, persists state, is killed, and restarts. The current CLI only parses a workflow and prints a request; it starts no persisted workflow/task run and invokes no recovery path.",
+      "last_successful_validation": "Existing integration recovery and duplicate-prevention tests cover StartupReconciler fail-closed behavior, but they are not a real subprocess runner/restart scenario.",
+      "next_action": "Authorize a bounded runner implementation task with explicit owned production files, then resume M5-RESTART-005."
+    }
+  },
   "blocker_history": [
     {
       "task": "M5-FORKJOIN-004",
@@ -116,5 +117,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M5-FORKJOIN-004 passed: preserved real fork/join evidence verified exact B_DONE/C_DONE/D_DONE; repaired real scheduler failure probe passed with parent FAILED and child BLOCKED/no second thread."
+  "last_validation_note": "M5-RESTART-005 blocked: no production subprocess runner exists within its Owned Files; CLI is parse/print only and cannot create or recover durable running task state."
 }

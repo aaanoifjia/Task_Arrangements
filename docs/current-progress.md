@@ -78,6 +78,8 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M5-RESTART-005` — next deterministic task
+`M5-RESTART-005` — BLOCKED
 
-`M5-FORKJOIN-004` is complete. Its valid prior real fork/join probe produced exact B_DONE, C_DONE, and D_DONE. After `M5-FAILMAP-004A`, the real scheduler failure probe passed: a failed parent command was classified as `FAILED`, its dependent child remained `BLOCKED`, and no second Codex thread was created. `M5-RESTART-005` is now next.
+`M5-FORKJOIN-004` is complete. Its valid prior real fork/join probe produced exact B_DONE, C_DONE, and D_DONE. After `M5-FAILMAP-004A`, the real scheduler failure probe passed: a failed parent command was classified as `FAILED`, its dependent child remained `BLOCKED`, and no second Codex thread was created.
+
+`M5-RESTART-005` is blocked by a task-plan ownership gap. Its scenario requires a subprocess runner that persists a running workflow/task state, can be killed, and invokes recovery on restart. The only current CLI path parses JSON and prints a request; it starts no run and calls no recovery code. Implementing that runner requires changes to `backend/src/codex_flow/cli/main.py` or a new production runner module, neither of which is an Owned File for M5-RESTART-005. Existing integration tests verify library-level fail-closed reconciliation but cannot substitute for the required real runner scenario.
