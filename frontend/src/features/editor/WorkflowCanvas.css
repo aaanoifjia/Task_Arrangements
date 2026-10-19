@@ -1,0 +1,8 @@
+.workflow-canvas {
+  min-height: 32rem;
+  height: 60vh;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--surface-panel);
+}

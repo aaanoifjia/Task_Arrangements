@@ -1,0 +1,41 @@
+import { useMemo } from 'react'
+import { Background, Controls, ReactFlow, type Edge, type Node } from '@xyflow/react'
+import '@xyflow/react/dist/style.css'
+import type { EditorGraph } from './graphModel'
+import './WorkflowCanvas.css'
+
+type WorkflowCanvasProps = {
+  graph: EditorGraph
+  selectedTaskId?: string | null
+  onSelectTask?: (taskId: string) => void
+}
+
+function WorkflowCanvas({ graph, selectedTaskId, onSelectTask }: WorkflowCanvasProps) {
+  const nodes = useMemo<Node[]>(() => graph.nodes.map((node) => ({
+    id: node.id,
+    type: 'default',
+    position: node.position,
+    data: { label: node.data.task.name },
+    selected: node.id === selectedTaskId,
+  })), [graph.nodes, selectedTaskId])
+  const edges = useMemo<Edge[]>(() => graph.edges.map((edge) => ({
+    id: edge.id, source: edge.source, target: edge.target,
+  })), [graph.edges])
+
+  return (
+    <div className="workflow-canvas" data-testid="workflow-canvas">
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        fitView
+        onNodeClick={(_, node) => onSelectTask?.(node.id)}
+        aria-label="Workflow graph canvas"
+      >
+        <Background />
+        <Controls />
+      </ReactFlow>
+    </div>
+  )
+}
+
+export default WorkflowCanvas

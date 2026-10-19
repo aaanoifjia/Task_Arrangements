@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-EDIT-014",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T15:01:08.9847990Z",
-    "note": "Bootstrap React Flow canvas with stable editor graph IDs and fit-view controls."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-EDIT-015",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -88,7 +83,8 @@
     "M7-WF-010",
     "M7-WF-011",
     "M7-EDIT-012",
-    "M7-EDIT-013"
+    "M7-EDIT-013",
+    "M7-EDIT-014"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -234,5 +230,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-EDIT-013 PASS: immutable reducer covers load, add/remove/update, connect/disconnect, selection, mark-saved, dirty state, and dependent-edge removal; typecheck, ESLint, and Vitest (17 tests) passed. M7-EDIT-014 is next."
+  "last_validation_note": "M7-EDIT-014 PASS: React Flow canvas renders stable editor nodes/edges with Background, Controls, fit-view, and jsdom mount coverage; typecheck, ESLint, and Vitest (18 tests) passed. M7-EDIT-015 is next."
 }
