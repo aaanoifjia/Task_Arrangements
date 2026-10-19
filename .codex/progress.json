@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M7-RUN-046",
+  "active_task": {
+    "id": "M7-RUN-046",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-20T00:07:00.0000000Z",
+    "note": "Apply WebSocket task snapshots to the run detail graph and task list while retaining REST data for initial render."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
