@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M7-RUN-041",
+  "active_task": {
+    "id": "M7-RUN-041",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-19T23:53:00.0000000Z",
+    "note": "Build the run detail foundation with run metadata, task snapshot loading, loading state, and 404 handling."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
