@@ -94,5 +94,31 @@ class StorageRepositories:
     def load_active_runs(self) -> list[sqlite3.Row]:
         return list(self._connection.execute("SELECT * FROM workflow_runs WHERE status NOT IN ('SUCCESS', 'FAILED', 'CANCELLED')"))
 
+    def load_active_runs_for_workflow(self, workflow_id: str) -> list[sqlite3.Row]:
+        return list(
+            self._connection.execute(
+                "SELECT * FROM workflow_runs WHERE workflow_id = ? AND status NOT IN ('SUCCESS', 'FAILED', 'CANCELLED')",
+                (workflow_id,),
+            )
+        )
+
+    def load_task_runs(self, workflow_run_id: str) -> list[sqlite3.Row]:
+        return list(
+            self._connection.execute(
+                "SELECT * FROM task_runs WHERE workflow_run_id = ? ORDER BY created_at, id",
+                (workflow_run_id,),
+            )
+        )
+
+    def update_workflow_run_state(self, workflow_run_id: str, status: str) -> None:
+        with self._connection:
+            self._connection.execute(
+                "UPDATE workflow_runs SET status = ? WHERE id = ?", (status, workflow_run_id)
+            )
+
+    def update_attempt_state(self, attempt_id: str, status: str) -> None:
+        with self._connection:
+            self._connection.execute("UPDATE attempts SET status = ? WHERE id = ?", (status, attempt_id))
+
     def load_attempts(self, task_run_id: str) -> list[sqlite3.Row]:
         return list(self._connection.execute("SELECT * FROM attempts WHERE task_run_id = ? ORDER BY created_at, id", (task_run_id,)))

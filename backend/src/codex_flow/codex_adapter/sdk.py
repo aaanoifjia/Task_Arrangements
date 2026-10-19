@@ -65,8 +65,10 @@ class SdkCodexAdapter:
 
     async def read_thread(self, thread: CodexThreadRef) -> CodexThreadSnapshot:
         handle = self._threads.get(thread.thread_id)
-        if handle is not None:
-            await handle.read()
+        if handle is None:
+            handle = await self._codex.thread_resume(thread.thread_id)
+            self._threads[thread.thread_id] = handle
+        await handle.read()
         return CodexThreadSnapshot(thread=thread)
 
     async def set_thread_name(self, thread: CodexThreadRef, name: str) -> None:
@@ -104,7 +106,7 @@ class SdkCodexAdapter:
             return {}
         item = getattr(payload, "item", payload)
         item_type = cls._plain_value(getattr(item, "type", None))
-        if item_type is None or "command" not in item_type.casefold():
+        if not isinstance(item_type, str) or "command" not in item_type.casefold():
             return {}
 
         details: dict[str, object] = {"item_type": item_type}

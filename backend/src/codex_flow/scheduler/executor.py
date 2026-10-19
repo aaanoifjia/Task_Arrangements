@@ -42,6 +42,19 @@ def command_completion_failed(event: CodexEvent) -> bool:
     return failed_status or failed_exit_code
 
 
+def terminal_status(event: CodexEvent, failed_command_observed: bool) -> TaskStatus | None:
+    """Map only real terminal events into the frozen scheduler task statuses."""
+    if event.event_type is EventType.TURN_COMPLETED:
+        return TaskStatus.FAILED if failed_command_observed else TaskStatus.SUCCESS
+    if event.event_type in {EventType.TURN_FAILED, EventType.TRANSPORT_ERROR}:
+        return TaskStatus.FAILED
+    if event.event_type is EventType.TURN_INTERRUPTED:
+        return TaskStatus.INTERRUPTED
+    if event.event_type is EventType.ATTENTION_REQUIRED:
+        return TaskStatus.NEEDS_ATTENTION
+    return None
+
+
 class TaskExecutor:
     """Run a task while applying the scheduler's capacity and lock rules."""
 
@@ -91,13 +104,8 @@ class TaskExecutor:
                 started = True
             elif command_completion_failed(event):
                 failed_command_observed = True
-            elif event.event_type is EventType.TURN_COMPLETED:
-                status = TaskStatus.FAILED if failed_command_observed else TaskStatus.SUCCESS
-                return ExecutionResult(started=started, status=status)
-            elif event.event_type in {EventType.TURN_FAILED, EventType.TRANSPORT_ERROR}:
-                return ExecutionResult(started=started, status=TaskStatus.FAILED)
-            elif event.event_type is EventType.TURN_INTERRUPTED:
-                return ExecutionResult(started=started, status=TaskStatus.INTERRUPTED)
-            elif event.event_type is EventType.ATTENTION_REQUIRED:
-                return ExecutionResult(started=started, status=TaskStatus.NEEDS_ATTENTION)
+            else:
+                status = terminal_status(event, failed_command_observed)
+                if status is not None:
+                    return ExecutionResult(started=started, status=status)
         return ExecutionResult(started=started, status=TaskStatus.FAILED)

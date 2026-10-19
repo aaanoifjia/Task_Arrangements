@@ -11,13 +11,8 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": {
-    "id": "M5-RUNNER-005A",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19",
-    "note": "Integrate the frozen scheduler, durable SQLite state, CLI run path, and fresh-process SDK thread reads."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M5-RESTART-005",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -52,7 +47,8 @@
     "M5-EXAMPLES-002",
     "M5-LINEAR-003",
     "M5-FAILMAP-004A",
-    "M5-FORKJOIN-004"
+    "M5-FORKJOIN-004",
+    "M5-RUNNER-005A"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -124,5 +120,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M5-RESTART-005 blocker moved to history; M5-RUNNER-005A is next to add the bounded durable headless runner integration."
+  "last_validation_note": "M5-RUNNER-005A passed: 77 offline integration/scheduler tests, Ruff, strict affected-package mypy, and fresh-process live SDK thread read without a second turn. M5-RESTART-005 resumes."
 }

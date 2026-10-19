@@ -3,14 +3,26 @@ import json
 import pytest
 
 from codex_flow.cli.main import main
+from codex_flow.codex_adapter.fake import FakeCodexAdapter
 
 
-def test_run_loads_workflow_fixture(tmp_path, capsys) -> None:
+def test_run_loads_workflow_fixture_into_defaulted_database(tmp_path, capsys, monkeypatch) -> None:
     workflow = tmp_path / "workflow.json"
-    workflow.write_text(json.dumps({"id": "workflow"}), encoding="utf-8")
+    workflow.write_text(
+        json.dumps(
+            {
+                "id": "workflow",
+                "name": "Workflow",
+                "tasks": [{"id": "A", "name": "A", "prompt": "A", "cwd": "."}],
+                "edges": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr("codex_flow.cli.main.SdkCodexAdapter", FakeCodexAdapter)
 
-    assert main(["run", str(workflow)]) == 0
-    assert "workflow" in capsys.readouterr().out
+    assert main(["run", str(workflow), "--db", str(tmp_path / "flow.sqlite3")]) == 0
+    assert "run completed:" in capsys.readouterr().out
 
 
 @pytest.mark.parametrize(
