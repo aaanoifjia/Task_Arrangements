@@ -27,6 +27,7 @@ The deterministic local core is implemented through graph validation, state tran
 - M1-PACK-005 — frozen PyInstaller feasibility probe; executable SDK/account check passed
 - M1-DESKTOP-004 — user-verified Desktop deep link, sidebar visibility, searchability, and project association
 - M1-REPORT-006 — M1 compatibility gate report; all M2 hard gates PASS
+- M2-INTERFACE-001 — SDK-independent async Codex adapter contract
 
 ## Verified Codex Runtime
 
@@ -58,6 +59,6 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M2-INTERFACE-001`
+`M2-FAKE-002`
 
-The M1 compatibility report confirms every M2 hard gate is PASS. The next task defines the internal async Codex adapter contract.
+The internal async adapter contract passed strict mypy. The next task implements its deterministic fake adapter.
