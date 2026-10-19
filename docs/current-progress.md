@@ -81,8 +81,8 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M6-WS-011` — WebSocket Run Stream
+`M6-LIFECYCLE-012` — FastAPI Runtime Lifespan & Startup Recovery
 
 M6 has 16 concrete tasks queued in the authoritative Early Phase Task Plan. Autonomous execution should continue task-by-task through `M6-REPORT-016` unless a genuine blocker is reached.
 
-M5 remains complete; its headless MVP gate report is PASS and must not be reimplemented. M6 workflow/run APIs, runtime manager, application services, and durable event stream are complete. `M6-WS-011` is next.
+M5 remains complete; its headless MVP gate report is PASS and must not be reimplemented. M6 workflow/run APIs, runtime manager, application services, durable event stream, and WebSocket route are complete. `M6-LIFECYCLE-012` is next.

@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M6-WS-011",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19",
-    "note": "Implement the durable WebSocket run stream with snapshots, events, cursor reconnect, and disconnect isolation."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M6-LIFECYCLE-012",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -69,7 +64,8 @@
     "M6-RUNTIME-007",
     "M6-RUN-SVC-008",
     "M6-RUN-API-009",
-    "M6-EVENT-SVC-010"
+    "M6-EVENT-SVC-010",
+    "M6-WS-011"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -157,5 +153,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M6-EVENT-SVC-010 PASS: 3 durable event/stream tests passed; cursor reconnect, task snapshots, cancellation, Ruff, and strict application mypy passed. M6-WS-011 is next."
+  "last_validation_note": "M6-WS-011 PASS: 2 WebSocket tests passed; durable event/snapshot delivery, cursor reconnect, missing-run close, Ruff, and strict API/application mypy passed. M6-LIFECYCLE-012 is next."
 }

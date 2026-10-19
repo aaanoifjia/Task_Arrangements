@@ -10,6 +10,7 @@ from codex_flow.api.config import ServiceConfig
 from codex_flow.api.lifespan import lifespan
 from codex_flow.api.routes.runs import router as runs_router
 from codex_flow.api.routes.workflows import router as workflows_router
+from codex_flow.api.routes.ws import router as ws_router
 
 
 def create_app(config: ServiceConfig | None = None) -> FastAPI:
@@ -25,6 +26,7 @@ def create_app(config: ServiceConfig | None = None) -> FastAPI:
     app.state.service_config = service_config
     app.include_router(workflows_router)
     app.include_router(runs_router)
+    app.include_router(ws_router)
 
     @app.exception_handler(Exception)
     async def internal_error(request: Request, error: Exception) -> JSONResponse:
