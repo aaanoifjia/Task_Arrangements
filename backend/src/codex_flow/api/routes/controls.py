@@ -3,6 +3,7 @@
 from fastapi import APIRouter, Request
 
 from codex_flow.api.errors import api_error, conflict, not_found
+from codex_flow.api.lifespan import get_repositories
 from codex_flow.api.schemas import ManualActionResponse
 from codex_flow.application.control_contract import ControlAction, ControlCommand
 from codex_flow.application.controls import (
@@ -44,6 +45,32 @@ async def resume_run(request: Request, run_id: str) -> ManualActionResponse:
         result = await service(request).apply(command)
     except ControlNotFoundError as error:
         raise not_found("CONTROL_RUN_NOT_FOUND", str(error)) from error
+    except ControlConflictError as error:
+        raise conflict("CONTROL_CONFLICT", str(error)) from error
+    except InvalidControlActionError as error:
+        raise api_error(422, "INVALID_CONTROL_ACTION", str(error)) from error
+    return ManualActionResponse.model_validate(result.model_dump())
+
+
+def _task_run_id(request: Request, run_id: str, task_id: str) -> str:
+    """Accept either the public task id or its durable TaskRun id."""
+    for row in get_repositories(request.app).load_task_runs(run_id):
+        if row["id"] == task_id or row["task_id"] == task_id:
+            return str(row["id"])
+    return task_id
+
+
+@router.post("/runs/{run_id}/tasks/{task_id}/retry", response_model=ManualActionResponse)
+async def retry_task(request: Request, run_id: str, task_id: str) -> ManualActionResponse:
+    command = ControlCommand(
+        run_id=run_id,
+        action=ControlAction.RETRY,
+        task_id=_task_run_id(request, run_id, task_id),
+    )
+    try:
+        result = await service(request).apply(command)
+    except ControlNotFoundError as error:
+        raise not_found("CONTROL_TASK_NOT_FOUND", str(error)) from error
     except ControlConflictError as error:
         raise conflict("CONTROL_CONFLICT", str(error)) from error
     except InvalidControlActionError as error:
