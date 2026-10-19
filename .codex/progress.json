@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-RUN-045",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T00:04:00.0000000Z",
-    "note": "Wrap the run WebSocket client in a cleanup-safe hook exposing task snapshots and the latest event cursor without backend mutations."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-RUN-046",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -119,7 +114,8 @@
     "M7-RUN-041",
     "M7-RUN-042",
     "M7-RUN-043",
-    "M7-RUN-044"
+    "M7-RUN-044",
+    "M7-RUN-045"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -265,5 +261,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-RUN-044 PASS: run graph uses durable TaskRun status overlays while preserving snapshot task IDs and thread/turn references; typecheck, ESLint, and Vitest (83 tests) passed. M7-RUN-045 is next."
+  "last_validation_note": "M7-RUN-045 PASS: cleanup-safe WebSocket hook applies snapshot messages, tracks latest event cursor, and sends no backend state changes; typecheck, ESLint, and Vitest (85 tests) passed. M7-RUN-046 is next."
 }
