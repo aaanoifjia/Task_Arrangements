@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M7-RUN-050",
+  "active_task": {
+    "id": "M7-RUN-050",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-20T00:15:00.0000000Z",
+    "note": "Load selected-task attempt history lazily and render immutable attempt metadata in API order with loading/empty/error states."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
