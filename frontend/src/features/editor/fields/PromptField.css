@@ -1,0 +1,25 @@
+.prompt-field {
+  display: grid;
+  gap: var(--space-1);
+  margin-top: var(--space-4);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.prompt-field textarea {
+  min-height: 12rem;
+  resize: vertical;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2);
+  color: var(--text-primary);
+  background: var(--surface-page);
+  font: inherit;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.prompt-field textarea:focus {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+}

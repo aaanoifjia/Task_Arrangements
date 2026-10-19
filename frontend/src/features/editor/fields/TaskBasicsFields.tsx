@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import type { TaskDefinition } from '../../../api/types'
 import type { EditorGraph } from '../graphModel'
 
-export type TaskBasicsChanges = Partial<Pick<TaskDefinition, 'id' | 'name' | 'cwd'>>
+export type TaskBasicsChanges = Partial<Pick<TaskDefinition, 'id' | 'name' | 'cwd' | 'prompt'>>
 
 export type TaskBasicsFieldsProps = {
   task: TaskDefinition
