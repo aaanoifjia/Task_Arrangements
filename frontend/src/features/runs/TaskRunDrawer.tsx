@@ -1,0 +1,32 @@
+import type { TaskRunView } from '../../api/types'
+import './TaskRunDrawer.css'
+
+export type TaskRunDrawerProps = {
+  task: TaskRunView | null
+  onClose: () => void
+}
+
+function optionalValue(value: string | null): string {
+  return value ?? 'Not available'
+}
+
+function TaskRunDrawer({ task, onClose }: TaskRunDrawerProps) {
+  if (!task) return null
+  return (
+    <aside className="task-run-drawer" aria-labelledby="task-run-drawer-heading" data-testid="task-run-drawer">
+      <div className="task-run-drawer__header">
+        <h2 id="task-run-drawer-heading">Task {task.task_id}</h2>
+        <button type="button" onClick={onClose} aria-label="Close task details">Close</button>
+      </div>
+      <dl>
+        <div><dt>Task ID</dt><dd>{task.task_id}</dd></div>
+        <div><dt>Status</dt><dd>{task.status}</dd></div>
+        <div><dt>Thread ID</dt><dd>{optionalValue(task.thread_id)}</dd></div>
+        <div><dt>Turn ID</dt><dd>{optionalValue(task.turn_id)}</dd></div>
+        <div><dt>Created</dt><dd><time dateTime={task.created_at}>{task.created_at}</time></dd></div>
+      </dl>
+    </aside>
+  )
+}
+
+export default TaskRunDrawer

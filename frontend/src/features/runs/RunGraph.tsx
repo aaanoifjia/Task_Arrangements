@@ -1,8 +1,9 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Background, Controls, MiniMap, ReactFlow, type Edge, type Node } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import type { TaskRunView } from '../../api/types'
 import RunTaskNode, { type RunTaskNodeData } from './RunTaskNode'
+import TaskRunDrawer from './TaskRunDrawer'
 import './RunGraph.css'
 
 type SnapshotTask = { id: string; name: string }
@@ -35,6 +36,7 @@ function readSnapshotEdges(snapshot: Record<string, unknown>, knownIds: Set<stri
 }
 
 function RunGraph({ snapshot, taskRuns }: RunGraphProps) {
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
   const taskDefinitions = useMemo(() => readSnapshotTasks(snapshot), [snapshot])
   const taskRunsById = useMemo(() => new Map(taskRuns.map((task) => [task.task_id, task])), [taskRuns])
   const nodes = useMemo<Node<RunTaskNodeData>[]>(() => taskDefinitions.map((task, index) => {
@@ -68,6 +70,7 @@ function RunGraph({ snapshot, taskRuns }: RunGraphProps) {
           nodes={nodes}
           edges={edges}
           nodeTypes={{ runTask: RunTaskNode }}
+          onNodeClick={(_, node) => setSelectedTaskId(node.id)}
           fitView
           nodesDraggable={false}
           nodesConnectable={false}
@@ -79,6 +82,10 @@ function RunGraph({ snapshot, taskRuns }: RunGraphProps) {
           <Controls />
           <MiniMap />
         </ReactFlow>}
+      <TaskRunDrawer
+        task={selectedTaskId ? taskRuns.find((task) => task.task_id === selectedTaskId) ?? null : null}
+        onClose={() => setSelectedTaskId(null)}
+      />
     </div>
   )
 }

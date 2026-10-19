@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { fixtureRunDetail, fixtureTaskRun } from '../../test/fixtures'
 import RunGraph from './RunGraph'
@@ -33,5 +33,8 @@ describe('RunGraph', () => {
     expect(screen.getByText('Thread: thread-b')).toBeInTheDocument()
     expect(screen.getByText('Turn: turn-b')).toBeInTheDocument()
     expect(screen.getByTestId('rf__minimap')).toBeInTheDocument()
+    fireEvent.click(screen.getByTestId('rf__node-A'))
+    expect(screen.getByTestId('task-run-drawer')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Task A' })).toBeInTheDocument()
   })
 })

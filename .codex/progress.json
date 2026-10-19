@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-RUN-049",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T00:12:00.0000000Z",
-    "note": "Add run task selection and a detail drawer showing TaskRun metadata with clear missing optional IDs."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-RUN-050",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -123,7 +118,8 @@
     "M7-RUN-045",
     "M7-RUN-046",
     "M7-RUN-047",
-    "M7-RUN-048"
+    "M7-RUN-048",
+    "M7-RUN-049"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -269,5 +265,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-RUN-048 PASS: WebSocket reconnects with the last event cursor using bounded backoff, suppresses duplicate events, and stops on cleanup or terminal snapshots; typecheck, ESLint, and Vitest (92 tests) passed. M7-RUN-049 is next."
+  "last_validation_note": "M7-RUN-049 PASS: selecting a run graph node opens TaskRun details with status, IDs, timestamp, and clear missing metadata; typecheck, ESLint, and Vitest (95 tests) passed. M7-RUN-050 is next."
 }
