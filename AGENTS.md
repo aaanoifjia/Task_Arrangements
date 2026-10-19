@@ -12,7 +12,7 @@ Read these before making implementation decisions:
 
 1. `.codex/progress.json` — authoritative local execution progress.
 2. `.codex/AUTO_EXECUTION.md` — autonomous execution and commit protocol.
-3. `docs/reference/Codex_Flow_Early_Phase_Task_Plan.md` — concrete task definitions and dependencies through M6.
+3. `docs/reference/Codex_Flow_Early_Phase_Task_Plan.md` — concrete task definitions and dependencies through M7.
 4. `docs/reference/Codex_Flow_Master_Roadmap.md` — milestone-level roadmap.
 5. `docs/reference/codex_task_dag方案.md` — product and scheduler design rationale.
 6. `docs/domain-model.md` and `docs/state-machine.md` — canonical domain/state contracts.
