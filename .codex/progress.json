@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-EDIT-030",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T16:45:00.0000000Z",
-    "note": "Serialize editor graph state into a stable exact WorkflowDefinition payload."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-EDIT-031",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -104,7 +99,8 @@
     "M7-EDIT-026",
     "M7-EDIT-027",
     "M7-EDIT-028",
-    "M7-EDIT-029"
+    "M7-EDIT-029",
+    "M7-EDIT-030"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -250,5 +246,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-EDIT-029 PASS: workflow metadata panel keeps ID read-only, edits name/optional description, and exposes deterministic dirty state; typecheck, ESLint, and Vitest (45 tests) passed. M7-EDIT-030 is next."
+  "last_validation_note": "M7-EDIT-030 PASS: serializer preserves node order, sorts edges lexically by source/target, and derives unique dependencies into the exact WorkflowDefinition payload; typecheck, ESLint, and Vitest (47 tests) passed. M7-EDIT-031 is next."
 }
