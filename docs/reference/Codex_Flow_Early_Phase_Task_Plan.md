@@ -198,7 +198,8 @@ M4-DUP-006 ────────────── M5-EXAMPLES-002
 M5-CLI-001 ───────┐
 M5-EXAMPLES-002 ──┴────── M5-LINEAR-003
 
-M5-LINEAR-003 ─────────── M5-FORKJOIN-004
+M5-LINEAR-003 ─────────── M5-FAILMAP-004A
+M5-FAILMAP-004A ───────── M5-FORKJOIN-004
 M5-LINEAR-003 ─────────── M5-RESTART-005
 
 M5-FORKJOIN-004 ─┐
@@ -2160,11 +2161,67 @@ Assertions：
 
 ---
 
+## M5-FAILMAP-004A — Tool Failure Propagation
+
+### Dependencies
+
+```text
+M5-LINEAR-003
+M3-CONTINUE-007
+```
+
+### Owned Files
+
+```text
+backend/src/codex_flow/codex_adapter/sdk.py
+backend/src/codex_flow/scheduler/executor.py
+backend/src/codex_flow/scheduler/continuation.py
+backend/tests/unit/test_tool_failure_mapping.py
+backend/tests/unit/test_continuation.py
+```
+
+### Goal
+
+A Codex turn must not be classified as Task SUCCESS merely because the SDK emits
+`TURN_COMPLETED` when a command/tool execution inside that turn failed.
+
+### Required Behavior
+
+- For `item/completed` command-execution notifications, preserve stable
+  `item_type`, optional `item_id`, `status`, `exit_code`, and optional `command`
+  in `CodexEvent.details`, while continuing to emit `EventType.TOOL_COMPLETED`.
+- A command completion is failed when its status is `failed` or `declined`, or
+  when a present exit code is non-zero. Contradictory explicit command outcome
+  data fails closed.
+- `TaskExecutor` and `ThreadContinuation` must keep consuming until the real
+  terminal event. `TURN_COMPLETED` is SUCCESS only when no failed command was
+  observed; otherwise it is FAILED. `TURN_FAILED`, `TURN_INTERRUPTED`,
+  `ATTENTION_REQUIRED`, and `TRANSPORT_ERROR` retain their canonical mappings.
+- `CONTINUE_THREAD` validates and resumes the source thread while retaining the
+  source thread id and storing the new turn id. `NEW_THREAD` remains unchanged.
+- Preserve deterministic selection, concurrency and workspace/thread locks,
+  fail-closed behavior, and the `CodexAdapter` boundary. Do not change the
+  `EventType` enum or public `CodexAdapter` interface.
+
+### Acceptance
+
+- Unit tests cover successful and failed/declined command completions,
+  terminal-event consumption after a failed command, child blocking after a
+  parent command failure, and the same behavior for `CONTINUE_THREAD`.
+- Existing scheduler core, manual actions, continuation, readiness, lock, and
+  state-machine tests pass.
+- Ruff passes for the owned files and strict mypy passes for scheduler code.
+
+---
+
 ## M5-FORKJOIN-004 — Real Fork / Join + Failure
 
 ### Dependencies
 
-`M5-LINEAR-003`
+```text
+M5-LINEAR-003
+M5-FAILMAP-004A
+```
 
 ### Owned Files
 

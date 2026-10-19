@@ -12,7 +12,7 @@
     "task_selection": "next_task_only"
   },
   "active_task": null,
-  "next_task": "M5-FORKJOIN-004",
+  "next_task": "M5-FAILMAP-004A",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -47,13 +47,16 @@
     "M5-EXAMPLES-002",
     "M5-LINEAR-003"
   ],
-  "blocked_tasks": {
-    "M5-FORKJOIN-004": {
+  "blocked_tasks": {},
+  "blocker_history": [
+    {
+      "task": "M5-FORKJOIN-004",
       "reason": "Real failure probe observed TURN_COMPLETED after the required failing command. The current SDK adapter exposes no tool-failure outcome to the scheduler, so failure blocking cannot be verified without a non-owned adapter/scheduler remediation.",
       "last_successful_validation": "Real fork/join probe wrote exact B_DONE, C_DONE, and D_DONE in isolated workspaces.",
-      "next_action": "Authorize a remediation task owning the SDK adapter event mapping and scheduler failure propagation, then resume M5-FORKJOIN-004."
+      "next_action": "Execute M5-FAILMAP-004A, then resume M5-FORKJOIN-004.",
+      "resolved_by": "M5-FAILMAP-004A"
     }
-  },
+  ],
   "task_queue_after_current": [
     "M1-PACK-005",
     "M1-DESKTOP-004",
@@ -79,6 +82,7 @@
     "M5-CLI-001",
     "M5-EXAMPLES-002",
     "M5-LINEAR-003",
+    "M5-FAILMAP-004A",
     "M5-FORKJOIN-004",
     "M5-RESTART-005",
     "M5-REPORT-006"
@@ -105,5 +109,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M5-FORKJOIN-004 blocked: real failing command emitted TURN_COMPLETED, so the current adapter cannot safely prove failure blocking."
+  "last_validation_note": "M5-FORKJOIN-004 failure evidence is preserved in blocker_history; M5-FAILMAP-004A is next to implement deterministic SDK tool-failure propagation."
 }

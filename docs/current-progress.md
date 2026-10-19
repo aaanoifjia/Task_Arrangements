@@ -76,6 +76,6 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M5-FORKJOIN-004` — BLOCKED
+`M5-FAILMAP-004A` — next deterministic task
 
-The real fork/join probe produced exact B_DONE, C_DONE, and D_DONE. The real failure probe then revealed a safety blocker: the Codex SDK emitted `TURN_COMPLETED` after the required failing command, and the current adapter exposes no tool-failure outcome to scheduler propagation. A remediation task owning adapter/scheduler failure mapping is required; failure blocking must not be claimed until then.
+The real fork/join probe produced exact B_DONE, C_DONE, and D_DONE. The recorded `M5-FORKJOIN-004` failure evidence remains preserved: the Codex SDK emitted `TURN_COMPLETED` after the required failing command, while the scheduler received no command-failure outcome. `M5-FAILMAP-004A` now owns the bounded SDK/Executor/Continuation propagation repair. Once its acceptance passes, `M5-FORKJOIN-004` will resume and reuse the valid fork/join evidence while rerunning failure blocking.
