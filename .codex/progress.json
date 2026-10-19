@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M7-RUN-052",
+  "active_task": {
+    "id": "M7-RUN-052",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-20T00:20:00.0000000Z",
+    "note": "Add deterministic failure and needs-attention notices without unsupported retry, pause, or resume controls."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
