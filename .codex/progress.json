@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M8-CONTROL-028",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T06:15:00.0000000Z",
-    "note": "Verify retrying a failed parent releases previously blocked descendants exactly once."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M8-CONTROL-029",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -160,7 +155,8 @@
     "M8-CONTROL-024",
     "M8-CONTROL-025",
     "M8-CONTROL-026",
-    "M8-CONTROL-027"
+    "M8-CONTROL-027",
+    "M8-CONTROL-028"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -426,5 +422,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-028 IN_PROGRESS: adding retry dependency-release integration coverage."
+  "last_validation_note": "M8-CONTROL-028 COMPLETE: retry dependency-release integration and existing retry regression PASS."
 }
