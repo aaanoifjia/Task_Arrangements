@@ -11,8 +11,13 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": null,
-  "next_task": "M1-CTRL-003",
+  "active_task": {
+    "id": "M1-CTRL-003",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-19",
+    "note": "Repairing public resumed-turn response extraction and rerunning the control probe."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
