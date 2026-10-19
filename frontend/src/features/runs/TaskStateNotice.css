@@ -1,0 +1,25 @@
+.task-state-notice {
+  margin-top: var(--space-4);
+  padding: var(--space-3);
+  border-left: 0.25rem solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--surface-muted);
+}
+
+.task-state-notice strong {
+  display: block;
+}
+
+.task-state-notice p {
+  margin: var(--space-2) 0 0;
+}
+
+.task-state-notice--failed,
+.task-state-notice--interrupted {
+  border-color: #b42318;
+}
+
+.task-state-notice--blocked,
+.task-state-notice--needs_attention {
+  border-color: #b54708;
+}
