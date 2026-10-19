@@ -9,6 +9,7 @@ import SaveWorkflowButton, { type SaveWorkflowButtonProps } from './SaveWorkflow
 import UnsavedIndicator from './UnsavedIndicator'
 import { useEditorShortcuts } from './useEditorShortcuts'
 import EditorEmptyState from './EditorEmptyState'
+import StartRunButton, { type StartRunButtonProps } from '../runs/StartRunButton'
 import './WorkflowEditorLayout.css'
 
 export type WorkflowEditorLayoutProps = {
@@ -22,6 +23,7 @@ export type WorkflowEditorLayoutProps = {
   workflowDescription?: string | null
   onMetadataChange?: (changes: WorkflowMetadataChanges) => void
   saveConfig?: Omit<SaveWorkflowButtonProps, 'hasBlockingIssues'>
+  startRunConfig?: Omit<StartRunButtonProps, 'hasBlockingIssues'>
   dirty?: boolean
   onDeleteTask?: (taskId: string) => void
   onAddTask?: () => void
@@ -38,6 +40,7 @@ function WorkflowEditorLayout({
   workflowDescription = null,
   onMetadataChange,
   saveConfig,
+  startRunConfig,
   dirty = false,
   onDeleteTask,
   onAddTask,
@@ -78,6 +81,7 @@ function WorkflowEditorLayout({
       </div>
       <ValidationPanel issues={validationIssues} onSelectTask={selectTask} onSave={onSave} />
       {saveConfig && <SaveWorkflowButton {...saveConfig} hasBlockingIssues={validationIssues.length > 0} />}
+      {startRunConfig && <StartRunButton {...startRunConfig} hasBlockingIssues={validationIssues.length > 0} />}
     </div>
   )
 }
