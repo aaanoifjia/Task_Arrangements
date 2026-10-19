@@ -72,6 +72,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M8-CONTROL-017 — control application service dispatch and stable error translation; matrix 24/24 PASS
 - M8-CONTROL-018 — SDK-independent ManualActionResponse and durable RunControlState schemas; serialization matrix 17/17 PASS
 - M8-CONTROL-019 — pause REST endpoint through ControlApplicationService with stable error envelopes; API tests, Ruff, and strict mypy PASS
+- M8-CONTROL-020 — resume REST endpoint returning the durable continuation request; API tests, Ruff, and strict mypy PASS
 
 ## Verified Codex Runtime
 
@@ -103,7 +104,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M8-CONTROL-020` — Resume REST Endpoint (IN_PROGRESS)
+`M8-CONTROL-021` — Retry REST Endpoint
 
 The late-phase plan contains 120 sequential tasks:
 - M8: 44 tasks

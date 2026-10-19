@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M8-CONTROL-020",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T04:15:00.0000000Z",
-    "note": "Add resume REST endpoint with durable pause-state continuation response."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M8-CONTROL-021",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -152,7 +147,8 @@
     "M8-CONTROL-016",
     "M8-CONTROL-017",
     "M8-CONTROL-018",
-    "M8-CONTROL-019"
+    "M8-CONTROL-019",
+    "M8-CONTROL-020"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -418,5 +414,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-020 IN_PROGRESS: implementing resume REST endpoint and route tests."
+  "last_validation_note": "M8-CONTROL-020 COMPLETE: resume route API tests, Ruff, and strict mypy PASS."
 }

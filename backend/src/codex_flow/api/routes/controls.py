@@ -35,3 +35,17 @@ async def pause_run(request: Request, run_id: str) -> ManualActionResponse:
     except InvalidControlActionError as error:
         raise api_error(422, "INVALID_CONTROL_ACTION", str(error)) from error
     return ManualActionResponse.model_validate(result.model_dump())
+
+
+@router.post("/runs/{run_id}/resume", response_model=ManualActionResponse)
+async def resume_run(request: Request, run_id: str) -> ManualActionResponse:
+    command = ControlCommand(run_id=run_id, action=ControlAction.RESUME)
+    try:
+        result = await service(request).apply(command)
+    except ControlNotFoundError as error:
+        raise not_found("CONTROL_RUN_NOT_FOUND", str(error)) from error
+    except ControlConflictError as error:
+        raise conflict("CONTROL_CONFLICT", str(error)) from error
+    except InvalidControlActionError as error:
+        raise api_error(422, "INVALID_CONTROL_ACTION", str(error)) from error
+    return ManualActionResponse.model_validate(result.model_dump())
