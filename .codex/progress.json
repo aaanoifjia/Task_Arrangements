@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M8-CONTROL-014",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T03:10:00.0000000Z",
-    "note": "Expose state-machine-valid SKIP operation and verify skipped dependencies remain blocking."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M8-CONTROL-015",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -146,7 +141,8 @@
     "M8-CONTROL-010",
     "M8-CONTROL-011",
     "M8-CONTROL-012",
-    "M8-CONTROL-013"
+    "M8-CONTROL-013",
+    "M8-CONTROL-014"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -412,5 +408,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-014 IN_PROGRESS: implementing SKIP operation with canonical transition and readiness blocking."
+  "last_validation_note": "M8-CONTROL-014 PASS: skip/readiness/control regression 9 passed; legal BLOCKED/READY skip, illegal states rejected, skipped dependency stayed blocking; Ruff and strict mypy passed. M8-CONTROL-015 is next."
 }

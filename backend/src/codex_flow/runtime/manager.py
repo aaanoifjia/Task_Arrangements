@@ -193,6 +193,44 @@ class RuntimeManager:
         self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
         return result
 
+    async def skip(self, run_id: str, task_run_id: str) -> ControlResult:
+        """Skip only states permitted by the canonical user-action transition."""
+        command = ControlCommand(run_id=run_id, action=ControlAction.SKIP, task_id=task_run_id)
+        run = self._repository.get_workflow_run(run_id)
+        task_row = self._repository.get_task_run(task_run_id)
+        if run is None or task_row is None or str(task_row["workflow_run_id"]) != run_id:
+            return rejected_result(command, error_code="TASK_NOT_FOUND", message="task run not found")
+        run_status = TaskStatus(str(run["status"]))
+        if is_terminal(run_status):
+            result = rejected_result(
+                command,
+                error_code="RUN_NOT_ACTIVE",
+                message=f"run is already terminal: {run_status.value}",
+            )
+            self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
+            return result
+        previous_status = TaskStatus(str(task_row["status"]))
+        if previous_status not in {TaskStatus.BLOCKED, TaskStatus.READY}:
+            result = rejected_result(
+                command,
+                error_code="TASK_NOT_SKIPPABLE",
+                message=f"task cannot be skipped from {previous_status.value}",
+            )
+            self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
+            return result
+        transition(previous_status, TaskStatus.SKIPPED, TransitionTrigger.USER_ACTION)
+        if not self._repository.compare_and_update_task_run_state(
+            task_run_id, previous_status.value, TaskStatus.SKIPPED.value
+        ):
+            result = rejected_result(
+                command, error_code="STALE_STATE", message="task state changed before skip"
+            )
+            self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
+            return result
+        result = accepted_result(command, previous_status=previous_status)
+        self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
+        return result
+
     async def _cancel_running(
         self,
         run_id: str,
