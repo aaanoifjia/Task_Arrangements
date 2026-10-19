@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-EDIT-037",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T17:55:00.0000000Z",
-    "note": "Run the full frontend editor regression matrix without a backend process."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-RUN-038",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -111,7 +106,8 @@
     "M7-EDIT-033",
     "M7-EDIT-034",
     "M7-EDIT-035",
-    "M7-EDIT-036"
+    "M7-EDIT-036",
+    "M7-EDIT-037"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -257,5 +253,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-EDIT-036 PASS: empty editor renders concise Add Task/Prompt/CWD/dependency/Save/Run guidance and first-task action while non-empty graph renders canvas; typecheck, ESLint, and Vitest (59 tests) passed. M7-EDIT-037 is next."
+  "last_validation_note": "M7-EDIT-037 PASS: backend-free four-node fork/join editor matrix covers rename, connect/disconnect, delete cleanup, continuation, cycle detection, serialization, and reload round-trip; typecheck, ESLint, and Vitest (60 tests) passed. M7-RUN-038 is next."
 }

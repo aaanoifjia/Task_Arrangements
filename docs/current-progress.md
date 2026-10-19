@@ -81,7 +81,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M7-EDIT-037` — Editor Regression Matrix
+`M7-RUN-038` — Run API Resource Layer
 
 M7 contains 58 sequential concrete tasks and is intentionally sized at approximately five times the implementation workload of M6. Autonomous execution should continue through `M7-REPORT-058` unless a genuine blocker occurs.
 
