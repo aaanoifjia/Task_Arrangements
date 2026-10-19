@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { RunDetail, TaskRunView } from '../../api/types'
 import { createRunApi, type RunApi } from './api'
+import RunGraph from './RunGraph'
 import './RunDetailPage.css'
 
 export type RunDetailPageProps = { api?: RunApi }
@@ -62,6 +63,10 @@ function RunDetailPage({ api }: RunDetailPageProps) {
         <div><dt>Workflow ID</dt><dd>{run.workflow_id}</dd></div>
         <div><dt>Created</dt><dd><time dateTime={run.created_at}>{run.created_at}</time></dd></div>
       </dl>
+      <section aria-labelledby="run-graph-heading">
+        <h2 id="run-graph-heading">Snapshot graph</h2>
+        <RunGraph snapshot={run.snapshot} taskRuns={tasks} />
+      </section>
       <section aria-labelledby="run-tasks-heading">
         <h2 id="run-tasks-heading">Tasks</h2>
         {tasks.length === 0

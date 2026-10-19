@@ -1,0 +1,20 @@
+.run-graph {
+  min-height: 28rem;
+  height: 55vh;
+  margin-bottom: var(--space-6);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--surface-panel);
+}
+
+.run-graph > p {
+  padding: var(--space-4);
+  color: var(--text-muted);
+}
+
+.run-graph .react-flow__minimap {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--surface-muted);
+}
