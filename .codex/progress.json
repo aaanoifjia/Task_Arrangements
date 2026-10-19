@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-RUN-043",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T23:59:00.0000000Z",
-    "note": "Define fail-closed visual mapping for every canonical TaskStatus and a reusable run task node presentation."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-RUN-044",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -117,7 +112,8 @@
     "M7-RUN-039",
     "M7-RUN-040",
     "M7-RUN-041",
-    "M7-RUN-042"
+    "M7-RUN-042",
+    "M7-RUN-043"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -263,5 +259,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-RUN-042 PASS: immutable run snapshot DAG renders in read-only React Flow with task_id matching and status labels; typecheck, ESLint, and Vitest (71 tests) passed. M7-RUN-043 is next."
+  "last_validation_note": "M7-RUN-043 PASS: all canonical TaskStatus values have explicit labels/tokens and unknown values visibly fail closed as UNKNOWN; typecheck, ESLint, and Vitest (83 tests) passed. M7-RUN-044 is next."
 }

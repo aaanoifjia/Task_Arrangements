@@ -81,7 +81,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M7-RUN-043` — Task Status Visual Mapping
+`M7-RUN-044` — Run Graph Status Overlay
 
 M7 contains 58 sequential concrete tasks and is intentionally sized at approximately five times the implementation workload of M6. Autonomous execution should continue through `M7-REPORT-058` unless a genuine blocker occurs.
 
