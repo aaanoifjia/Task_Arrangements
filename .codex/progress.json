@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M6-API-001",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19",
-    "note": "Implement explicit side-effect-free FastAPI bootstrap and API package foundation."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M6-CONFIG-002",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -59,7 +54,8 @@
     "M5-FORKJOIN-004",
     "M5-RUNNER-005A",
     "M5-RESTART-005",
-    "M5-REPORT-006"
+    "M5-REPORT-006",
+    "M6-API-001"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -147,5 +143,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M5 is complete. Authoritative M6 Local API & Runtime Service plan is now defined with 16 deterministic tasks; M6-API-001 is READY. Autonomous Git policy updated: safe clean-state pull and automatic push are enabled."
+  "last_validation_note": "M6-API-001 PASS: FastAPI bootstrap test passed; Ruff and strict API-package mypy passed. M6-CONFIG-002 is next."
 }

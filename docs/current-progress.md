@@ -81,8 +81,8 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M6-API-001` — FastAPI Bootstrap
+`M6-CONFIG-002` — Local Service Configuration & DB Lifespan Foundation
 
 M6 has 16 concrete tasks queued in the authoritative Early Phase Task Plan. Autonomous execution should continue task-by-task through `M6-REPORT-016` unless a genuine blocker is reached.
 
-M5 remains complete; its headless MVP gate report is PASS and must not be reimplemented.
+M5 remains complete; its headless MVP gate report is PASS and must not be reimplemented. `M6-API-001` added the explicit side-effect-free FastAPI application factory; its bootstrap test, Ruff, and strict API-package mypy checks passed.
