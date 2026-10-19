@@ -28,6 +28,20 @@ class ExecutionResult:
     status: TaskStatus
 
 
+def command_completion_failed(event: CodexEvent) -> bool:
+    """Classify an explicit command completion conservatively and deterministically."""
+    if event.event_type is not EventType.TOOL_COMPLETED:
+        return False
+    item_type = event.details.get("item_type")
+    if not isinstance(item_type, str) or "command" not in item_type.casefold():
+        return False
+    status = event.details.get("status")
+    failed_status = isinstance(status, str) and status.casefold() in {"failed", "declined"}
+    exit_code = event.details.get("exit_code")
+    failed_exit_code = isinstance(exit_code, int) and not isinstance(exit_code, bool) and exit_code != 0
+    return failed_status or failed_exit_code
+
+
 class TaskExecutor:
     """Run a task while applying the scheduler's capacity and lock rules."""
 
@@ -70,12 +84,16 @@ class TaskExecutor:
     async def _stream_terminal(self, turn: CodexTurnRef) -> ExecutionResult:
         """Map the adapter's terminal events into frozen scheduler statuses."""
         started = False
+        failed_command_observed = False
         stream = cast("AsyncIterator[CodexEvent]", self._adapter.stream_turn(turn))
         async for event in stream:
             if event.event_type is EventType.TURN_STARTED:
                 started = True
+            elif command_completion_failed(event):
+                failed_command_observed = True
             elif event.event_type is EventType.TURN_COMPLETED:
-                return ExecutionResult(started=started, status=TaskStatus.SUCCESS)
+                status = TaskStatus.FAILED if failed_command_observed else TaskStatus.SUCCESS
+                return ExecutionResult(started=started, status=status)
             elif event.event_type in {EventType.TURN_FAILED, EventType.TRANSPORT_ERROR}:
                 return ExecutionResult(started=started, status=TaskStatus.FAILED)
             elif event.event_type is EventType.TURN_INTERRUPTED:

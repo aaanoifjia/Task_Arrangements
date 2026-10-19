@@ -1,12 +1,18 @@
 import pytest
 
 from codex_flow.codex_adapter.fake import FakeCodexAdapter
+from codex_flow.codex_adapter.models import CodexEvent, EventType
 from codex_flow.domain.models import ExecutionMode, TaskDefinition
 from codex_flow.domain.status import TaskStatus
 from codex_flow.scheduler.continuation import (
     ContinuationError,
     ContinuationSource,
     ThreadContinuation,
+)
+from codex_flow.scheduler.locks import (
+    GlobalConcurrencyLimiter,
+    ThreadTurnLockManager,
+    WorkspaceLockManager,
 )
 
 
@@ -54,3 +60,32 @@ async def test_continuation_requires_an_existing_source() -> None:
 
     with pytest.raises(ContinuationError, match="does not exist"):
         await continuation.continue_task(continuation_task(), {})
+
+
+async def test_continuation_command_failure_prevents_completed_turn_success() -> None:
+    adapter = FakeCodexAdapter()
+
+    async def failed_stream(turn):  # type: ignore[no-untyped-def]
+        yield CodexEvent(event_type=EventType.TURN_STARTED, thread_id=turn.thread_id, turn_id=turn.turn_id)
+        yield CodexEvent(
+            event_type=EventType.TOOL_COMPLETED,
+            thread_id=turn.thread_id,
+            turn_id=turn.turn_id,
+            details={"item_type": "commandExecution", "status": "failed", "exit_code": 1},
+        )
+        yield CodexEvent(event_type=EventType.TURN_COMPLETED, thread_id=turn.thread_id, turn_id=turn.turn_id)
+
+    adapter.stream_turn = failed_stream  # type: ignore[method-assign]
+    continuation = ThreadContinuation(adapter)
+    source = ContinuationSource("parent", TaskStatus.SUCCESS, "fake-thread-7", False)
+
+    result = await continuation.execute_task(
+        continuation_task(),
+        {"parent": source},
+        GlobalConcurrencyLimiter(1),
+        WorkspaceLockManager(),
+        ThreadTurnLockManager(),
+    )
+
+    assert result.thread.thread_id == "fake-thread-7"
+    assert result.status is TaskStatus.FAILED

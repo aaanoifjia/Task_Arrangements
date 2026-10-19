@@ -45,6 +45,7 @@ The deterministic local core is implemented through graph validation, state tran
 - M5-CLI-001 — standard-library headless CLI command surface
 - M5-EXAMPLES-002 — canonical linear, fork/join, failure, and continuation workflow fixtures
 - M5-LINEAR-003 — real isolated A → B Codex execution with exact output verification
+- M5-FAILMAP-004A — command-execution failure details and terminal-stream failure propagation
 
 ## Verified Codex Runtime
 
@@ -76,6 +77,6 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M5-FAILMAP-004A` — next deterministic task
+`M5-FORKJOIN-004` — resumed real fork/join and failure validation
 
-The real fork/join probe produced exact B_DONE, C_DONE, and D_DONE. The recorded `M5-FORKJOIN-004` failure evidence remains preserved: the Codex SDK emitted `TURN_COMPLETED` after the required failing command, while the scheduler received no command-failure outcome. `M5-FAILMAP-004A` now owns the bounded SDK/Executor/Continuation propagation repair. Once its acceptance passes, `M5-FORKJOIN-004` will resume and reuse the valid fork/join evidence while rerunning failure blocking.
+`M5-FAILMAP-004A` passed its Ruff, strict mypy, and 70 relevant unit-test checks. The earlier `M5-FORKJOIN-004` evidence remains preserved: fork/join produced exact B_DONE, C_DONE, and D_DONE, while the original failure probe exposed a completed turn after a failed command. The resumed task now reruns that real failure scenario through the repaired adapter/scheduler path and must prove that no downstream Codex thread is created.

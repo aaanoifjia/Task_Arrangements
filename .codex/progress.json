@@ -11,13 +11,8 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": {
-    "id": "M5-FAILMAP-004A",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19",
-    "note": "Implement deterministic command-execution failure propagation while preserving the public adapter contract."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M5-FORKJOIN-004",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -50,7 +45,8 @@
     "M4-DUP-006",
     "M5-CLI-001",
     "M5-EXAMPLES-002",
-    "M5-LINEAR-003"
+    "M5-LINEAR-003",
+    "M5-FAILMAP-004A"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -114,5 +110,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M5-FORKJOIN-004 failure evidence is preserved in blocker_history; M5-FAILMAP-004A is next to implement deterministic SDK tool-failure propagation."
+  "last_validation_note": "M5-FAILMAP-004A passed: Ruff and strict scheduler mypy passed; 70 relevant unit tests passed. M5-FORKJOIN-004 resumes for the real failure probe."
 }

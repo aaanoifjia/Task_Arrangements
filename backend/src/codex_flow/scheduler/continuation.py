@@ -8,6 +8,7 @@ from codex_flow.codex_adapter.interface import CodexAdapter
 from codex_flow.codex_adapter.models import CodexEvent, CodexThreadRef, CodexTurnRef, EventType
 from codex_flow.domain.models import ExecutionMode, SandboxMode, TaskDefinition
 from codex_flow.domain.status import TaskStatus
+from codex_flow.scheduler.executor import command_completion_failed
 from codex_flow.scheduler.locks import (
     GlobalConcurrencyLimiter,
     ThreadTurnLockManager,
@@ -98,14 +99,18 @@ class ThreadContinuation:
     ) -> ContinuationExecutionResult:
         thread = await self._resume_thread(task, sources)
         started = False
+        failed_command_observed = False
         async with thread_locks.acquire_turn(thread.thread_id):
             turn = await self._adapter.start_turn(thread, task.prompt)
             stream = cast("AsyncIterator[CodexEvent]", self._adapter.stream_turn(turn))
             async for event in stream:
                 if event.event_type is EventType.TURN_STARTED:
                     started = True
+                elif command_completion_failed(event):
+                    failed_command_observed = True
                 elif event.event_type is EventType.TURN_COMPLETED:
-                    return ContinuationExecutionResult(thread, turn, started, TaskStatus.SUCCESS)
+                    status = TaskStatus.FAILED if failed_command_observed else TaskStatus.SUCCESS
+                    return ContinuationExecutionResult(thread, turn, started, status)
                 elif event.event_type in {EventType.TURN_FAILED, EventType.TRANSPORT_ERROR}:
                     return ContinuationExecutionResult(thread, turn, started, TaskStatus.FAILED)
                 elif event.event_type is EventType.TURN_INTERRUPTED:

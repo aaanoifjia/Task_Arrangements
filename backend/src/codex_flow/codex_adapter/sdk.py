@@ -6,8 +6,13 @@ from typing import Any
 from openai_codex import ApprovalMode, AsyncCodex, Sandbox
 
 from codex_flow.codex_adapter.models import (
-    CodexEvent, CodexExecutionConfig, CodexThreadRef, CodexThreadSnapshot,
-    CodexTurnOutcome, CodexTurnRef, EventType,
+    CodexEvent,
+    CodexExecutionConfig,
+    CodexThreadRef,
+    CodexThreadSnapshot,
+    CodexTurnOutcome,
+    CodexTurnRef,
+    EventType,
 )
 from codex_flow.domain.models import SandboxMode
 
@@ -44,8 +49,13 @@ class SdkCodexAdapter:
             payload = notification.payload
             event_type = self._event_type(method, payload)
             message = getattr(payload, "delta", None)
-            yield CodexEvent(event_type=event_type, thread_id=turn.thread_id, turn_id=turn.turn_id,
-                             message=message if isinstance(message, str) else None)
+            yield CodexEvent(
+                event_type=event_type,
+                thread_id=turn.thread_id,
+                turn_id=turn.turn_id,
+                message=message if isinstance(message, str) else None,
+                details=self._event_details(method, payload),
+            )
 
     async def interrupt_turn(self, turn: CodexTurnRef) -> CodexTurnOutcome:
         handle = self._turns[turn.turn_id]
@@ -86,3 +96,33 @@ class SdkCodexAdapter:
         if method == "item/started": return EventType.TOOL_STARTED
         if method == "item/completed": return EventType.TOOL_COMPLETED
         return EventType.TRANSPORT_ERROR
+
+    @classmethod
+    def _event_details(cls, method: str, payload: object) -> dict[str, object]:
+        """Keep command execution outcomes visible without leaking SDK types."""
+        if method != "item/completed":
+            return {}
+        item = getattr(payload, "item", payload)
+        item_type = cls._plain_value(getattr(item, "type", None))
+        if item_type is None or "command" not in item_type.casefold():
+            return {}
+
+        details: dict[str, object] = {"item_type": item_type}
+        for detail_name, attribute_name in (
+            ("item_id", "id"),
+            ("status", "status"),
+            ("exit_code", "exit_code"),
+            ("command", "command"),
+        ):
+            value = getattr(item, attribute_name, None)
+            if value is not None:
+                details[detail_name] = cls._plain_value(value)
+        return details
+
+    @staticmethod
+    def _plain_value(value: object) -> str | int | float | bool | None:
+        """Normalize SDK enum-like values to stable built-in values."""
+        raw = getattr(value, "value", value)
+        if raw is None or isinstance(raw, (str, int, float, bool)):
+            return raw
+        return str(raw)
