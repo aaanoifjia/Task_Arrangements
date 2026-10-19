@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-EDIT-012",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T14:59:16.2067453Z",
-    "note": "Implement pure WorkflowDefinition to editor graph conversion preserving all task fields."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-EDIT-013",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -86,7 +81,8 @@
     "M7-FE-008",
     "M7-WF-009",
     "M7-WF-010",
-    "M7-WF-011"
+    "M7-WF-011",
+    "M7-EDIT-012"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -232,5 +228,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-WF-011 PASS: validated workflow id/name form, optional description, empty task/edge payload, create API call, and post-success editor navigation; typecheck, ESLint, and Vitest (14 tests) passed. M7-EDIT-012 is next."
+  "last_validation_note": "M7-EDIT-012 PASS: pure editor graph conversion round-trips the fixture with all task execution fields, dependencies, and edges preserved; typecheck, ESLint, and Vitest (15 tests) passed. M7-EDIT-013 is next."
 }
