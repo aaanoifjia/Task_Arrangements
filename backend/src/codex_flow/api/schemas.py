@@ -4,7 +4,9 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from codex_flow.application.control_contract import ControlAction
 from codex_flow.domain.models import WorkflowDefinition
+from codex_flow.domain.status import TaskStatus
 
 
 class ErrorBody(BaseModel):
@@ -68,3 +70,25 @@ class EventView(BaseModel):
     event_type: str
     payload: dict[str, Any] = Field(default_factory=dict)
     created_at: str
+
+
+class ManualActionResponse(BaseModel):
+    """Public serialization of an accepted or rejected manual action."""
+
+    action: ControlAction
+    run_id: str
+    task_id: str | None = None
+    accepted: bool
+    previous_status: TaskStatus | None = None
+    status: TaskStatus | None = None
+    retry_requested: bool = False
+    error_code: str | None = None
+    message: str | None = None
+
+
+class RunControlState(BaseModel):
+    """Durable workflow-run control state exposed without SDK objects."""
+
+    run_id: str
+    paused: bool
+    paused_at: str | None = None

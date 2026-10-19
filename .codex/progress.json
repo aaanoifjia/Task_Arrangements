@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M8-CONTROL-018",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T03:50:00.0000000Z",
-    "note": "Add SDK-independent public manual action response and durable run-control state DTOs."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M8-CONTROL-019",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -150,7 +145,8 @@
     "M8-CONTROL-014",
     "M8-CONTROL-015",
     "M8-CONTROL-016",
-    "M8-CONTROL-017"
+    "M8-CONTROL-017",
+    "M8-CONTROL-018"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -416,5 +412,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-018 IN_PROGRESS: implementing public control API schemas and serialization tests."
+  "last_validation_note": "M8-CONTROL-018 PASS: control schema/API serialization matrix 17 passed; ManualActionResponse and RunControlState remain SDK-independent; Ruff and strict mypy passed. M8-CONTROL-019 is next."
 }
