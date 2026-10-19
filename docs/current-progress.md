@@ -29,6 +29,7 @@ The deterministic local core is implemented through graph validation, state tran
 - M1-REPORT-006 — M1 compatibility gate report; all M2 hard gates PASS
 - M2-INTERFACE-001 — SDK-independent async Codex adapter contract
 - M2-FAKE-002 — deterministic offline adapter; 8 contract-focused tests passed
+- M2-SDK-003 — official SDK adapter; live exact-file-write smoke test passed
 
 ## Verified Codex Runtime
 
@@ -60,6 +61,6 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M2-SDK-003`
+`M2-CONTRACT-004`
 
-The deterministic fake adapter passed its offline tests. The next task implements the official SDK adapter.
+The official SDK adapter passed its live smoke test. The next task verifies the shared adapter contract.
