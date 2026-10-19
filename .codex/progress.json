@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-RUN-041",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T23:53:00.0000000Z",
-    "note": "Build the run detail foundation with run metadata, task snapshot loading, loading state, and 404 handling."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-RUN-042",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -115,7 +110,8 @@
     "M7-EDIT-037",
     "M7-RUN-038",
     "M7-RUN-039",
-    "M7-RUN-040"
+    "M7-RUN-040",
+    "M7-RUN-041"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -261,5 +257,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-RUN-040 PASS: run history lists durable run metadata, filters by workflow_id, links run details, and handles empty/error/refresh states; typecheck, ESLint, and Vitest (68 tests) passed. M7-RUN-041 is next."
+  "last_validation_note": "M7-RUN-041 PASS: run detail loads run metadata and task snapshot, shows loading/success states, and handles 404; typecheck, ESLint, and Vitest (70 tests) passed. M7-RUN-042 is next."
 }

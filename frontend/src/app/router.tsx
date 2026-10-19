@@ -3,10 +3,7 @@ import AppShell from './AppShell'
 import WorkflowListPage from '../features/workflows/WorkflowListPage'
 import WorkflowEditorPage from '../features/editor/WorkflowEditorPage'
 import RunListPage from '../features/runs/RunListPage'
-
-function RunDetailPage() {
-  return <section aria-labelledby="run-heading"><h1 id="run-heading">Run detail</h1><p>Live run state and events.</p></section>
-}
+import RunDetailPage from '../features/runs/RunDetailPage'
 
 function NotFoundPage() {
   return <section aria-labelledby="not-found-heading"><h1 id="not-found-heading">Not found</h1><p>The requested view does not exist.</p></section>
