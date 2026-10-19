@@ -11,8 +11,13 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": null,
-  "next_task": "M5-FAILMAP-004A",
+  "active_task": {
+    "id": "M5-FAILMAP-004A",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-19",
+    "note": "Implement deterministic command-execution failure propagation while preserving the public adapter contract."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
