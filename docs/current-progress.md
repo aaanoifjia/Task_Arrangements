@@ -53,23 +53,15 @@ unexpected_files = []
 
 ## Current Task
 
-The next deterministic task was:
+The next deterministic task is:
 
 `M1-PACK-005`
 
-The control probe now verifies resumed context using the exact marker and observes a real interrupted terminal event. Autonomous execution is blocked before M1-PACK-005 begins because its required authoritative task specification is absent.
-
-The next task specification is:
-
-`.codex/tasks/M1-PACK-005.md`
-
-## Current Blocker
-
-`M1-PACK-005` is referenced by `.codex/progress.json` and the dependency graph, but no definition exists in either `.codex/tasks/` or `docs/reference/Codex_Flow_Early_Phase_Task_Plan.md`. The project protocol prohibits inferring its owned files, implementation steps, or acceptance checks.
+The control probe now verifies resumed context using the exact marker and observes a real interrupted terminal event.
 
 ## Waiting After M1-PACK-005
 
-Once an authoritative M1-PACK-005 specification is added and passes:
+Once M1-PACK-005 passes:
 
 ```text
 M1-DESKTOP-004 (manual user observation gate)
