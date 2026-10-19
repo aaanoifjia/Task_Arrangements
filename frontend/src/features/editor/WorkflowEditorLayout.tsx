@@ -8,6 +8,7 @@ import WorkflowMetadataPanel, { type WorkflowMetadataChanges } from './WorkflowM
 import SaveWorkflowButton, { type SaveWorkflowButtonProps } from './SaveWorkflowButton'
 import UnsavedIndicator from './UnsavedIndicator'
 import { useEditorShortcuts } from './useEditorShortcuts'
+import EditorEmptyState from './EditorEmptyState'
 import './WorkflowEditorLayout.css'
 
 export type WorkflowEditorLayoutProps = {
@@ -23,6 +24,7 @@ export type WorkflowEditorLayoutProps = {
   saveConfig?: Omit<SaveWorkflowButtonProps, 'hasBlockingIssues'>
   dirty?: boolean
   onDeleteTask?: (taskId: string) => void
+  onAddTask?: () => void
 }
 
 function WorkflowEditorLayout({
@@ -38,6 +40,7 @@ function WorkflowEditorLayout({
   saveConfig,
   dirty = false,
   onDeleteTask,
+  onAddTask,
 }: WorkflowEditorLayoutProps) {
   const [internalSelectedTaskId, setInternalSelectedTaskId] = useState<string | null>(null)
   const activeTaskId = selectedTaskId === undefined ? internalSelectedTaskId : selectedTaskId
@@ -67,7 +70,9 @@ function WorkflowEditorLayout({
       <UnsavedIndicator dirty={dirty} />
       <div className="workflow-editor-layout">
         <section className="workflow-editor-layout__canvas" aria-label="Workflow editor canvas panel">
-          <WorkflowCanvas graph={graph} selectedTaskId={activeTaskId} onSelectTask={selectTask} />
+          {graph.nodes.length === 0
+            ? <EditorEmptyState onAddTask={onAddTask} />
+            : <WorkflowCanvas graph={graph} selectedTaskId={activeTaskId} onSelectTask={selectTask} />}
         </section>
         <TaskInspector task={activeTask} />
       </div>
