@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M8-CONTROL-002",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T01:10:00.0000000Z",
-    "note": "Add idempotent run-control pause metadata migration and v1 upgrade coverage."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M8-CONTROL-003",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -134,7 +129,8 @@
     "M7-INTEGRATE-056",
     "M7-GATE-057",
     "M7-REPORT-058",
-    "M8-CONTROL-001"
+    "M8-CONTROL-001",
+    "M8-CONTROL-002"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -400,5 +396,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-002 IN_PROGRESS: implementing the idempotent run-control pause metadata migration."
+  "last_validation_note": "M8-CONTROL-002 PASS: v1/v2 migration tests 4 passed; M4 migration regression remains green; Ruff and strict mypy passed. M8-CONTROL-003 is next."
 }

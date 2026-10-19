@@ -1,0 +1,2 @@
+ALTER TABLE workflow_runs ADD COLUMN paused INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE workflow_runs ADD COLUMN paused_at TEXT;
