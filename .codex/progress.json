@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M8-CONTROL-027",
+  "active_task": {
+    "id": "M8-CONTROL-027",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-20T06:00:00.0000000Z",
+    "note": "Restore unfinished workflow snapshots on restart without releasing paused work before explicit Resume."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -420,5 +425,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-026 COMPLETE: control audit stream/reconnect integration, Ruff, and strict mypy PASS."
+  "last_validation_note": "M8-CONTROL-027 IN_PROGRESS: implementing restart snapshot restoration and paused-run recovery tests."
 }
