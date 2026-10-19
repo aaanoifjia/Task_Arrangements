@@ -172,6 +172,19 @@ class RuntimeManager:
         previous_status = TaskStatus(str(task_row["status"]))
         if previous_status in {TaskStatus.STARTING, TaskStatus.RUNNING}:
             return await self._cancel_running(run_id, task_run_id, command, previous_status)
+        if previous_status is TaskStatus.NEEDS_ATTENTION:
+            transition(previous_status, TaskStatus.CANCELLED, TransitionTrigger.USER_ACTION)
+            if not self._repository.compare_and_update_task_run_state(
+                task_run_id, previous_status.value, TaskStatus.CANCELLED.value
+            ):
+                result = rejected_result(
+                    command, error_code="STALE_STATE", message="task state changed before cancellation"
+                )
+                self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
+                return result
+            result = accepted_result(command, previous_status=previous_status)
+            self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
+            return result
         if previous_status not in {TaskStatus.PENDING, TaskStatus.BLOCKED, TaskStatus.READY}:
             result = rejected_result(
                 command,

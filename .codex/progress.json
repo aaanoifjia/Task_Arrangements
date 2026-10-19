@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M8-CONTROL-016",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T03:30:00.0000000Z",
-    "note": "Cover deterministic NEEDS_ATTENTION retry/cancel actions without implicit success or downstream release."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M8-CONTROL-017",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -148,7 +143,8 @@
     "M8-CONTROL-012",
     "M8-CONTROL-013",
     "M8-CONTROL-014",
-    "M8-CONTROL-015"
+    "M8-CONTROL-015",
+    "M8-CONTROL-016"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -414,5 +410,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-016 IN_PROGRESS: implementing NEEDS_ATTENTION action matrix."
+  "last_validation_note": "M8-CONTROL-016 PASS: NEEDS_ATTENTION cancel/retry and runtime regression 5 passed; cancel kept child blocked, retry required explicit reset/fresh Attempt, no implicit success; Ruff and strict mypy passed. M8-CONTROL-017 is next."
 }
