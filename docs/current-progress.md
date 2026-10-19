@@ -81,7 +81,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M7-FE-008` — Frontend Test Fixtures & Network Mocks
+`M7-WF-009` — Workflow API Resource Layer
 
 M7 contains 58 sequential concrete tasks and is intentionally sized at approximately five times the implementation workload of M6. Autonomous execution should continue through `M7-REPORT-058` unless a genuine blocker occurs.
 
