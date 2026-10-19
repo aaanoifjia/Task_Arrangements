@@ -24,6 +24,7 @@ The deterministic local core is implemented through graph validation, state tran
 - M1-AUTH-001 — SDK version and existing ChatGPT Plus authentication verified
 - M1-RUN-002 — real Codex thread, turn, stream completion, workspace write, and exact output verification
 - M1-CTRL-003 — resumed-thread context verification and real turn interruption
+- M1-PACK-005 — frozen PyInstaller feasibility probe; executable SDK/account check passed
 
 ## Verified Codex Runtime
 
@@ -53,18 +54,8 @@ unexpected_files = []
 
 ## Current Task
 
-The next deterministic task was:
-
-`M1-PACK-005`
-
-The control probe now verifies resumed context using the exact marker and observes a real interrupted terminal event. Autonomous execution is blocked before M1-PACK-005 begins because its task definition is absent from both the local and up-to-date remote plan.
-
-## Current Task
-
-The complete 2322-line Early Phase Task Plan is now present on `master` and contains the authoritative `M1-PACK-005 — Frozen Backend Feasibility Probe` specification.
-
 Current deterministic next task:
 
-`M1-PACK-005`
+`M1-DESKTOP-004`
 
-The previous missing-spec blocker is resolved. Resume autonomous execution from `.codex/progress.json`.
+The frozen package probe built and ran successfully. The next task is the explicitly defined Desktop deep-link/sidebar observation gate.

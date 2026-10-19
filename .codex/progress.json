@@ -11,13 +11,8 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": {
-    "id": "M1-PACK-005",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19",
-    "note": "Running the frozen PyInstaller feasibility probe for the Codex SDK runtime path."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M1-DESKTOP-004",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -32,7 +27,8 @@
     "M1-HOME-FIX-001",
     "M1-AUTH-001",
     "M1-RUN-002",
-    "M1-CTRL-003"
+    "M1-CTRL-003",
+    "M1-PACK-005"
   ],
   "blocked_tasks": {},
   "task_queue_after_current": [
@@ -82,5 +78,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M1-CTRL-003 passed. The complete 2322-line Early Phase Task Plan is now on master and contains the authoritative M1-PACK-005 specification. M1-PACK-005 is READY."
+  "last_validation_note": "M1-PACK-005 passed: PyInstaller 6.22.3 built dist/codex-flow-package-probe/codex-flow-package-probe.exe with openai_codex and codex_cli_bin collected; the executable exited 0 and printed sdk_version=0.162.1 and account_access_ok=true."
 }
