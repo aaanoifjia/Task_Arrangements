@@ -11,13 +11,8 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": {
-    "id": "M5-LINEAR-003",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19",
-    "note": "Running the real linear Codex end-to-end workflow in an isolated workspace."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M5-FORKJOIN-004",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -49,7 +44,8 @@
     "M4-RECOVERY-005",
     "M4-DUP-006",
     "M5-CLI-001",
-    "M5-EXAMPLES-002"
+    "M5-EXAMPLES-002",
+    "M5-LINEAR-003"
   ],
   "blocked_tasks": {},
   "task_queue_after_current": [
@@ -103,5 +99,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M5-EXAMPLES-002 passed: all canonical workflow fixtures parse against the frozen domain schema."
+  "last_validation_note": "M5-LINEAR-003 passed: real isolated Codex A-to-B execution produced exact A_DONE and B_DONE after terminal events."
 }

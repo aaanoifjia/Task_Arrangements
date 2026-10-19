@@ -44,6 +44,7 @@ The deterministic local core is implemented through graph validation, state tran
 - M4-DUP-006 — crash-point duplicate-execution prevention matrix
 - M5-CLI-001 — standard-library headless CLI command surface
 - M5-EXAMPLES-002 — canonical linear, fork/join, failure, and continuation workflow fixtures
+- M5-LINEAR-003 — real isolated A → B Codex execution with exact output verification
 
 ## Verified Codex Runtime
 
@@ -75,6 +76,6 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M5-LINEAR-003`
+`M5-FORKJOIN-004`
 
-Canonical fixtures parse against the frozen domain schema. The next task is the real linear end-to-end check.
+The real A → B probe produced exact A_DONE and B_DONE after observed terminal events. The next task validates fork/join and failure behavior.
