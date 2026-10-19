@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M6-STORE-004",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19",
-    "note": "Add deterministic repository query operations required by the M6 API."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M6-WF-SVC-005",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -62,7 +57,8 @@
     "M5-REPORT-006",
     "M6-API-001",
     "M6-CONFIG-002",
-    "M6-SCHEMA-003"
+    "M6-SCHEMA-003",
+    "M6-STORE-004"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -150,5 +146,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M6-SCHEMA-003 PASS: 3 schema/error tests passed; public DTO serialization, error helpers, Ruff, and strict API-package mypy passed. M6-STORE-004 is next."
+  "last_validation_note": "M6-STORE-004 PASS: 5 repository/migration tests passed; deterministic query/cursor ordering, Ruff, and strict storage mypy passed. M6-WF-SVC-005 is next."
 }

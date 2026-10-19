@@ -81,8 +81,8 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M6-STORE-004` — API Query Repository Extensions
+`M6-WF-SVC-005` — Workflow Application Service
 
 M6 has 16 concrete tasks queued in the authoritative Early Phase Task Plan. Autonomous execution should continue task-by-task through `M6-REPORT-016` unless a genuine blocker is reached.
 
-M5 remains complete; its headless MVP gate report is PASS and must not be reimplemented. `M6-API-001`, `M6-CONFIG-002`, and `M6-SCHEMA-003` are complete; public API DTOs and stable error helpers are now defined. `M6-STORE-004` is next.
+M5 remains complete; its headless MVP gate report is PASS and must not be reimplemented. M6 API bootstrap, configuration, schemas, and repository query extensions are complete. `M6-WF-SVC-005` is next.

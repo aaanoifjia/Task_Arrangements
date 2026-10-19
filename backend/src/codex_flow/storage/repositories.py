@@ -4,6 +4,7 @@ import json
 import sqlite3
 from collections.abc import Iterable
 from datetime import UTC, datetime
+from typing import cast
 from uuid import uuid4
 
 from codex_flow.domain.models import WorkflowDefinition
@@ -41,6 +42,27 @@ class StorageRepositories:
             "SELECT definition_json FROM workflows WHERE id = ?", (workflow_id,)
         ).fetchone()
         return None if row is None else WorkflowDefinition.model_validate_json(row["definition_json"])
+
+    def list_workflows(self) -> list[sqlite3.Row]:
+        return list(self._connection.execute("SELECT * FROM workflows ORDER BY id"))
+
+    def get_workflow_run(self, workflow_run_id: str) -> sqlite3.Row | None:
+        return cast(
+            sqlite3.Row | None,
+            self._connection.execute(
+                "SELECT * FROM workflow_runs WHERE id = ?", (workflow_run_id,)
+            ).fetchone(),
+        )
+
+    def list_workflow_runs(self, workflow_id: str | None = None) -> list[sqlite3.Row]:
+        if workflow_id is None:
+            return list(self._connection.execute("SELECT * FROM workflow_runs ORDER BY created_at, id"))
+        return list(
+            self._connection.execute(
+                "SELECT * FROM workflow_runs WHERE workflow_id = ? ORDER BY created_at, id",
+                (workflow_id,),
+            )
+        )
 
     def create_workflow_run(self, workflow_id: str, snapshot: dict[str, object]) -> str:
         run_id = str(uuid4())
@@ -110,6 +132,14 @@ class StorageRepositories:
             )
         )
 
+    def get_task_run(self, task_run_id: str) -> sqlite3.Row | None:
+        return cast(
+            sqlite3.Row | None,
+            self._connection.execute(
+                "SELECT * FROM task_runs WHERE id = ?", (task_run_id,)
+            ).fetchone(),
+        )
+
     def update_workflow_run_state(self, workflow_run_id: str, status: str) -> None:
         with self._connection:
             self._connection.execute(
@@ -122,3 +152,25 @@ class StorageRepositories:
 
     def load_attempts(self, task_run_id: str) -> list[sqlite3.Row]:
         return list(self._connection.execute("SELECT * FROM attempts WHERE task_run_id = ? ORDER BY created_at, id", (task_run_id,)))
+
+    def load_events_for_run(self, workflow_run_id: str) -> list[sqlite3.Row]:
+        return list(
+            self._connection.execute(
+                "SELECT * FROM events WHERE workflow_run_id = ? ORDER BY created_at, id",
+                (workflow_run_id,),
+            )
+        )
+
+    def load_events_after(self, workflow_run_id: str, event_id: str) -> list[sqlite3.Row]:
+        cursor = self._connection.execute(
+            "SELECT created_at, id FROM events WHERE workflow_run_id = ? AND id = ?",
+            (workflow_run_id, event_id),
+        ).fetchone()
+        if cursor is None:
+            raise ValueError("event cursor not found")
+        return list(
+            self._connection.execute(
+                "SELECT * FROM events WHERE workflow_run_id = ? AND (created_at > ? OR (created_at = ? AND id > ?)) ORDER BY created_at, id",
+                (workflow_run_id, cursor["created_at"], cursor["created_at"], cursor["id"]),
+            )
+        )
