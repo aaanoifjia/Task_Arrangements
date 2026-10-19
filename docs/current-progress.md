@@ -4,9 +4,9 @@ Updated: 2026-10-19
 
 ## Current Phase
 
-Early headless core, entering the Codex-control compatibility gate.
+M6 — Local API & Runtime Service.
 
-The deterministic local core is implemented through graph validation, state transitions, dependency readiness, and concurrency/workspace locking. The real Codex SDK path now authenticates successfully and completes an actual thread/turn/workspace-write probe.
+M5 Headless MVP is complete with every required gate PASS. The authoritative Early Phase Task Plan now defines 16 deterministic M6 tasks covering FastAPI bootstrap, SQLite-backed workflow/run queries, non-blocking runtime management, WebSocket state/event streaming, startup recovery, integration gates, and the M6 milestone report.
 
 ## Completed
 
@@ -81,8 +81,8 @@ unexpected_files = []
 
 Current deterministic next task:
 
-M5 is complete. The next roadmap milestone is M6 Local API; no M6 concrete task is defined by the authoritative Early Phase Task Plan.
+`M6-API-001` — FastAPI Bootstrap
 
-`M5-FORKJOIN-004` is complete. Its valid prior real fork/join probe produced exact B_DONE, C_DONE, and D_DONE. After `M5-FAILMAP-004A`, the real scheduler failure probe passed: a failed parent command was classified as `FAILED`, its dependent child remained `BLOCKED`, and no second Codex thread was created.
+M6 has 16 concrete tasks queued in the authoritative Early Phase Task Plan. Autonomous execution should continue task-by-task through `M6-REPORT-016` unless a genuine blocker is reached.
 
-`M5-RUNNER-005A` added the durable CLI runner path. `M5-RESTART-005` then proved real subprocess recovery without duplicate external work. `M5-REPORT-006` records every required headless-MVP gate result as PASS. The Early Phase Task Plan ends at M5, so execution now awaits an authoritative M6 task specification.
+M5 remains complete; its headless MVP gate report is PASS and must not be reimplemented.
