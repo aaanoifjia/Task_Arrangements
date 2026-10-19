@@ -11,13 +11,8 @@
     "fail_closed": true,
     "task_selection": "next_task_only"
   },
-  "active_task": {
-    "id": "M1-REPORT-006",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19",
-    "note": "Consolidating verified M1 probe evidence into the compatibility gate report."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M2-INTERFACE-001",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -34,7 +29,8 @@
     "M1-RUN-002",
     "M1-CTRL-003",
     "M1-PACK-005",
-    "M1-DESKTOP-004"
+    "M1-DESKTOP-004",
+    "M1-REPORT-006"
   ],
   "blocked_tasks": {},
   "task_queue_after_current": [
@@ -84,5 +80,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M1-DESKTOP-004 passed: the user confirmed Codex Desktop opened the real basic-probe thread, it appeared in the sidebar without restart, was searchable, and was associated with the expected project."
+  "last_validation_note": "M1-REPORT-006 passed: docs/codex-compatibility-report.md records all required M1 capability statuses from probe evidence. Every M2 hard-gate capability is PASS."
 }
