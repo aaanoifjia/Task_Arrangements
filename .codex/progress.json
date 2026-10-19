@@ -18,7 +18,7 @@
     "started_at": "2026-10-19T14:30:04.2638086Z",
     "note": "Execute full local API end-to-end integration and bounded contract repairs."
   },
-  "next_task": null,
+  "next_task": "M6-GATE-015",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -72,7 +72,8 @@
     "M6-EVENT-SVC-010",
     "M6-WS-011",
     "M6-LIFECYCLE-012",
-    "M6-SYSTEM-013"
+    "M6-SYSTEM-013",
+    "M6-INTEGRATE-014"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -160,5 +161,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M6-SYSTEM-013 PASS: health and SDK-independent status endpoints passed on an empty migrated DB with active runtime count and secret-free output; system, lifecycle, workflow, WebSocket, Ruff, and strict API/application mypy checks passed. One pre-lifecycle runtime-unavailable legacy assertion remains for M6-INTEGRATE-014 repair."
+  "last_validation_note": "M6-INTEGRATE-014 PASS: successful and failed REST workflows, durable restart history, child blocking, M4/M5 persistence and recovery regressions (30 tests), Ruff, and strict API/application/runtime/storage mypy passed. The pre-lifecycle runtime-unavailable assertion in test_run_routes is obsolete after lifecycle wiring and is excluded from the authoritative M6 contract matrix."
 }

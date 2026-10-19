@@ -22,9 +22,13 @@ class StorageRepositories:
         payload = workflow.model_dump_json()
         with self._connection:
             self._connection.execute(
-                "INSERT OR REPLACE INTO workflows(id, name, definition_json, created_at) VALUES (?, ?, ?, ?)",
+                """
+                INSERT INTO workflows(id, name, definition_json, created_at) VALUES (?, ?, ?, ?)
+                ON CONFLICT(id) DO UPDATE SET name = excluded.name, definition_json = excluded.definition_json
+                """,
                 (workflow.id, workflow.name, payload, _now()),
             )
+            self._connection.execute("DELETE FROM edges WHERE workflow_id = ?", (workflow.id,))
             self._connection.execute("DELETE FROM tasks WHERE workflow_id = ?", (workflow.id,))
             for task in workflow.tasks:
                 self._connection.execute(
