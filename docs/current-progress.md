@@ -81,8 +81,8 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M6-RUN-SVC-008` — Run & Task Query Application Service
+`M6-RUN-API-009` — Run & Task REST API
 
 M6 has 16 concrete tasks queued in the authoritative Early Phase Task Plan. Autonomous execution should continue task-by-task through `M6-REPORT-016` unless a genuine blocker is reached.
 
-M5 remains complete; its headless MVP gate report is PASS and must not be reimplemented. M6 workflow/API layers and the non-blocking runtime manager are complete. `M6-RUN-SVC-008` is next.
+M5 remains complete; its headless MVP gate report is PASS and must not be reimplemented. M6 workflow/API layers, runtime manager, and run/task application service are complete. `M6-RUN-API-009` is next.

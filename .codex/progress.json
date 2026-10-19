@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M6-RUN-SVC-008",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19",
-    "note": "Implement run/task query application service delegated to RuntimeManager and repositories."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M6-RUN-API-009",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -66,7 +61,8 @@
     "M6-STORE-004",
     "M6-WF-SVC-005",
     "M6-WF-API-006",
-    "M6-RUNTIME-007"
+    "M6-RUNTIME-007",
+    "M6-RUN-SVC-008"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -154,5 +150,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M6-RUNTIME-007 PASS: 5 runtime/persistent-runner tests passed; non-blocking start, wait, duplicate active rejection, CLI compatibility, Ruff, and strict runtime mypy passed. M6-RUN-SVC-008 is next."
+  "last_validation_note": "M6-RUN-SVC-008 PASS: 2 run-service tests passed; non-blocking start delegation, run/task/attempt queries, missing workflow/run, active conflict, Ruff, and strict application mypy passed. M6-RUN-API-009 is next."
 }
