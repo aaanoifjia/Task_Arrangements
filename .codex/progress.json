@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M7-EDIT-031",
+  "active_task": {
+    "id": "M7-EDIT-031",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-19T16:55:00.0000000Z",
+    "note": "Add existing-workflow PUT save with validation gating, duplicate-submit protection, and error-preserving dirty state."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
