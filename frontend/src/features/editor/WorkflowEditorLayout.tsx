@@ -7,6 +7,7 @@ import type { ValidationIssue } from './validation'
 import WorkflowMetadataPanel, { type WorkflowMetadataChanges } from './WorkflowMetadataPanel'
 import SaveWorkflowButton, { type SaveWorkflowButtonProps } from './SaveWorkflowButton'
 import UnsavedIndicator from './UnsavedIndicator'
+import { useEditorShortcuts } from './useEditorShortcuts'
 import './WorkflowEditorLayout.css'
 
 export type WorkflowEditorLayoutProps = {
@@ -21,6 +22,7 @@ export type WorkflowEditorLayoutProps = {
   onMetadataChange?: (changes: WorkflowMetadataChanges) => void
   saveConfig?: Omit<SaveWorkflowButtonProps, 'hasBlockingIssues'>
   dirty?: boolean
+  onDeleteTask?: (taskId: string) => void
 }
 
 function WorkflowEditorLayout({
@@ -35,6 +37,7 @@ function WorkflowEditorLayout({
   onMetadataChange,
   saveConfig,
   dirty = false,
+  onDeleteTask,
 }: WorkflowEditorLayoutProps) {
   const [internalSelectedTaskId, setInternalSelectedTaskId] = useState<string | null>(null)
   const activeTaskId = selectedTaskId === undefined ? internalSelectedTaskId : selectedTaskId
@@ -43,6 +46,15 @@ function WorkflowEditorLayout({
     setInternalSelectedTaskId(taskId)
     onSelectTask?.(taskId)
   }
+  const clearSelection = () => {
+    setInternalSelectedTaskId(null)
+    onSelectTask?.(null)
+  }
+  const deleteSelected = (taskId: string) => {
+    onDeleteTask?.(taskId)
+    clearSelection()
+  }
+  useEditorShortcuts({ selectedTaskId: activeTaskId, onSave, onDeleteSelected: deleteSelected, onClearSelection: clearSelection })
 
   return (
     <div>
