@@ -1,0 +1,19 @@
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+}
+
+.editor-toolbar button {
+  border: 1px solid var(--focus-ring);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  color: #ffffff;
+  background: var(--focus-ring);
+  cursor: pointer;
+}
+
+.editor-toolbar button:hover {
+  filter: brightness(0.9);
+}

@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-EDIT-016",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T15:12:00.0000000Z",
-    "note": "Add deterministic locally unique task defaults to the editor with visible canvas placement and dirty state."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-EDIT-017",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -90,7 +85,8 @@
     "M7-EDIT-012",
     "M7-EDIT-013",
     "M7-EDIT-014",
-    "M7-EDIT-015"
+    "M7-EDIT-015",
+    "M7-EDIT-016"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -236,5 +232,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-EDIT-015 PASS: custom TaskNode renders task metadata, accessible dependency handles, and selected styling in the React Flow canvas; typecheck, ESLint, and Vitest (19 tests) passed. M7-EDIT-016 is next."
+  "last_validation_note": "M7-EDIT-016 PASS: editor toolbar adds deterministic locally unique task defaults at a visible grid position and marks the reducer state dirty without a backend call; typecheck, ESLint, and Vitest (20 tests) passed. M7-EDIT-017 is next."
 }

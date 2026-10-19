@@ -19,6 +19,35 @@ export type EditorAction =
 
 export const emptyEditorState: EditorState = { graph: { nodes: [], edges: [] }, selectedTaskId: null, dirty: false }
 
+export function createDefaultTask(graph: EditorGraph): { task: TaskDefinition; position: { x: number; y: number } } {
+  const existingIds = new Set(graph.nodes.map((node) => node.id))
+  let sequence = 1
+  let id = `new-task-${sequence}`
+  while (existingIds.has(id)) {
+    sequence += 1
+    id = `new-task-${sequence}`
+  }
+  const index = graph.nodes.length
+  return {
+    task: {
+      id,
+      name: 'New task',
+      prompt: '',
+      cwd: '.',
+      dependencies: [],
+      execution_mode: 'NEW_THREAD',
+      continue_from_task_id: null,
+      model: null,
+      reasoning_effort: null,
+      sandbox: 'workspace_write',
+      approval_mode: null,
+      timeout_seconds: null,
+      retry_policy: { max_attempts: 1 },
+    },
+    position: { x: (index % 3) * 280, y: Math.floor(index / 3) * 180 },
+  }
+}
+
 function nodeFor(task: TaskDefinition, position: { x: number; y: number }): EditorNode {
   return { id: task.id, type: 'task', position: { ...position }, data: { task: structuredClone(task) } }
 }
