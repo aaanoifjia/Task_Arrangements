@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-EDIT-029",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-19T16:35:00.0000000Z",
-    "note": "Add workflow metadata editing with stable workflow ID and local dirty-state tracking."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-EDIT-030",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -103,7 +98,8 @@
     "M7-EDIT-025",
     "M7-EDIT-026",
     "M7-EDIT-027",
-    "M7-EDIT-028"
+    "M7-EDIT-028",
+    "M7-EDIT-029"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -249,5 +245,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-EDIT-028 PASS: validation panel renders deterministic issues, selects referenced tasks, reports valid state, and disables Save while issues exist; typecheck, ESLint, and Vitest (43 tests) passed. M7-EDIT-029 is next."
+  "last_validation_note": "M7-EDIT-029 PASS: workflow metadata panel keeps ID read-only, edits name/optional description, and exposes deterministic dirty state; typecheck, ESLint, and Vitest (45 tests) passed. M7-EDIT-030 is next."
 }
