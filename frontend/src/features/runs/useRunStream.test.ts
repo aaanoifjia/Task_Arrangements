@@ -29,6 +29,7 @@ describe('useRunStream', () => {
     const socket = FakeWebSocket.instances[0]!
     act(() => socket.onmessage?.({ data: JSON.stringify({ kind: 'snapshot', payload: { tasks: [task] } }) } as MessageEvent))
     expect(result.current.tasks).toEqual([task])
+    expect(result.current.hasSnapshot).toBe(true)
     act(() => socket.onmessage?.({
       data: JSON.stringify({
         kind: 'event',

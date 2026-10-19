@@ -3,9 +3,10 @@ import { useParams } from 'react-router-dom'
 import type { RunDetail, TaskRunView } from '../../api/types'
 import { createRunApi, type RunApi } from './api'
 import RunGraph from './RunGraph'
+import { useRunStream, type UseRunStreamOptions } from './useRunStream'
 import './RunDetailPage.css'
 
-export type RunDetailPageProps = { api?: RunApi }
+export type RunDetailPageProps = { api?: RunApi; streamOptions?: UseRunStreamOptions }
 
 function isNotFound(cause: unknown): boolean {
   if (!cause || typeof cause !== 'object') return false
@@ -13,9 +14,10 @@ function isNotFound(cause: unknown): boolean {
   return error.status === 404 || error.code === 'NOT_FOUND'
 }
 
-function RunDetailPage({ api }: RunDetailPageProps) {
+function RunDetailPage({ api, streamOptions }: RunDetailPageProps) {
   const { runId } = useParams<{ runId: string }>()
   const stableApi = useMemo(() => api ?? createRunApi(), [api])
+  const stream = useRunStream(runId, streamOptions)
   const [run, setRun] = useState<RunDetail | null>(null)
   const [tasks, setTasks] = useState<TaskRunView[]>([])
   const [loading, setLoading] = useState(true)
@@ -48,6 +50,7 @@ function RunDetailPage({ api }: RunDetailPageProps) {
   if (notFound) return <section aria-labelledby="run-not-found-heading"><h1 id="run-not-found-heading">Run not found</h1><p>The requested run does not exist.</p></section>
   if (error) return <section aria-labelledby="run-error-heading"><h1 id="run-error-heading">Unable to load run</h1><p role="alert">{error}</p></section>
   if (!run) return <p role="alert">Run data is unavailable.</p>
+  const visibleTasks = stream.hasSnapshot ? stream.tasks : tasks
 
   return (
     <section aria-labelledby="run-detail-heading" className="run-detail">
@@ -65,14 +68,14 @@ function RunDetailPage({ api }: RunDetailPageProps) {
       </dl>
       <section aria-labelledby="run-graph-heading">
         <h2 id="run-graph-heading">Snapshot graph</h2>
-        <RunGraph snapshot={run.snapshot} taskRuns={tasks} />
+        <RunGraph snapshot={run.snapshot} taskRuns={visibleTasks} />
       </section>
       <section aria-labelledby="run-tasks-heading">
         <h2 id="run-tasks-heading">Tasks</h2>
-        {tasks.length === 0
+        {visibleTasks.length === 0
           ? <p>No tasks recorded.</p>
           : <ul className="run-detail__tasks">
-            {tasks.map((task) => (
+            {visibleTasks.map((task) => (
               <li key={task.id}>
                 <strong>{task.task_id}</strong>
                 <span>{task.status}</span>

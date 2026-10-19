@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-RUN-046",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T00:07:00.0000000Z",
-    "note": "Apply WebSocket task snapshots to the run detail graph and task list while retaining REST data for initial render."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-RUN-047",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -120,7 +115,8 @@
     "M7-RUN-042",
     "M7-RUN-043",
     "M7-RUN-044",
-    "M7-RUN-045"
+    "M7-RUN-045",
+    "M7-RUN-046"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -266,5 +262,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-RUN-045 PASS: cleanup-safe WebSocket hook applies snapshot messages, tracks latest event cursor, and sends no backend state changes; typecheck, ESLint, and Vitest (85 tests) passed. M7-RUN-046 is next."
+  "last_validation_note": "M7-RUN-046 PASS: REST remains the initial task source and WebSocket snapshots drive a tested PENDING→RUNNING→SUCCESS task UI transition; typecheck, ESLint, and Vitest (86 tests) passed. M7-RUN-047 is next."
 }

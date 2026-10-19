@@ -6,18 +6,19 @@ export type UseRunStreamOptions = { webSocketFactory?: WebSocketFactory }
 
 export type RunStreamState = {
   tasks: TaskRunView[]
+  hasSnapshot: boolean
   latestEvent: EventView | null
   latestEventId: string | null
   connected: boolean
 }
 
 const emptyState: RunStreamState = {
-  tasks: [], latestEvent: null, latestEventId: null, connected: false,
+  tasks: [], hasSnapshot: false, latestEvent: null, latestEventId: null, connected: false,
 }
 
 function applyMessage(message: StreamMessage, setState: (update: (current: RunStreamState) => RunStreamState) => void) {
   if (message.kind === 'snapshot') {
-    setState((current) => ({ ...current, tasks: message.payload.tasks }))
+    setState((current) => ({ ...current, tasks: message.payload.tasks, hasSnapshot: true }))
     return
   }
   setState((current) => ({
