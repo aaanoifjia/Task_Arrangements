@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M7-RUN-047",
+  "active_task": {
+    "id": "M7-RUN-047",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-20T00:10:00.0000000Z",
+    "note": "Add an arrival-ordered durable event log panel with timestamps, references, and compact JSON payload disclosure."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
