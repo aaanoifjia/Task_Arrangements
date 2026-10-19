@@ -76,6 +76,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M8-CONTROL-021 — retry REST endpoint accepting public task ids and TaskRun ids; API tests, Ruff, and strict mypy PASS
 - M8-CONTROL-022 — queued/running cancel REST endpoint with stable conflict mapping; API matrix, Ruff, and strict mypy PASS
 - M8-CONTROL-023 — skip REST endpoint with stable invalid-state error; API tests, Ruff, and strict mypy PASS
+- M8-CONTROL-024 — mark-success REST endpoint with explicit success transition and audit path; API tests, Ruff, and strict mypy PASS
 
 ## Verified Codex Runtime
 
@@ -107,7 +108,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M8-CONTROL-024` — Mark-Success REST Endpoint (IN_PROGRESS)
+`M8-CONTROL-025` — Control API Error Matrix
 
 The late-phase plan contains 120 sequential tasks:
 - M8: 44 tasks

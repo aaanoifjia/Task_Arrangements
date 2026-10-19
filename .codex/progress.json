@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M8-CONTROL-024",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T05:15:00.0000000Z",
-    "note": "Add mark-success REST endpoint with explicit audit-backed control response."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M8-CONTROL-025",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -156,7 +151,8 @@
     "M8-CONTROL-020",
     "M8-CONTROL-021",
     "M8-CONTROL-022",
-    "M8-CONTROL-023"
+    "M8-CONTROL-023",
+    "M8-CONTROL-024"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -422,5 +418,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-CONTROL-024 IN_PROGRESS: implementing mark-success REST endpoint and audit response tests."
+  "last_validation_note": "M8-CONTROL-024 COMPLETE: mark-success route/audit API tests, Ruff, and strict mypy PASS."
 }

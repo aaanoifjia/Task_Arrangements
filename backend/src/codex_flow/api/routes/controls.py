@@ -112,3 +112,21 @@ async def skip_task(request: Request, run_id: str, task_id: str) -> ManualAction
     except InvalidControlActionError as error:
         raise api_error(422, "INVALID_CONTROL_ACTION", str(error)) from error
     return ManualActionResponse.model_validate(result.model_dump())
+
+
+@router.post("/runs/{run_id}/tasks/{task_id}/mark-success", response_model=ManualActionResponse)
+async def mark_success_task(request: Request, run_id: str, task_id: str) -> ManualActionResponse:
+    command = ControlCommand(
+        run_id=run_id,
+        action=ControlAction.MARK_SUCCESS,
+        task_id=_task_run_id(request, run_id, task_id),
+    )
+    try:
+        result = await service(request).apply(command)
+    except ControlNotFoundError as error:
+        raise not_found("CONTROL_TASK_NOT_FOUND", str(error)) from error
+    except ControlConflictError as error:
+        raise conflict("CONTROL_CONFLICT", str(error)) from error
+    except InvalidControlActionError as error:
+        raise api_error(422, "INVALID_CONTROL_ACTION", str(error)) from error
+    return ManualActionResponse.model_validate(result.model_dump())
