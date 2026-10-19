@@ -10,7 +10,7 @@ class ResizeObserverMock {
 }
 
 describe('RunGraph', () => {
-  it('renders the immutable snapshot graph with task-run status and no editing controls', () => {
+  it('renders a mixed-state immutable graph with status and execution references', () => {
     globalThis.ResizeObserver = ResizeObserverMock
     render(
       <RunGraph
@@ -19,12 +19,19 @@ describe('RunGraph', () => {
           tasks: [{ id: 'A', name: 'First task' }, { id: 'B', name: 'Second task' }],
           edges: [{ source_task_id: 'A', target_task_id: 'B' }],
         }}
-        taskRuns={[fixtureTaskRun]}
+        taskRuns={[
+          fixtureTaskRun,
+          { ...fixtureTaskRun, id: 'task-run-b', task_id: 'B', status: 'FAILED', thread_id: 'thread-b', turn_id: 'turn-b' },
+        ]}
       />,
     )
     expect(screen.getByTestId('run-graph')).toHaveAttribute('data-read-only', 'true')
-    expect(screen.getByText('First task — RUNNING')).toBeInTheDocument()
-    expect(screen.getByText('Second task — PENDING')).toBeInTheDocument()
+    expect(screen.getByText('First task')).toBeInTheDocument()
+    expect(screen.getByText('Running')).toBeInTheDocument()
+    expect(screen.getByText('Second task')).toBeInTheDocument()
+    expect(screen.getByText('Failed')).toBeInTheDocument()
+    expect(screen.getByText('Thread: thread-b')).toBeInTheDocument()
+    expect(screen.getByText('Turn: turn-b')).toBeInTheDocument()
     expect(screen.getByTestId('rf__minimap')).toBeInTheDocument()
   })
 })

@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M7-RUN-044",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-20T00:02:00.0000000Z",
-    "note": "Overlay durable TaskRun status and thread/turn references on immutable run snapshot nodes while preserving node identity."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M7-RUN-045",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -118,7 +113,8 @@
     "M7-RUN-040",
     "M7-RUN-041",
     "M7-RUN-042",
-    "M7-RUN-043"
+    "M7-RUN-043",
+    "M7-RUN-044"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -264,5 +260,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M7-RUN-043 PASS: all canonical TaskStatus values have explicit labels/tokens and unknown values visibly fail closed as UNKNOWN; typecheck, ESLint, and Vitest (83 tests) passed. M7-RUN-044 is next."
+  "last_validation_note": "M7-RUN-044 PASS: run graph uses durable TaskRun status overlays while preserving snapshot task IDs and thread/turn references; typecheck, ESLint, and Vitest (83 tests) passed. M7-RUN-045 is next."
 }

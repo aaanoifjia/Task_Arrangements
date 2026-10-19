@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Background, Controls, MiniMap, ReactFlow, type Edge, type Node } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import type { TaskRunView } from '../../api/types'
+import RunTaskNode, { type RunTaskNodeData } from './RunTaskNode'
 import './RunGraph.css'
 
 type SnapshotTask = { id: string; name: string }
@@ -35,12 +36,21 @@ function readSnapshotEdges(snapshot: Record<string, unknown>, knownIds: Set<stri
 
 function RunGraph({ snapshot, taskRuns }: RunGraphProps) {
   const taskDefinitions = useMemo(() => readSnapshotTasks(snapshot), [snapshot])
-  const taskStatuses = useMemo(() => new Map(taskRuns.map((task) => [task.task_id, task.status])), [taskRuns])
-  const nodes = useMemo<Node<{ label: string }>[]>(() => taskDefinitions.map((task, index) => ({
+  const taskRunsById = useMemo(() => new Map(taskRuns.map((task) => [task.task_id, task])), [taskRuns])
+  const nodes = useMemo<Node<RunTaskNodeData>[]>(() => taskDefinitions.map((task, index) => {
+    const taskRun = taskRunsById.get(task.id)
+    return {
     id: task.id,
+    type: 'runTask',
     position: { x: (index % 3) * 280, y: Math.floor(index / 3) * 180 },
-    data: { label: `${task.name} — ${taskStatuses.get(task.id) ?? 'PENDING'}` },
-  })), [taskDefinitions, taskStatuses])
+    data: {
+      taskId: task.id,
+      taskName: task.name,
+      status: taskRun?.status ?? 'PENDING',
+      threadId: taskRun?.thread_id,
+      turnId: taskRun?.turn_id,
+    },
+  }}), [taskDefinitions, taskRunsById])
   const edges = useMemo<Edge[]>(() => {
     const knownIds = new Set(taskDefinitions.map((task) => task.id))
     return readSnapshotEdges(snapshot, knownIds).map((edge) => ({
@@ -57,6 +67,7 @@ function RunGraph({ snapshot, taskRuns }: RunGraphProps) {
         : <ReactFlow
           nodes={nodes}
           edges={edges}
+          nodeTypes={{ runTask: RunTaskNode }}
           fitView
           nodesDraggable={false}
           nodesConnectable={false}
