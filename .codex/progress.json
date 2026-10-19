@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M7-WF-010",
+  "active_task": {
+    "id": "M7-WF-010",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-19T14:56:36.6145604Z",
+    "note": "Build workflow list page with loading, empty, error, refresh, and editor navigation states."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
