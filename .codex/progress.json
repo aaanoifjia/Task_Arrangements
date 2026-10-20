@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M8-UI-032",
+  "active_task": {
+    "id": "M8-UI-032",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-20T08:30:00.0000000Z",
+    "note": "Add typed RunApi pause/resume/retry/cancel/skip/markSuccess methods with endpoint and error propagation tests."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -434,5 +439,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-UI-031 COMPLETE: committed public control types, 3 type tests, and frontend tsc -b PASS after M8-UI-031A."
+  "last_validation_note": "M8-UI-032 IN_PROGRESS: implementing typed frontend control API client methods."
 }
