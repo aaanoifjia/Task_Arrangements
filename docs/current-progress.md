@@ -114,7 +114,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M8-UI-031A` — SKIPPED Status Presentation Repair
+`M8-UI-031A` — SKIPPED Status Presentation Repair (IN_PROGRESS)
 
 `M8-UI-031` is blocked only because its authoritative addition of `SKIPPED` to the frontend TaskStatus union made the pre-existing M7 `status.ts` presentation record incomplete. The remediation task owns only the status presentation files, adds the missing SKIPPED mapping, and runs focused tests plus `tsc -b`.
 
