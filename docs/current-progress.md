@@ -114,15 +114,10 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M8-UI-031` — Frontend Control Types (BLOCKED)
+`M8-UI-031A` — SKIPPED Status Presentation Repair
 
-Blocker: the required frontend `tsc -b` fails because adding the authoritative `SKIPPED` status requires a matching entry in non-owned `frontend/src/features/runs/status.ts`. The task owns only `frontend/src/api/types.ts` and `frontend/src/api/types.test.ts`; no task-scope-compliant completion is possible without an authorized remediation task.
+`M8-UI-031` is blocked only because its authoritative addition of `SKIPPED` to the frontend TaskStatus union made the pre-existing M7 `status.ts` presentation record incomplete. The remediation task owns only the status presentation files, adds the missing SKIPPED mapping, and runs focused tests plus `tsc -b`.
 
-The late-phase plan contains 120 sequential tasks:
-- M8: 44 tasks
-- M9: 40 tasks
-- M10: 36 tasks
+After M8-UI-031A passes, resume M8-UI-031 without redoing its committed type changes, complete its acceptance, then continue automatically with M8-UI-032 and the remaining M8 → M9 → M10 sequence.
 
-It is intentionally sized for a long autonomous run (roughly 7–9 hours at recent project velocity). Codex should continue through `M10-REPORT-036` unless a genuine blocker or actual host termination occurs.
-
-All user/manual Desktop checks are deferred until after M10 automated completion so they do not interrupt autonomous execution.
+All user/manual Desktop checks remain deferred until after M10 automated completion.
