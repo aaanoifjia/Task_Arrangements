@@ -114,10 +114,12 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M8-UI-032` — Frontend Control API Client (IN_PROGRESS)
+`M8-UI-032` — Frontend Control API Client (BLOCKED)
+
+Blocker: the six RunApi control methods require additions to the typed default client in non-owned `frontend/src/api/client.ts`. The task owns only `frontend/src/features/runs/api.ts` and its tests, so implementing the real endpoint mapping would cross the task boundary.
 
 M8-UI-031A is COMPLETE: SKIPPED mapping tests 14/14 and frontend `tsc -b` PASS. M8-UI-031 is COMPLETE with 3 public type tests and frontend `tsc -b` PASS; its bounded remediation cleared the prior non-owned-file blocker.
 
-Continue automatically with M8-UI-032 and the remaining M8 → M9 → M10 sequence.
+Progress is blocked at M8-UI-032 until a bounded remediation task owns `frontend/src/api/client.ts` and its tests.
 
 All user/manual Desktop checks remain deferred until after M10 automated completion.
