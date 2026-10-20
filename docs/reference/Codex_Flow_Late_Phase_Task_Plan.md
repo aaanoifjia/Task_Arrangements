@@ -94,6 +94,8 @@ M8-CONTROL-029
 ↓
 M8-CONTROL-030
 ↓
+M8-UI-031A
+↓
 M8-UI-031
 ↓
 M8-UI-032
@@ -832,7 +834,7 @@ All deterministic crash/race points pass.
 
 ### Dependencies
 
-`M8-CONTROL-030`
+`M8-UI-031A`
 
 ### Owned Files
 
@@ -847,7 +849,40 @@ Mirror control response/error and paused run fields from public M8 API. Add SKIP
 
 ### Acceptance
 
-Frontend public types match OpenAPI contract and type tests pass.
+Frontend public types match OpenAPI contract and type tests pass; frontend `tsc -b` passes after the dedicated status-presentation remediation.
+
+---
+
+## M8-UI-031A — SKIPPED Status Presentation Repair
+
+### Dependencies
+
+`M8-CONTROL-030`
+
+### Owned Files
+
+```text
+frontend/src/features/runs/status.ts
+frontend/src/features/runs/status.test.ts
+```
+
+### Implementation
+
+Repair the M8-UI-031 integration gap caused by adding the authoritative `SKIPPED` TaskStatus:
+
+- add `SKIPPED` to `canonicalTaskStatuses`;
+- add deterministic presentation mapping `SKIPPED -> { label: "Skipped", token: "skipped" }`;
+- preserve UNKNOWN fail-visible behavior;
+- do not modify any other status semantics;
+- run the focused status tests and frontend `tsc -b`.
+
+After this task passes, resume `M8-UI-031` exactly where it was blocked. Do not reimplement its already committed type changes.
+
+### Acceptance
+
+- status mapping tests include SKIPPED and pass;
+- frontend `tsc -b` passes;
+- no unrelated frontend status or styling changes.
 
 ---
 
