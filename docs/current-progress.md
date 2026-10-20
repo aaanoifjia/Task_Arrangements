@@ -114,10 +114,10 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M8-UI-031` — Frontend Control Types (IN_PROGRESS; resumed after M8-UI-031A)
+`M8-UI-032` — Frontend Control API Client
 
-M8-UI-031A is COMPLETE: SKIPPED mapping tests 14/14 and frontend `tsc -b` PASS. Its bounded remediation cleared the prior non-owned-file blocker.
+M8-UI-031A is COMPLETE: SKIPPED mapping tests 14/14 and frontend `tsc -b` PASS. M8-UI-031 is COMPLETE with 3 public type tests and frontend `tsc -b` PASS; its bounded remediation cleared the prior non-owned-file blocker.
 
-After M8-UI-031A passes, resume M8-UI-031 without redoing its committed type changes, complete its acceptance, then continue automatically with M8-UI-032 and the remaining M8 → M9 → M10 sequence.
+Continue automatically with M8-UI-032 and the remaining M8 → M9 → M10 sequence.
 
 All user/manual Desktop checks remain deferred until after M10 automated completion.
