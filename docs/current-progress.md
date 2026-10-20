@@ -114,9 +114,9 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M8-UI-031A` — SKIPPED Status Presentation Repair (IN_PROGRESS)
+`M8-UI-031` — Frontend Control Types (resuming after M8-UI-031A)
 
-`M8-UI-031` is blocked only because its authoritative addition of `SKIPPED` to the frontend TaskStatus union made the pre-existing M7 `status.ts` presentation record incomplete. The remediation task owns only the status presentation files, adds the missing SKIPPED mapping, and runs focused tests plus `tsc -b`.
+M8-UI-031A is COMPLETE: SKIPPED mapping tests 14/14 and frontend `tsc -b` PASS. Its bounded remediation cleared the prior non-owned-file blocker.
 
 After M8-UI-031A passes, resume M8-UI-031 without redoing its committed type changes, complete its acceptance, then continue automatically with M8-UI-032 and the remaining M8 → M9 → M10 sequence.
 

@@ -17,6 +17,11 @@ describe('task status presentation', () => {
     expect(mapTaskStatus(null)).toEqual({ label: 'UNKNOWN', token: 'unknown' })
   })
 
+  it('maps SKIPPED to the deterministic visible presentation', () => {
+    expect(mapTaskStatus('SKIPPED')).toEqual({ label: 'Skipped', token: 'skipped' })
+    expect(canonicalTaskStatuses).toContain('SKIPPED')
+  })
+
   it('renders unknown status visibly on a run task node', () => {
     render(
       createElement(

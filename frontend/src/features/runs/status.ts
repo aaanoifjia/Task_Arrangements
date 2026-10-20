@@ -7,7 +7,7 @@ export type TaskStatusPresentation = {
 
 export const canonicalTaskStatuses: readonly TaskStatus[] = [
   'PENDING', 'READY', 'STARTING', 'RUNNING', 'SUCCESS',
-  'FAILED', 'BLOCKED', 'CANCELLED', 'INTERRUPTED', 'NEEDS_ATTENTION',
+  'FAILED', 'BLOCKED', 'CANCELLED', 'SKIPPED', 'INTERRUPTED', 'NEEDS_ATTENTION',
 ]
 
 const presentations: Record<TaskStatus, TaskStatusPresentation> = {
@@ -19,6 +19,7 @@ const presentations: Record<TaskStatus, TaskStatusPresentation> = {
   FAILED: { label: 'Failed', token: 'failed' },
   BLOCKED: { label: 'Blocked', token: 'blocked' },
   CANCELLED: { label: 'Cancelled', token: 'cancelled' },
+  SKIPPED: { label: 'Skipped', token: 'skipped' },
   INTERRUPTED: { label: 'Interrupted', token: 'interrupted' },
   NEEDS_ATTENTION: { label: 'Needs attention', token: 'needs-attention' },
 }
