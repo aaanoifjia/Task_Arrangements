@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M10-HARDEN-034",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Building a complete item-by-item v1 acceptance evidence matrix with explicit manual-only pending states."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M10-GATE-035",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -256,7 +251,8 @@
     "M10-HARDEN-030",
     "M10-HARDEN-031",
     "M10-HARDEN-032",
-    "M10-HARDEN-033"
+    "M10-HARDEN-033",
+    "M10-HARDEN-034"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -642,5 +638,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M10-HARDEN-033 PASS: complete automated regression passed: backend non-live 348 passed/6 deselected/2 known xfailed; frontend 52 files/177 tests, typecheck, lint, and production build; packaging contract 3 passed; Tauri cargo check and 26 Rust tests; Ruff passed."
+  "last_validation_note": "M10-HARDEN-034 PASS: complete v1 acceptance evidence matrix maps all 22 items to existing automated/manual evidence; all referenced paths were verified, manual-only and both-mode UX items remain explicitly PENDING."
 }
