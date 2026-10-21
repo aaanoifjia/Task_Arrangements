@@ -256,7 +256,8 @@
       ],
       "failing_validation": "cargo check failed in tauri-build: resource path binaries\\codex-flow-server-x86_64-pc-windows-msvc.exe does not exist.",
       "intended_acceptance": "The sidecar build stages the target-named Windows executable in desktop/src-tauri/binaries so Tauri cargo checks can resolve externalBin without shell invocation.",
-      "status": "IN_PROGRESS"
+      "status": "COMPLETE",
+      "validation": "PyInstaller build completed and staged desktop/src-tauri/binaries/codex-flow-server-x86_64-pc-windows-msvc.exe; the target-named externalBin resource is now present for Tauri validation."
     }
   ],
   "task_queue_after_current": [
