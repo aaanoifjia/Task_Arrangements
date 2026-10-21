@@ -164,40 +164,82 @@ class DurableRunner:
                 task_run_id, config, task.prompt
             )
         self._active_turns[task_run_id] = turn
-        failed_command_observed = False
-        turn_started = False
         try:
-            stream = cast("AsyncIterator[CodexEvent]", self._adapter.stream_turn(turn))
-            async for event in stream:
-                self._repository.append_event(
-                    event.event_type.value,
-                    event.details,
-                    task_run_id=task_run_id,
-                    attempt_id=attempt_id,
-                )
-                if event.event_type is EventType.TURN_STARTED:
-                    turn_started = True
-                    if self._update_execution_state(
-                        task_run_id, TaskStatus.RUNNING.value, turn.thread_id, turn.turn_id
-                    ):
-                        self._repository.update_attempt_state(attempt_id, TaskStatus.RUNNING.value)
-                elif command_completion_failed(event):
-                    failed_command_observed = True
-                else:
-                    status = terminal_status(event, failed_command_observed)
-                    if status is not None:
-                        if self._update_execution_state(
-                            task_run_id, status.value, turn.thread_id, turn.turn_id
-                        ):
-                            self._repository.update_attempt_state(attempt_id, status.value)
-                        return self._retry_reason(event, turn_started)
-            if self._update_execution_state(
-                task_run_id, TaskStatus.FAILED.value, turn.thread_id, turn.turn_id
-            ):
-                self._repository.update_attempt_state(attempt_id, TaskStatus.FAILED.value)
-            return False, None
+            if task.timeout_seconds is None:
+                return await self._stream_turn(task_run_id, attempt_id, turn)
+            try:
+                async with asyncio.timeout(task.timeout_seconds):
+                    return await self._stream_turn(task_run_id, attempt_id, turn)
+            except TimeoutError:
+                await self._handle_timeout(task_run_id, attempt_id, turn, task.timeout_seconds)
+                return False, None
         finally:
             self._active_turns.pop(task_run_id, None)
+
+    async def _stream_turn(
+        self, task_run_id: str, attempt_id: str, turn: CodexTurnRef
+    ) -> tuple[bool, str | None]:
+        failed_command_observed = False
+        turn_started = False
+        stream = cast("AsyncIterator[CodexEvent]", self._adapter.stream_turn(turn))
+        async for event in stream:
+            self._repository.append_event(
+                event.event_type.value,
+                event.details,
+                task_run_id=task_run_id,
+                attempt_id=attempt_id,
+            )
+            if event.event_type is EventType.TURN_STARTED:
+                turn_started = True
+                if self._update_execution_state(
+                    task_run_id, TaskStatus.RUNNING.value, turn.thread_id, turn.turn_id
+                ):
+                    self._repository.update_attempt_state(attempt_id, TaskStatus.RUNNING.value)
+            elif command_completion_failed(event):
+                failed_command_observed = True
+            else:
+                status = terminal_status(event, failed_command_observed)
+                if status is not None:
+                    if self._update_execution_state(
+                        task_run_id, status.value, turn.thread_id, turn.turn_id
+                    ):
+                        self._repository.update_attempt_state(attempt_id, status.value)
+                    return self._retry_reason(event, turn_started)
+        if self._update_execution_state(
+            task_run_id, TaskStatus.FAILED.value, turn.thread_id, turn.turn_id
+        ):
+            self._repository.update_attempt_state(attempt_id, TaskStatus.FAILED.value)
+        return False, None
+
+    async def _handle_timeout(
+        self, task_run_id: str, attempt_id: str, turn: CodexTurnRef, timeout_seconds: int
+    ) -> None:
+        interrupt_error: str | None = None
+        try:
+            await self._adapter.interrupt_turn(turn)
+        except Exception as error:  # noqa: BLE001 - timeout must fail closed on interrupt errors.
+            interrupt_error = type(error).__name__
+        status = TaskStatus.FAILED if interrupt_error is not None else TaskStatus.INTERRUPTED
+        if self._update_execution_state(task_run_id, status.value, turn.thread_id, turn.turn_id):
+            self._repository.update_attempt_state(attempt_id, status.value)
+        payload: dict[str, object] = {
+            "timeout_seconds": timeout_seconds,
+            "interrupt_requested": True,
+            "interrupt_succeeded": interrupt_error is None,
+            "terminal_status": status.value,
+        }
+        if interrupt_error is not None:
+            payload["interrupt_error_type"] = interrupt_error
+        task_row = self._repository.get_task_run(task_run_id)
+        if task_row is None:
+            raise ValueError(f"task run not found: {task_run_id}")
+        self._repository.append_event(
+            "TASK_TIMEOUT",
+            payload,
+            workflow_run_id=str(task_row["workflow_run_id"]),
+            task_run_id=task_run_id,
+            attempt_id=attempt_id,
+        )
 
     @staticmethod
     def _explicit_reason_class(event: CodexEvent) -> str | None:
