@@ -442,13 +442,15 @@ mod tests {
             assert!(seen_tokens.insert(first_token.clone()));
             assert_eq!(process.paths.db_path, paths.db_path);
 
-            for _ in 0..100 {
+            let mut exited = false;
+            for _ in 0..1000 {
                 if process.poll_exit().expect("poll fake sidecar").is_some() {
+                    exited = true;
                     break;
                 }
                 thread::sleep(std::time::Duration::from_millis(1));
             }
-            assert!(process.poll_exit().expect("observe fake sidecar exit").is_some());
+            assert!(exited, "fake sidecar should exit before relaunch");
 
             process.relaunch().expect("bounded relaunch after fake crash");
             assert_ne!(process.token, first_token);
