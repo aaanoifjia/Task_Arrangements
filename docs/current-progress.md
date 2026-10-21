@@ -142,7 +142,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M9-DESKTOP-014` — Desktop Runtime State Command (IN_PROGRESS)
+`M9-DESKTOP-015` — Frontend Desktop Bridge
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 
@@ -154,4 +154,4 @@ The repository protocol now supports:
 
 M9-PREFLIGHT-003A audits Python/Node/PyInstaller/Rust/MSVC/Windows SDK/WebView2/Git. If the current invocation explicitly authorizes Rust, it may install the official Rust toolchain only. Other missing system components remain genuine blockers.
 
-M9-PREFLIGHT-003A through M9-DESKTOP-013 are complete. M9-DESKTOP-012 passed Cargo metadata, standalone Rust library/test compilation, and 2/2 sidecar command-construction unit tests. M9-DESKTOP-013 passed canonical readiness parsing, malformed/invalid fail-closed behavior, timeout, stderr/non-handshake filtering, and sidecar integration with 6/6 Rust tests. M9-DESKTOP-014 is now in progress for the desktop runtime-state command. The complete declared Windows/Tauri prerequisite audit is recorded in `docs/m9-environment-preflight.md`; the authorized official Rustup stable toolchain is installed and verified. Bounded remediation M9-DESKTOP-012-R1 is complete: the target-named sidecar binary required by the already-authoritative Tauri externalBin configuration was staged and verified. M9-DESKTOP-010-R1 repaired the packaged server entrypoint and is recorded complete in remediation history.
+M9-PREFLIGHT-003A through M9-DESKTOP-014 are complete. M9-DESKTOP-012 passed Cargo metadata, standalone Rust library/test compilation, and 2/2 sidecar command-construction unit tests. M9-DESKTOP-013 passed canonical readiness parsing, malformed/invalid fail-closed behavior, timeout, stderr/non-handshake filtering, and sidecar integration with 6/6 Rust tests. M9-DESKTOP-014 passed Tauri Cargo compilation and 5/5 tests for unavailable-before-ready, exact ready state, IPC payload, and sidecar command regressions. The complete declared Windows/Tauri prerequisite audit is recorded in `docs/m9-environment-preflight.md`; the authorized official Rustup stable toolchain is installed and verified. Bounded remediation M9-DESKTOP-012-R1 is complete: the target-named sidecar binary required by the already-authoritative Tauri externalBin configuration was staged and verified. M9-DESKTOP-010-R1 repaired the packaged server entrypoint and is recorded complete in remediation history.
