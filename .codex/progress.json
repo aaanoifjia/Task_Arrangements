@@ -365,6 +365,17 @@
       "intended_acceptance": "The parity audit records durable continuation as PASS, removes the obsolete strict xfail, and all parent continuation/parity tests pass.",
       "status": "COMPLETE",
       "validation": "Removed the obsolete continuation strict xfail and updated the audit to PASS; durable continuation/parity suite passed 4 tests with 2 remaining known-gap xfails, Ruff passed, and strict mypy passed."
+    },
+    {
+      "id": "M10-HARDEN-023-R1",
+      "parent_task": "M10-HARDEN-023",
+      "reason": "Adding migration 0003 correctly advances the authoritative schema version, while the existing migration 0002 regression test still asserted the obsolete version 2 contract.",
+      "files": [
+        "backend/tests/integration/test_migration_0002.py"
+      ],
+      "failing_validation": "Migration 0002 regression tests failed because MIGRATION_VERSION and upgraded user_version are now 3 after the required query-index migration.",
+      "intended_acceptance": "The existing migration regression test asserts the preserved v1/v2 upgrade behavior and the current schema version 3 without changing schema semantics.",
+      "status": "IN_PROGRESS"
     }
   ],
   "task_queue_after_current": [
