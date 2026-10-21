@@ -2,7 +2,7 @@ import type { TaskRunView } from '../../api/types'
 import type { RunApi } from './api'
 import AttemptHistory from './AttemptHistory'
 import OpenInCodex from './OpenInCodex'
-import RunControls from './RunControls'
+import RunControls, { type RunControlAction } from './RunControls'
 import TaskStateNotice from './TaskStateNotice'
 import './TaskRunDrawer.css'
 
@@ -11,13 +11,15 @@ export type TaskRunDrawerProps = {
   onClose: () => void
   attemptApi?: Pick<RunApi, 'attempts'>
   onRetry?: () => void
+  onCancel?: () => void
+  pendingAction?: RunControlAction | null
 }
 
 function optionalValue(value: string | null): string {
   return value ?? 'Not available'
 }
 
-function TaskRunDrawer({ task, onClose, attemptApi, onRetry }: TaskRunDrawerProps) {
+function TaskRunDrawer({ task, onClose, attemptApi, onRetry, onCancel, pendingAction }: TaskRunDrawerProps) {
   if (!task) return null
   return (
     <aside className="task-run-drawer" role="dialog" aria-modal="false" aria-labelledby="task-run-drawer-heading" data-testid="task-run-drawer">
@@ -34,7 +36,15 @@ function TaskRunDrawer({ task, onClose, attemptApi, onRetry }: TaskRunDrawerProp
       </dl>
       <p><OpenInCodex threadId={task.thread_id} /></p>
       <TaskStateNotice status={task.status} />
-      <RunControls runStatus="SUCCESS" paused={false} taskStatus={task.status} onRetry={onRetry} />
+      <RunControls
+        runStatus="SUCCESS"
+        paused={false}
+        taskStatus={task.status}
+        pendingAction={pendingAction}
+        disabled={pendingAction !== null && pendingAction !== undefined}
+        onRetry={onRetry}
+        onCancel={onCancel}
+      />
       <AttemptHistory runId={task.workflow_run_id} taskId={task.task_id} api={attemptApi} />
     </aside>
   )

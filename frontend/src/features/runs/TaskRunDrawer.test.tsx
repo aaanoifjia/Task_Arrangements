@@ -43,4 +43,25 @@ describe('TaskRunDrawer', () => {
     render(<TaskRunDrawer task={{ ...fixtureTaskRun, status: 'SUCCESS' }} onClose={vi.fn()} onRetry={vi.fn()} attemptApi={attemptApi} />)
     expect(screen.queryByRole('button', { name: 'Retry' })).not.toBeInTheDocument()
   })
+
+  it.each(['PENDING', 'BLOCKED', 'READY', 'STARTING', 'RUNNING', 'NEEDS_ATTENTION'] as const)('shows and invokes Cancel for %s', async (status) => {
+    const onCancel = vi.fn()
+    const user = userEvent.setup()
+    render(<TaskRunDrawer task={{ ...fixtureTaskRun, status }} onClose={vi.fn()} onCancel={onCancel} attemptApi={attemptApi} />)
+    await user.click(screen.getByRole('button', { name: 'Cancel' }))
+    expect(onCancel).toHaveBeenCalledOnce()
+  })
+
+  it('disables Cancel while a cancellation is pending', () => {
+    render(
+      <TaskRunDrawer
+        task={{ ...fixtureTaskRun, status: 'RUNNING' }}
+        onClose={vi.fn()}
+        onCancel={vi.fn()}
+        pendingAction="cancel"
+        attemptApi={attemptApi}
+      />,
+    )
+    expect(screen.getByRole('button', { name: 'Cancel…' })).toBeDisabled()
+  })
 })
