@@ -10,6 +10,8 @@ use std::time::{Instant, SystemTime, UNIX_EPOCH};
 
 #[path = "handshake.rs"]
 pub mod handshake;
+#[path = "health.rs"]
+pub mod health;
 #[cfg(test)]
 #[path = "sidecar_test.rs"]
 mod sidecar_test;
@@ -178,7 +180,13 @@ pub fn wait_for_readiness(
         match receiver.recv_timeout(remaining) {
             Ok(output) if output.stream == SidecarStream::Stdout => {
                 match handshake::parse_readiness_line(&output.line)? {
-                    Some(readiness) => return Ok(readiness),
+                Some(readiness) => {
+                    health::wait_for_health(readiness.port, timeout).map_err(|error| match error {
+                        health::HealthError::Timeout => handshake::HandshakeError::Timeout,
+                        health::HealthError::Unavailable => handshake::HandshakeError::StreamClosed,
+                    })?;
+                    return Ok(readiness);
+                }
                     None => continue,
                 }
             }
