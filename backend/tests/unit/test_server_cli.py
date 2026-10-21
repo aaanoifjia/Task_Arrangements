@@ -1,7 +1,9 @@
 """Tests for the production server entrypoint."""
 
+import json
 import sys
 import types
+from io import StringIO
 from pathlib import Path
 
 import pytest
@@ -53,6 +55,24 @@ def test_import_does_not_start_uvicorn(monkeypatch) -> None:
     importlib.reload(server)
 
     assert calls == []
+
+
+def test_readiness_line_is_single_machine_readable_record(monkeypatch) -> None:
+    output = StringIO()
+    monkeypatch.setattr(sys, "stdout", output)
+
+    server.emit_readiness(43127, pid=1234)
+
+    lines = output.getvalue().splitlines()
+    assert len(lines) == 1
+    record = json.loads(lines[0])
+    assert record == {
+        "event": "ready",
+        "version": "0.1.0",
+        "port": 43127,
+        "pid": 1234,
+    }
+    assert "token" not in record
 
 
 @pytest.mark.parametrize("host", ["127.0.0.1", "::1"])
