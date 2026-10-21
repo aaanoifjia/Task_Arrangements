@@ -7,10 +7,10 @@ mod paths;
 use std::time::Duration;
 use std::sync::Mutex;
 
-use tauri::Manager;
+use tauri::{Manager, RunEvent};
 
 fn main() {
-    tauri::Builder::default()
+    let app = tauri::Builder::default()
         .setup(|app| {
             let runtime_paths = paths::resolve_runtime_paths(app.handle())?;
             app.manage(runtime_paths);
@@ -30,6 +30,16 @@ fn main() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![runtime_state::runtime_state])
-        .run(tauri::generate_context!())
-        .expect("error while running Codex Flow desktop application");
+        .build(tauri::generate_context!())
+        .expect("error while building Codex Flow desktop application");
+
+    app.run(|app_handle, event| {
+        if let RunEvent::Exit = event {
+            if let Some(process) = app_handle.try_state::<Mutex<sidecar::SidecarProcess>>() {
+                if let Ok(mut process) = process.lock() {
+                    let _ = process.shutdown();
+                }
+            }
+        }
+    });
 }

@@ -49,8 +49,17 @@ pub struct SidecarProcess {
 
 impl Drop for SidecarProcess {
     fn drop(&mut self) {
-        let _ = self.child.kill();
-        let _ = self.child.wait();
+        let _ = self.shutdown();
+    }
+}
+
+impl SidecarProcess {
+    pub fn shutdown(&mut self) -> io::Result<()> {
+        if self.child.try_wait()?.is_some() {
+            return Ok(());
+        }
+        self.child.kill()?;
+        self.child.wait().map(|_| ())
     }
 }
 
@@ -224,8 +233,11 @@ fn drain_output(receiver: &Receiver<SidecarOutput>) -> VecDeque<SidecarOutput> {
 
 #[cfg(test)]
 mod tests {
-    use super::{command_arguments, generate_session_token, RuntimePaths};
+    use super::{command_arguments, generate_session_token, RuntimePaths, SidecarProcess};
+    use std::process::Command;
     use std::path::PathBuf;
+    use std::sync::mpsc;
+    use std::thread;
 
     fn paths() -> RuntimePaths {
         RuntimePaths {
@@ -258,5 +270,26 @@ mod tests {
         assert!(!first.is_empty());
         assert!(!second.is_empty());
         assert_ne!(first, second);
+    }
+
+    #[test]
+    fn shutdown_is_idempotent_for_an_already_exited_child() {
+        let child = Command::new("cmd.exe")
+            .args(["/C", "exit", "0"])
+            .spawn()
+            .expect("spawn test child");
+        let (sender, output) = mpsc::channel();
+        drop(sender);
+        let mut process = SidecarProcess {
+            token: "test-token".to_owned(),
+            output,
+            child,
+            _stdout_thread: thread::spawn(|| {}),
+            _stderr_thread: thread::spawn(|| {}),
+        };
+
+        process.shutdown().expect("first shutdown");
+        process.shutdown().expect("second shutdown");
+        assert_eq!(process.output.try_iter().count(), 0);
     }
 }
