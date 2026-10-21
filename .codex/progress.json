@@ -19,7 +19,7 @@
     "id": "M9-DESKTOP-037",
     "status": "IN_PROGRESS",
     "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "M9-DESKTOP-037-R1 authorized: generate a deterministic temporary engineering icon with the official Tauri icon workflow so the existing desktop integration suite can compile."
+    "note": "M9-DESKTOP-037-R1 complete: the official Tauri-generated engineering icon set is present; resume the parent desktop integration acceptance and completion commit."
   },
   "next_task": null,
   "completed_tasks": [
@@ -263,7 +263,7 @@
       "reason": "BLOCKED: the required Tauri Rust integration suite cannot compile because the existing desktop package has no desktop/src-tauri/icons/icon.ico resource; cargo test fails in tauri-build before compiling the owned sidecar integration tests. Creating or choosing an application icon is outside the task Owned Files and requires a product asset decision.",
       "last_successful_validation": "Frontend desktop integration tests 8/8, frontend typecheck, and ESLint passed. cargo test --manifest-path desktop/src-tauri/Cargo.toml failed before test compilation: desktop/src-tauri/icons/icon.ico not found.",
       "next_action": "Provide the authoritative desktop icon resource or authorize the required non-owned asset repair, then resume M9-DESKTOP-037 without reimplementing the existing changes.",
-      "resolved_by": null
+      "resolved_by": "M9-DESKTOP-037-R1"
     }
   ],
   "remediation_history": [
@@ -310,11 +310,15 @@
       "files": [
         "desktop/src-tauri/icons/codex-flow.svg",
         "desktop/src-tauri/icons/icon.ico",
-        "desktop/src-tauri/icons/ (Tauri-generated icon set)"
+        "desktop/src-tauri/icons/*.png",
+        "desktop/src-tauri/icons/icon.icns",
+        "desktop/src-tauri/icons/android/**",
+        "desktop/src-tauri/icons/ios/**"
       ],
       "failing_validation": "cargo test --manifest-path desktop/src-tauri/Cargo.toml failed in tauri-build before test compilation because desktop/src-tauri/icons/icon.ico was missing.",
       "intended_acceptance": "A deterministic source SVG and official Tauri-generated icon set provide icon.ico so the Tauri Rust integration suite compiles and passes.",
-      "status": "IN_PROGRESS"
+      "status": "COMPLETE",
+      "validation": "Official Tauri CLI generated the reproducible icon set from codex-flow.svg; cargo test passed 25/25, frontend desktop tests passed 8/8, typecheck passed, and ESLint passed."
     }
   ],
   "task_queue_after_current": [
@@ -567,5 +571,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-037-R1 IN_PROGRESS: generating the authorized temporary engineering icon through the official Tauri CLI."
+  "last_validation_note": "M9-DESKTOP-037-R1 COMPLETE: official Tauri-generated engineering icon unblocked the Rust suite; cargo test 25/25, focused frontend desktop tests 8/8, typecheck, and ESLint PASS."
 }
