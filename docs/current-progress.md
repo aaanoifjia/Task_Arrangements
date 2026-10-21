@@ -164,7 +164,7 @@ unexpected_files = []
 
 Current active task:
 
-`M10-HARDEN-018` — Retry Audit Events (next)
+`M10-HARDEN-018` — Retry Audit Events (IN_PROGRESS)
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 
