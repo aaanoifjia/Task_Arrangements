@@ -17,11 +17,11 @@
   },
   "active_task": {
     "id": "M10-HARDEN-001",
-    "status": "IN_PROGRESS",
+    "status": "COMPLETE",
     "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Comparing DurableRunner/RuntimeManager against frozen AsyncScheduler semantics and recording only known runtime gaps."
+    "note": "Parity audit PASS: 2 direct parity checks passed, 3 strict xfails identify only known continuation, parallelism, and timeout gaps; relevant runtime/scheduler regression 33 passed."
   },
-  "next_task": null,
+  "next_task": "M10-HARDEN-002",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -223,7 +223,8 @@
     "M9-DESKTOP-037",
     "M9-DESKTOP-038",
     "M9-GATE-039",
-    "M9-REPORT-040"
+    "M9-REPORT-040",
+    "M10-HARDEN-001"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -582,5 +583,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-REPORT-040 PASS: docs/desktop-packaging-test-report.md records exact automated results for sidecar, Tauri, MSI/NSIS, startup/shutdown, app-data, auth home, token security, notification, Open-in-Codex, and regression checks; manual Desktop checks are explicitly deferred."
+  "last_validation_note": "M10-HARDEN-001 PASS: parity audit 2 passed/3 strict xfailed known gaps, related runtime/scheduler regression 33 passed, Ruff and strict mypy passed; docs/runtime-parity-audit.md records the bounded gap map."
 }
