@@ -15,8 +15,13 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M9-DESKTOP-027",
+  "active_task": {
+    "id": "M9-DESKTOP-027",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Allow one explicit user-triggered sidecar relaunch with the same database path and a fresh token; never auto-restart in a loop."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -520,5 +525,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-026 PASS: Tauri cargo test passed 17/17 with unexpected child-exit detection and unavailable-state propagation; startup-gate tests 4/4, typecheck, and ESLint passed."
+  "last_validation_note": "M9-DESKTOP-027 IN_PROGRESS: implementing one-shot sidecar relaunch and no-loop lifecycle tests."
 }
