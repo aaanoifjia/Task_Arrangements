@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M8-UI-033",
+  "active_task": {
+    "id": "M8-UI-033",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Implement the durable-state-driven RunControls shell and visibility matrix."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -444,5 +449,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-UI-032 COMPLETE: RunApi control mapping/error tests passed 2/2 and frontend tsc -b passed; M8-UI-033 is next."
+  "last_validation_note": "M8-UI-033 IN_PROGRESS: implement the standalone RunControls shell using durable run/task state and explicit callbacks."
 }

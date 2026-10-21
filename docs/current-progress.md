@@ -116,12 +116,12 @@ unexpected_files = []
 
 ## Current Task
 
-Current deterministic next task:
+Current active task:
 
-`M8-UI-033` — Run Controls Component Shell
+`M8-UI-033` — Run Controls Component Shell (IN_PROGRESS)
 
 M8-UI-032 is blocked only because its typed RunApi layer depends on six low-level control methods that are missing from non-owned `frontend/src/api/client.ts`. The bounded remediation task owns only `client.ts` and its tests, adds the six typed endpoint mappings, and verifies frontend type safety.
 
-M8-UI-032A and M8-UI-032 are COMPLETE: the typed control client and RunApi endpoint/error tests pass, and frontend `tsc -b` passes. Continue with the Run Controls component shell, then the remaining M8 → M9 → M10 sequence.
+M8-UI-032A and M8-UI-032 are COMPLETE: the typed control client and RunApi endpoint/error tests pass, and frontend `tsc -b` passes. The current task owns the standalone RunControls shell and its state visibility matrix; then the remaining M8 → M9 → M10 sequence continues.
 
 All manual Desktop checks remain deferred until after M10 automated completion.
