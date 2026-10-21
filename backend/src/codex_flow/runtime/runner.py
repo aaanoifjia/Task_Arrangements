@@ -7,10 +7,11 @@ from codex_flow.codex_adapter.interface import CodexAdapter
 from codex_flow.codex_adapter.models import (
     CodexEvent,
     CodexExecutionConfig,
+    CodexThreadRef,
     CodexTurnRef,
     EventType,
 )
-from codex_flow.domain.models import TaskDefinition, WorkflowDefinition
+from codex_flow.domain.models import ExecutionMode, TaskDefinition, WorkflowDefinition
 from codex_flow.domain.status import TaskStatus
 from codex_flow.scheduler.executor import command_completion_failed, terminal_status
 from codex_flow.scheduler.graph import dependency_map, topological_order
@@ -96,9 +97,12 @@ class DurableRunner:
             reasoning_effort=task.reasoning_effort,
             approval_mode=task.approval_mode,
         )
-        attempt_id, turn = await AttemptStarter(self._repository._connection, self._adapter).start(
-            task_run_id, config, task.prompt
-        )
+        if task.execution_mode is ExecutionMode.CONTINUE_THREAD:
+            attempt_id, turn = await self._start_continuation_attempt(task_run_id, task)
+        else:
+            attempt_id, turn = await AttemptStarter(self._repository._connection, self._adapter).start(
+                task_run_id, config, task.prompt
+            )
         self._active_turns[task_run_id] = turn
         failed_command_observed = False
         try:
@@ -131,6 +135,51 @@ class DurableRunner:
                 self._repository.update_attempt_state(attempt_id, TaskStatus.FAILED.value)
         finally:
             self._active_turns.pop(task_run_id, None)
+
+    async def _start_continuation_attempt(
+        self, task_run_id: str, task: TaskDefinition
+    ) -> tuple[str, CodexTurnRef]:
+        """Resume the explicit successful source thread for a continuation task."""
+        source_id = task.continue_from_task_id
+        if source_id is None:
+            raise ValueError("continue_from_task_id is required")
+        task_row = self._repository.get_task_run(task_run_id)
+        if task_row is None:
+            raise ValueError(f"task run not found: {task_run_id}")
+        source = next(
+            (
+                row
+                for row in self._repository.load_task_runs(str(task_row["workflow_run_id"]))
+                if str(row["task_id"]) == source_id
+            ),
+            None,
+        )
+        if source is None:
+            raise ValueError(f"continuation source does not exist: {source_id}")
+        if str(source["status"]) != TaskStatus.SUCCESS.value:
+            raise ValueError("continuation source must be SUCCESS")
+        source_thread_id = source["thread_id"]
+        if not isinstance(source_thread_id, str) or not source_thread_id:
+            raise ValueError("continuation source has no thread_id")
+
+        self._repository.update_task_run_state(task_run_id, TaskStatus.STARTING.value)
+        attempt_id = self._repository.create_attempt(task_run_id)
+        thread = await self._adapter.resume_thread(CodexThreadRef(thread_id=source_thread_id))
+        if thread.thread_id != source_thread_id:
+            raise ValueError("continuation adapter changed the source thread")
+        turn = await self._adapter.start_turn(thread, task.prompt)
+        with self._repository._connection:
+            self._repository._connection.execute(
+                "UPDATE attempts SET thread_id = ?, turn_id = ? WHERE id = ?",
+                (turn.thread_id, turn.turn_id, attempt_id),
+            )
+        self._repository.update_task_run_state(
+            task_run_id,
+            TaskStatus.STARTING.value,
+            turn.thread_id,
+            turn.turn_id,
+        )
+        return attempt_id, turn
 
     def _update_execution_state(
         self, task_run_id: str, status: str, thread_id: str, turn_id: str

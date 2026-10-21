@@ -19,9 +19,9 @@
     "id": "M10-HARDEN-002",
     "status": "COMPLETE",
     "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Implementing durable CONTINUE_THREAD using the explicit successful source thread_id and a distinct new turn without creating a new thread."
+    "note": "Durable continuation PASS: successful source thread_id is validated, resume_thread is used, no new source thread is created, and a distinct turn is persisted; bounded R1 repaired the parity audit XPASS."
   },
-  "next_task": null,
+  "next_task": "M10-HARDEN-003",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -224,7 +224,8 @@
     "M9-DESKTOP-038",
     "M9-GATE-039",
     "M9-REPORT-040",
-    "M10-HARDEN-001"
+    "M10-HARDEN-001",
+    "M10-HARDEN-002"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -596,5 +597,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M10-HARDEN-001 PASS: parity audit 2 passed/3 strict xfailed known gaps, related runtime/scheduler regression 33 passed, Ruff and strict mypy passed; docs/runtime-parity-audit.md records the bounded gap map."
+  "last_validation_note": "M10-HARDEN-002 PASS: durable continuation regression 30 passed/2 known-gap xfailed; successful source thread is resumed with a distinct new turn and no new source thread; Ruff and strict mypy passed."
 }
