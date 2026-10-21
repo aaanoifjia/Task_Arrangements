@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M8-UI-039",
+  "active_task": {
+    "id": "M8-UI-039",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Show stable control errors and refresh durable state after conflict responses."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -450,5 +455,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-UI-038 COMPLETE: confirmation/focus/Escape tests passed 20/20; frontend tsc -b and lint passed; M8-UI-039 is next."
+  "last_validation_note": "M8-UI-039 IN_PROGRESS: add stable error rendering and 409 conflict refresh behavior to RunDetailPage controls."
 }

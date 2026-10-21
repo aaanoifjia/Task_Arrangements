@@ -124,10 +124,10 @@ unexpected_files = []
 
 Current active task:
 
-`M8-UI-039` — Control Feedback & Conflict Recovery
+`M8-UI-039` — Control Feedback & Conflict Recovery (IN_PROGRESS)
 
 M8-UI-032 is blocked only because its typed RunApi layer depends on six low-level control methods that are missing from non-owned `frontend/src/api/client.ts`. The bounded remediation task owns only `client.ts` and its tests, adds the six typed endpoint mappings, and verifies frontend type safety.
 
-M8-UI-032A through M8-UI-038 are COMPLETE: the typed control client, RunApi mappings, RunControls visibility matrix, pause/resume flow, Retry, Cancel, Skip, Mark Success, and accessible confirmation behavior pass with frontend typecheck/lint. Continue with control feedback and conflict recovery, then the remaining M8 → M9 → M10 sequence.
+M8-UI-032A through M8-UI-038 are COMPLETE: the typed control client, RunApi mappings, RunControls visibility matrix, pause/resume flow, Retry, Cancel, Skip, Mark Success, and accessible confirmation behavior pass with frontend typecheck/lint. This task adds stable control feedback and 409 durable-state recovery, then the remaining M8 → M9 → M10 sequence continues.
 
 All manual Desktop checks remain deferred until after M10 automated completion.
