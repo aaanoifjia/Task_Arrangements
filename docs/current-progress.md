@@ -120,10 +120,10 @@ unexpected_files = []
 
 Current active task:
 
-`M8-UI-035` — Retry UI
+`M8-UI-035` — Retry UI (IN_PROGRESS)
 
 M8-UI-032 is blocked only because its typed RunApi layer depends on six low-level control methods that are missing from non-owned `frontend/src/api/client.ts`. The bounded remediation task owns only `client.ts` and its tests, adds the six typed endpoint mappings, and verifies frontend type safety.
 
-M8-UI-032A through M8-UI-034 are COMPLETE: the typed control client, RunApi mappings, RunControls visibility matrix, and pause/resume durable refresh flow pass with frontend typecheck/lint. Continue with Retry UI, then the remaining M8 → M9 → M10 sequence.
+M8-UI-032A through M8-UI-034 are COMPLETE: the typed control client, RunApi mappings, RunControls visibility matrix, and pause/resume durable refresh flow pass with frontend typecheck/lint. This task wires explicit Retry visibility/invocation through the task drawer, then the remaining M8 → M9 → M10 sequence continues.
 
 All manual Desktop checks remain deferred until after M10 automated completion.

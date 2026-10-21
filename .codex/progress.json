@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M8-UI-035",
+  "active_task": {
+    "id": "M8-UI-035",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Expose explicit Retry in task controls only for failed, interrupted, or needs-attention states."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -446,5 +451,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-UI-034 COMPLETE: RunControls/RunDetailPage pause-resume tests passed 17/17; frontend tsc -b and lint passed; M8-UI-035 is next."
+  "last_validation_note": "M8-UI-035 IN_PROGRESS: wire explicit Retry through RunControls and TaskRunDrawer without automatic retries."
 }
