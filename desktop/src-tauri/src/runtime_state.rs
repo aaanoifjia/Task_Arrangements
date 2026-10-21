@@ -63,6 +63,14 @@ impl RuntimeStateStore {
             .take();
         Ok(())
     }
+
+    pub fn replace(&self, state: RuntimeState) -> Result<(), String> {
+        *self
+            .state
+            .lock()
+            .map_err(|_| "backend runtime unavailable".to_owned())? = Some(state);
+        Ok(())
+    }
 }
 
 #[tauri::command]
@@ -97,6 +105,19 @@ mod tests {
 
         store.mark_unavailable().expect("mark unavailable");
         assert_eq!(store.current(), Err("backend runtime unavailable".to_owned()));
+    }
+
+    #[test]
+    fn relaunch_can_replace_runtime_state_with_a_fresh_token() {
+        let store = RuntimeStateStore::unavailable();
+        store
+            .replace(RuntimeState {
+                base_url: "http://127.0.0.1:43128".to_owned(),
+                token: "fresh-token".to_owned(),
+            })
+            .expect("replace state");
+
+        assert_eq!(store.current().expect("ready state").token, "fresh-token");
     }
 
     #[test]

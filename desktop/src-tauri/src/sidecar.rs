@@ -42,6 +42,8 @@ pub struct SidecarOutput {
 pub struct SidecarProcess {
     pub token: String,
     pub output: Receiver<SidecarOutput>,
+    paths: RuntimePaths,
+    relaunch_count: u8,
     child: Child,
     _stdout_thread: JoinHandle<()>,
     _stderr_thread: JoinHandle<()>,
@@ -64,6 +66,37 @@ impl SidecarProcess {
         }
         self.child.kill()?;
         self.child.wait().map(|_| ())
+    }
+
+    pub fn relaunch(&mut self) -> io::Result<()> {
+        if self.relaunch_count >= 1 {
+            return Err(io::Error::new(
+                io::ErrorKind::AlreadyExists,
+                "sidecar relaunch limit reached",
+            ));
+        }
+
+        self.shutdown()?;
+        let token = generate_session_token();
+        let mut child = build_command(&self.paths, &token).spawn()?;
+        let stdout = child
+            .stdout
+            .take()
+            .ok_or_else(|| io::Error::other("sidecar stdout pipe missing"))?;
+        let stderr = child
+            .stderr
+            .take()
+            .ok_or_else(|| io::Error::other("sidecar stderr pipe missing"))?;
+        let (sender, output) = mpsc::channel();
+        let stdout_thread = spawn_output_reader(stdout, SidecarStream::Stdout, sender.clone());
+        let stderr_thread = spawn_output_reader(stderr, SidecarStream::Stderr, sender);
+        self.token = token;
+        self.output = output;
+        self.child = child;
+        self._stdout_thread = stdout_thread;
+        self._stderr_thread = stderr_thread;
+        self.relaunch_count += 1;
+        Ok(())
     }
 }
 
@@ -174,6 +207,8 @@ pub fn launch_sidecar(paths: &RuntimePaths) -> io::Result<SidecarProcess> {
     Ok(SidecarProcess {
         token,
         output,
+        paths: paths.clone(),
+        relaunch_count: 0,
         child,
         _stdout_thread: stdout_thread,
         _stderr_thread: stderr_thread,
@@ -287,6 +322,8 @@ mod tests {
         let mut process = SidecarProcess {
             token: "test-token".to_owned(),
             output,
+            paths: paths(),
+            relaunch_count: 0,
             child,
             _stdout_thread: thread::spawn(|| {}),
             _stderr_thread: thread::spawn(|| {}),
@@ -307,6 +344,8 @@ mod tests {
         let mut process = SidecarProcess {
             token: "test-token".to_owned(),
             output,
+            paths: paths(),
+            relaunch_count: 0,
             child,
             _stdout_thread: thread::spawn(|| {}),
             _stderr_thread: thread::spawn(|| {}),
@@ -321,5 +360,25 @@ mod tests {
             thread::sleep(std::time::Duration::from_millis(1));
         }
         assert_eq!(exit.expect("child exit").code(), Some(7));
+    }
+
+    #[test]
+    fn relaunch_reuses_paths_refreshes_token_and_stops_after_one_attempt() {
+        let paths = RuntimePaths {
+            root: PathBuf::from("C:/Codex Flow"),
+            db_path: PathBuf::from("C:/Codex Flow/codex-flow.sqlite3"),
+            log_dir: PathBuf::from("C:/Codex Flow/logs"),
+            executable: PathBuf::from("cmd.exe"),
+        };
+        let mut process = super::launch_sidecar(&paths).expect("launch test sidecar");
+        let original_token = process.token.clone();
+        process.relaunch().expect("first relaunch");
+
+        assert_ne!(process.token, original_token);
+        assert_eq!(process.paths.db_path, paths.db_path);
+        assert_eq!(
+            process.relaunch().expect_err("second relaunch must be blocked").kind(),
+            std::io::ErrorKind::AlreadyExists
+        );
     }
 }
