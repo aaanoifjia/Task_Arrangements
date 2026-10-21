@@ -16,12 +16,12 @@
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
   "active_task": {
-    "id": "M10-HARDEN-006",
-    "status": "COMPLETE",
+    "id": "M10-HARDEN-007",
+    "status": "IN_PROGRESS",
     "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Parallel READY execution PASS: independent delayed tasks overlap at limit 2, serialize at limit 1, preserve A→B selection order, and pause-before-batch exits cleanly."
+    "note": "Reusing canonical WorkspaceLockManager so same-cwd durable write tasks serialize while different workspaces may overlap under the global limit."
   },
-  "next_task": "M10-HARDEN-007",
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
