@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import ipaddress
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -51,9 +52,22 @@ def parse_args(argv: Sequence[str] | None = None) -> ServerOptions:
     )
 
 
+def validate_bind_host(host: str, *, desktop_mode: bool = True) -> None:
+    """Reject non-loopback addresses when the service runs in desktop mode."""
+    if not desktop_mode:
+        return
+    try:
+        address = ipaddress.ip_address(host)
+    except ValueError as error:
+        raise ValueError("desktop mode requires an IPv4 or IPv6 loopback host") from error
+    if not address.is_loopback:
+        raise ValueError("desktop mode requires a loopback bind host")
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Start the production API server after parsing its explicit options."""
     options = parse_args(argv)
+    validate_bind_host(options.host)
     app = create_app(ServiceConfig.from_db_path(options.db_path))
 
     import uvicorn

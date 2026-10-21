@@ -4,6 +4,8 @@ import sys
 import types
 from pathlib import Path
 
+import pytest
+
 from codex_flow import server
 
 
@@ -51,3 +53,14 @@ def test_import_does_not_start_uvicorn(monkeypatch) -> None:
     importlib.reload(server)
 
     assert calls == []
+
+
+@pytest.mark.parametrize("host", ["127.0.0.1", "::1"])
+def test_desktop_mode_accepts_loopback_hosts(host: str) -> None:
+    server.validate_bind_host(host)
+
+
+@pytest.mark.parametrize("host", ["0.0.0.0", "::", "192.168.1.20"])
+def test_desktop_mode_rejects_wildcard_and_lan_hosts(host: str) -> None:
+    with pytest.raises(ValueError, match="loopback"):
+        server.validate_bind_host(host)
