@@ -1,10 +1,10 @@
 # Codex Flow — Current Progress
 
-Updated: 2026-10-21
+Updated: 2026-10-22
 
 ## Current Phase
 
-M8 — Human-in-the-loop & Reliability.
+M9 — Desktop Integration & Packaging.
 
 M7 Visual DAG UI is complete with all automated gates PASS. The authoritative late-phase task plan now defines 120 deterministic autonomous tasks across M8–M10: durable human controls and reliability, Windows Tauri/Python-sidecar desktop packaging, then real-world hardening and automated beta gates.
 
@@ -132,8 +132,16 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M9-DESKTOP-003` — Tauri Rust Scaffold (BLOCKED)
+`M9-PREFLIGHT-003A` — Windows Desktop Toolchain Preflight
 
-M8-UI-032A through M9-DESKTOP-002 are COMPLETE. M9-DESKTOP-003 is blocked because `cargo` and `rustc` are unavailable on the host, while the task requires `cargo metadata` and the repository forbids silently installing a system-level Rust/Windows toolchain. Resume this task after a supported Rust toolchain is provided.
+M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 
-All manual Desktop checks remain deferred until after M10 automated completion.
+The repository protocol now supports:
+
+- bounded automatic remediation for small deterministic non-owned integration repairs;
+- milestone toolchain preflight so missing prerequisites are detected together;
+- system-level installation only for an exact named toolchain explicitly authorized by an authoritative task or the user's current invocation.
+
+M9-PREFLIGHT-003A audits Python/Node/PyInstaller/Rust/MSVC/Windows SDK/WebView2/Git. If the current invocation explicitly authorizes Rust, it may install the official Rust toolchain only. Other missing system components remain genuine blockers.
+
+After the preflight passes, clear the M9-DESKTOP-003 environment blocker and resume M9-DESKTOP-003 automatically, then continue M9 → M10.
