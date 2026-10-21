@@ -16,12 +16,12 @@
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
   "active_task": {
-    "id": "M10-HARDEN-003",
-    "status": "COMPLETE",
+    "id": "M10-HARDEN-004",
+    "status": "IN_PROGRESS",
     "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Continuation Attempt persistence PASS: transaction-order observation confirms STARTING plus one Attempt before resume_thread; same source thread and distinct new turn refs are recorded."
+    "note": "Hardening continuation recovery so ambiguous resume/start-turn crash points fail closed and never resend the prompt."
   },
-  "next_task": "M10-HARDEN-004",
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
