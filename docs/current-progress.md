@@ -167,7 +167,7 @@ unexpected_files = []
 
 Current active task:
 
-`M10-HARDEN-021` — Timeout Restart Recovery (next)
+`M10-HARDEN-021` — Timeout Restart Recovery (IN_PROGRESS)
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 
