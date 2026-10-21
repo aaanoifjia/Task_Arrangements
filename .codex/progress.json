@@ -16,12 +16,12 @@
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
   "active_task": {
-    "id": "M10-HARDEN-008",
-    "status": "COMPLETE",
+    "id": "M10-HARDEN-009",
+    "status": "IN_PROGRESS",
     "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Durable thread lock PASS: canonical ThreadTurnLockManager serializes continuation turns targeting the same source thread while preserving shared thread identity."
+    "note": "Running the persistent A → B/C → D fork/join through DurableRunner with database state, parallel branches, exact join release, and no premature D start."
   },
-  "next_task": "M10-HARDEN-009",
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",

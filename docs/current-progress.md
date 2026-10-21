@@ -155,7 +155,7 @@ unexpected_files = []
 
 Current active task:
 
-`M10-HARDEN-009` — Persistent Fork/Join Runtime Test
+`M10-HARDEN-009` — Persistent Fork/Join Runtime Test (IN_PROGRESS)
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 
