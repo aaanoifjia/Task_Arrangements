@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M9-DESKTOP-034",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Create a deterministic Windows desktop development script that verifies prerequisites and launches Tauri without silently installing anything."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M9-DESKTOP-035",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -216,7 +211,8 @@
       "M9-DESKTOP-030",
       "M9-DESKTOP-031",
       "M9-DESKTOP-032",
-      "M9-DESKTOP-033"
+      "M9-DESKTOP-033",
+      "M9-DESKTOP-034"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -544,5 +540,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-034 IN_PROGRESS: implementing prerequisite checks, check mode, and fixed-order Tauri development launch script."
+  "last_validation_note": "M9-DESKTOP-034 PASS: PowerShell check mode and parser syntax validation passed; prerequisite messages are explicit and no installation is performed."
 }

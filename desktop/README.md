@@ -31,3 +31,10 @@ same bundle works from the Tauri asset protocol. The frontend does not bake a
 backend URL into the production bundle: in desktop mode it loads the runtime
 base URL and bearer token through the Tauri `runtime_state` bridge, while the
 browser path continues to use its current origin.
+
+## Development command
+
+From the repository root, run `powershell -File scripts/dev_desktop.ps1`.
+Use `-Check` to validate Node/npm, Cargo/rustc, the project virtualenv, and
+required project files without starting or installing anything. The script
+builds the frontend first, then launches Tauri with the checked-in config.
