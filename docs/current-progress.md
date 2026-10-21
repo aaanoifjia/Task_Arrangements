@@ -143,9 +143,9 @@ unexpected_files = []
 
 ## Current Task
 
-Current deterministic next task:
+Current active task:
 
-`M9-GATE-039` — M9 Automated Desktop Gate
+`M9-GATE-039` — M9 Automated Desktop Gate (IN_PROGRESS)
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 

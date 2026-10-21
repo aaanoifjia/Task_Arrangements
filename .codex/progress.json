@@ -16,12 +16,12 @@
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
   "active_task": {
-    "id": "M9-DESKTOP-038",
-    "status": "COMPLETE",
+    "id": "M9-GATE-039",
+    "status": "IN_PROGRESS",
     "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Windows frontend, PyInstaller sidecar, Tauri release executable, MSI, and NSIS bundle all passed. Artifact manifest records exact filenames, sizes, and SHA256 hashes."
+    "note": "Running the authoritative automated M9 desktop gate: frontend, backend non-live, sidecar packaging, Rust/Tauri checks, Windows bundle, and security scans."
   },
-  "next_task": "M9-GATE-039",
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
