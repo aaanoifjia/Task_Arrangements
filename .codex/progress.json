@@ -15,8 +15,13 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M9-DESKTOP-037",
+  "active_task": {
+    "id": "M9-DESKTOP-037",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Automate desktop integration coverage for sidecar lifecycle, runtime state, auth token, app-data paths, crash/relaunch, and frontend bridge without GUI interaction."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -542,5 +547,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-036 PASS: packaged sidecar handshake, healthz, authenticated system status, and clean termination contract passed; PyInstaller _internal runtime staging was repaired in the owned desktop build script."
+  "last_validation_note": "M9-DESKTOP-037 IN_PROGRESS: implementing automated desktop integration coverage without GUI interaction."
 }
