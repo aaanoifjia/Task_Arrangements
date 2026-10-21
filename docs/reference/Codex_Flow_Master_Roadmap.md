@@ -998,3 +998,58 @@ NEEDS_ATTENTION
 ```text
 schema_version
 migration scripts
+
+---
+
+# M11 — Release Candidate / Real-world Validation
+
+## 目标
+
+在不引入新系统工具链、不依赖 live Codex 或外网的前提下，把已经完成的本地桌面产品放进更接近真实使用的 Windows 场景里验证。
+
+重点覆盖：
+
+- 空格 / Unicode / 深层工作目录
+- SQLite reopen / migration / event cursor / attempt history
+- pause / attention / retry / cancel 等状态跨重启恢复
+- 20 节点复杂 DAG、并发工作区、重复运行
+- FastAPI + WebSocket 本地生命周期
+- Tauri sidecar 快速启停、崩溃重启、single-instance、session token 更新
+- 日志脱敏与保留策略
+- release artifact manifest、重复 build、release executable smoke
+
+M11 不做主观 GUI 验收，不安装新的系统软件，不要求外网。
+
+完成后进入 M12。
+
+---
+
+# M12 — Product Quality / Operations
+
+## 目标
+
+把 Release Candidate 从“能运行”推进到“更容易开始、迁移、诊断和日常使用”。
+
+重点覆盖：
+
+- starter/sample workflows 与首次使用空状态
+- Workflow Definition JSON import / export
+- redacted diagnostics summary 与 diagnostic bundle
+- SQLite 安全在线 backup export
+- Run History pagination / filter / search
+- Event Log filter / safe copy
+- About / Runtime Status
+- 控制动作与启动失败 UX
+- keyboard/focus/accessibility regression
+- large DAG / large history / event UI 性能 guard
+- 最终自动化 Productization Gate
+- README 与 manual V1 checklist 更新
+
+边界：
+
+- 不改变 scheduler 核心语义
+- 不实现运行中数据库原地 restore
+- 不增加云端、多用户、telemetry 或后台网络
+- 不引入新的 UI framework / 第三方 runtime dependency
+
+M12 完成后，自动化主线结束，进入最终人工 V1 验收。
