@@ -105,6 +105,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M9-DESKTOP-003 — minimal Tauri v2 Windows shell scaffold; cargo metadata and Tauri config/capability schema parsing PASS
 - M9-DESKTOP-004 — independent production uvicorn server entrypoint; argument parsing/no-import-side-effect tests 3/3, Ruff, and strict mypy PASS
 - M9-DESKTOP-005 — desktop loopback binding guard; IPv4/IPv6 acceptance and wildcard/LAN rejection tests 8/8, Ruff, and strict mypy PASS
+- M9-DESKTOP-006 — optional per-process bearer-token REST middleware with token-safe health; authorization matrix 3/3, existing system/lifecycle regression 3/3, Ruff, and strict mypy PASS
 
 ## Verified Codex Runtime
 
@@ -136,7 +137,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M9-DESKTOP-006` — Local Session Token Middleware (IN_PROGRESS)
+`M9-DESKTOP-007` — WebSocket Token Validation
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 
@@ -148,4 +149,4 @@ The repository protocol now supports:
 
 M9-PREFLIGHT-003A audits Python/Node/PyInstaller/Rust/MSVC/Windows SDK/WebView2/Git. If the current invocation explicitly authorizes Rust, it may install the official Rust toolchain only. Other missing system components remain genuine blockers.
 
-M9-PREFLIGHT-003A through M9-DESKTOP-005 are complete. The complete declared Windows/Tauri prerequisite audit is recorded in `docs/m9-environment-preflight.md`; the authorized official Rustup stable toolchain is installed and verified. M9-DESKTOP-006 is active for optional per-process bearer-token REST protection and token-safe health access.
+M9-PREFLIGHT-003A through M9-DESKTOP-006 are complete. The complete declared Windows/Tauri prerequisite audit is recorded in `docs/m9-environment-preflight.md`; the authorized official Rustup stable toolchain is installed and verified. M9-DESKTOP-007 is the next dependency-ready task for WebSocket token validation.

@@ -1,5 +1,6 @@
 """Explicit FastAPI application construction."""
 
+import hmac
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
@@ -36,6 +37,27 @@ def create_app(
 
     app = FastAPI(title="Codex Flow Local API", version="0.1.0", lifespan=app_lifespan)
     app.state.service_config = service_config
+
+    @app.middleware("http")
+    async def local_token_middleware(request: Request, call_next):
+        """Protect REST data endpoints when a desktop process token is configured."""
+        if service_config.token is None or not _requires_local_token(request.url.path):
+            return await call_next(request)
+        authorization = request.headers.get("authorization", "")
+        if not _valid_bearer_token(authorization, service_config.token):
+            return JSONResponse(
+                status_code=401,
+                content={
+                    "detail": {
+                        "error": {
+                            "code": "UNAUTHORIZED",
+                            "message": "valid bearer token required",
+                        }
+                    }
+                },
+            )
+        return await call_next(request)
+
     app.include_router(workflows_router)
     app.include_router(runs_router)
     app.include_router(controls_router)
@@ -48,3 +70,16 @@ def create_app(
         return JSONResponse(status_code=500, content={"error": {"code": "INTERNAL_ERROR", "message": "internal server error"}})
 
     return app
+
+
+def _requires_local_token(path: str) -> bool:
+    return path == "/api" or path.startswith("/api/")
+
+
+def _valid_bearer_token(authorization: str, expected_token: str) -> bool:
+    scheme, separator, provided_token = authorization.partition(" ")
+    return (
+        separator == " "
+        and hmac.compare_digest(scheme.lower(), "bearer")
+        and hmac.compare_digest(provided_token, expected_token)
+    )

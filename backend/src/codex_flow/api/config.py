@@ -8,11 +8,19 @@ from pathlib import Path
 class ServiceConfig:
     db_path: Path
     event_poll_interval_seconds: float = 0.25
+    token: str | None = None
 
     @classmethod
     def default(cls) -> "ServiceConfig":
         return cls(db_path=Path.cwd() / ".codex-flow.sqlite3")
 
     @classmethod
-    def from_db_path(cls, db_path: Path | None = None) -> "ServiceConfig":
-        return cls(db_path=db_path or (Path.cwd() / ".codex-flow.sqlite3"))
+    def from_db_path(
+        cls,
+        db_path: Path | None = None,
+        token: str | None = None,
+    ) -> "ServiceConfig":
+        return cls(
+            db_path=db_path or (Path.cwd() / ".codex-flow.sqlite3"),
+            token=token,
+        )
