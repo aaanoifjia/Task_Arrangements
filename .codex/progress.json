@@ -15,8 +15,13 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M9-DESKTOP-030",
+  "active_task": {
+    "id": "M9-DESKTOP-030",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Use native Tauri notifications for newly observed NEEDS_ATTENTION tasks in desktop mode while retaining browser fallback and dedupe."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -535,5 +540,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-029 PASS: Cargo check/test passed with tauri-plugin-notification 2.7.0; frontend package/lock updated, typecheck and ESLint passed; capability grants notification:default."
+  "last_validation_note": "M9-DESKTOP-030 IN_PROGRESS: implementing desktop/browser notification adapters and dedupe-preserving tests."
 }
