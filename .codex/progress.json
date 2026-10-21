@@ -15,12 +15,7 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M10-REPORT-036",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Recording exact automated M10 results and handing off the explicit manual V1 verification checklist."
-  },
+  "active_task": null,
   "next_task": null,
   "completed_tasks": [
     "PREP-000",
@@ -258,7 +253,8 @@
     "M10-HARDEN-032",
     "M10-HARDEN-033",
     "M10-HARDEN-034",
-    "M10-GATE-035"
+    "M10-GATE-035",
+    "M10-REPORT-036"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -644,5 +640,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M10-GATE-035 PASS: final automated M10 beta gate passed without live Codex: backend non-live 348 passed/6 deselected/2 known xfailed, packaging plus stress 22 passed, frontend 52 files/177 tests with typecheck/lint/build, and Tauri cargo check plus 26 tests."
+  "last_validation_note": "M10-REPORT-036 PASS: automated beta report and final manual V1 checklist created; M10 automated gate evidence recorded, all 22 v1 acceptance items mapped, and manual Desktop/UI observations explicitly remain PENDING user verification."
 }
