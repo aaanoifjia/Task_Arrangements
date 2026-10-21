@@ -28,7 +28,8 @@ def seed_recoverable_task(database: Path) -> None:
     connection.executescript(
         """
         INSERT INTO workflows VALUES ('workflow', 'Workflow', '{}', 'now');
-        INSERT INTO workflow_runs VALUES ('run', 'workflow', '{}', 'RUNNING', 'now');
+        INSERT INTO workflow_runs(id, workflow_id, snapshot_json, status, created_at, paused, paused_at)
+        VALUES ('run', 'workflow', '{"id":"workflow","name":"Workflow","description":null,"tasks":[],"edges":[]}', 'RUNNING', 'now', 0, NULL);
         INSERT INTO task_runs(id, workflow_run_id, task_id, status, thread_id, created_at)
         VALUES ('task', 'run', 'A', 'RUNNING', 'thread', 'now');
         """

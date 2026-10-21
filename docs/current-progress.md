@@ -96,6 +96,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M8-UI-039 — stable control feedback and 409 durable-state refresh; focused tests 22/22, `tsc -b`, and ESLint PASS
 - M8-UI-040 — AttentionCenter NEEDS_ATTENTION aggregation/count/navigation; focused tests 3/3, `tsc -b`, and ESLint PASS
 - M8-UI-041 — granted-only browser notification adapter with TaskRun-id dedupe; focused tests 4/4, `tsc -b`, and ESLint PASS
+- M8-INTEGRATE-042 — full Fake human-in-the-loop integration and bounded v2 test-fixture repairs; backend non-live 235 passed, frontend 49 files/160 tests, `tsc -b`, ESLint, and production build PASS
 
 ## Verified Codex Runtime
 
@@ -127,10 +128,10 @@ unexpected_files = []
 
 Current active task:
 
-`M8-INTEGRATE-042` — Human-in-the-loop Integration & Repair (IN_PROGRESS)
+`M8-GATE-043` — M8 Reliability Acceptance Matrix
 
 M8-UI-032 is blocked only because its typed RunApi layer depends on six low-level control methods that are missing from non-owned `frontend/src/api/client.ts`. The bounded remediation task owns only `client.ts` and its tests, adds the six typed endpoint mappings, and verifies frontend type safety.
 
-M8-UI-032A through M8-UI-041 are COMPLETE: the typed control client, RunApi mappings, RunControls visibility matrix, pause/resume flow, Retry, Cancel, Skip, Mark Success, accessible confirmation, 409 recovery, AttentionCenter aggregation, and granted-only notification adapter pass with frontend typecheck/lint. This task runs the full M8 Fake integration flow and bounded M8 repairs, then the remaining M8 → M9 → M10 sequence continues.
+M8-UI-032A through M8-INTEGRATE-042 are COMPLETE: the typed control client, RunApi mappings, all human-control UI states, AttentionCenter, notifications, and full Fake integration pass. Backend non-live regression is 235 passed; frontend is 49 files/160 tests with typecheck, lint, and production build passing. Continue with the M8 reliability acceptance matrix, then M8 report and M9 → M10.
 
 All manual Desktop checks remain deferred until after M10 automated completion.

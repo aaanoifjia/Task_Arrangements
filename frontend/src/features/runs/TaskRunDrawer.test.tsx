@@ -49,6 +49,7 @@ describe('TaskRunDrawer', () => {
     const user = userEvent.setup()
     render(<TaskRunDrawer task={{ ...fixtureTaskRun, status }} onClose={vi.fn()} onCancel={onCancel} attemptApi={attemptApi} />)
     await user.click(screen.getByRole('button', { name: 'Cancel' }))
+    await user.click(screen.getByRole('button', { name: 'Confirm Cancel' }))
     expect(onCancel).toHaveBeenCalledOnce()
   })
 
@@ -70,6 +71,7 @@ describe('TaskRunDrawer', () => {
     const user = userEvent.setup()
     render(<TaskRunDrawer task={{ ...fixtureTaskRun, status }} onClose={vi.fn()} onSkip={onSkip} attemptApi={attemptApi} />)
     await user.click(screen.getByRole('button', { name: 'Skip' }))
+    await user.click(screen.getByRole('button', { name: 'Confirm Skip' }))
     expect(onSkip).toHaveBeenCalledOnce()
   })
 
@@ -78,6 +80,7 @@ describe('TaskRunDrawer', () => {
     const user = userEvent.setup()
     render(<TaskRunDrawer task={{ ...fixtureTaskRun, status: 'READY' }} onClose={vi.fn()} onMarkSuccess={onMarkSuccess} attemptApi={attemptApi} />)
     await user.click(screen.getByRole('button', { name: 'Mark success' }))
+    await user.click(screen.getByRole('button', { name: 'Confirm Mark success' }))
     expect(onMarkSuccess).toHaveBeenCalledOnce()
   })
 

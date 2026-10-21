@@ -20,7 +20,10 @@ async def test_crash_recovery_never_resends_prompt_or_releases_downstream(
 ) -> None:
     connection = open_database(tmp_path / f"{crash_point}.sqlite3")
     connection.execute("INSERT INTO workflows VALUES ('workflow', 'Workflow', '{}', 'now')")
-    connection.execute("INSERT INTO workflow_runs VALUES ('run', 'workflow', '{}', 'RUNNING', 'now')")
+    connection.execute(
+        "INSERT INTO workflow_runs(id, workflow_id, snapshot_json, status, created_at, paused, paused_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        ("run", "workflow", "{}", "RUNNING", "now", 0, None),
+    )
     connection.execute(
         "INSERT INTO task_runs(id, workflow_run_id, task_id, status, thread_id, created_at) VALUES ('parent', 'run', 'A', ?, ?, 'now')",
         (status, thread_id),

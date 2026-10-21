@@ -14,7 +14,10 @@ from codex_flow.storage.repositories import StorageRepositories
 def prepare_run(database: Path, run_id: str = "run") -> str:
     repository = StorageRepositories(open_database(database))
     repository._connection.execute("INSERT INTO workflows VALUES (?, ?, ?, ?)", ("workflow", "Workflow", json.dumps({}), "now"))
-    repository._connection.execute("INSERT INTO workflow_runs VALUES (?, ?, ?, ?, ?)", (run_id, "workflow", "{}", "SUCCESS", "now"))
+    repository._connection.execute(
+        "INSERT INTO workflow_runs(id, workflow_id, snapshot_json, status, created_at, paused, paused_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        (run_id, "workflow", "{}", "SUCCESS", "now", 0, None),
+    )
     repository._connection.execute("INSERT INTO task_runs(id, workflow_run_id, task_id, status, created_at) VALUES (?, ?, ?, ?, ?)", ("task", run_id, "A", "SUCCESS", "now"))
     repository.append_event("TURN_COMPLETED", {}, workflow_run_id=run_id, task_run_id="task")
     repository._connection.commit()
