@@ -132,7 +132,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M9-PREFLIGHT-003A` — Windows Desktop Toolchain Preflight
+`M9-PREFLIGHT-003A` — Windows Desktop Toolchain Preflight (IN_PROGRESS)
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 
@@ -144,4 +144,4 @@ The repository protocol now supports:
 
 M9-PREFLIGHT-003A audits Python/Node/PyInstaller/Rust/MSVC/Windows SDK/WebView2/Git. If the current invocation explicitly authorizes Rust, it may install the official Rust toolchain only. Other missing system components remain genuine blockers.
 
-After the preflight passes, clear the M9-DESKTOP-003 environment blocker and resume M9-DESKTOP-003 automatically, then continue M9 → M10.
+The preflight is active: it will audit the complete declared Windows/Tauri toolchain and may install only the explicitly authorized official Rust toolchain. After it passes, clear the M9-DESKTOP-003 environment blocker and resume M9-DESKTOP-003 automatically.

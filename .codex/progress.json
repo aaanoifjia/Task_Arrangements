@@ -15,8 +15,13 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M9-PREFLIGHT-003A",
+  "active_task": {
+    "id": "M9-PREFLIGHT-003A",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Audit the complete Windows/Tauri prerequisite set; install only the explicitly authorized official Rust toolchain if cargo/rustc are missing."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -475,5 +480,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "Protocol upgraded: bounded adjacent integration repairs are now auto-remediated and milestones use prerequisite preflight. Current next task is M9-PREFLIGHT-003A to audit the full Windows/Tauri toolchain; Rust may be installed only when the current user invocation explicitly authorizes the Rust toolchain."
+  "last_validation_note": "M9-PREFLIGHT-003A IN_PROGRESS: auditing Python/venv/PyInstaller, Node/npm, Rust, MSVC/Windows SDK, WebView2, and Git; only official Rust installation is authorized if needed."
 }
