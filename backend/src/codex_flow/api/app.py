@@ -5,7 +5,10 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from starlette.middleware.base import RequestResponseEndpoint
+from starlette.responses import Response
 
 from codex_flow.api.config import ServiceConfig
 from codex_flow.api.lifespan import AdapterFactory, lifespan
@@ -37,9 +40,17 @@ def create_app(
 
     app = FastAPI(title="Codex Flow Local API", version="0.1.0", lifespan=app_lifespan)
     app.state.service_config = service_config
+    if service_config.desktop_mode:
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=list(service_config.cors_origins),
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
 
     @app.middleware("http")
-    async def local_token_middleware(request: Request, call_next):
+    async def local_token_middleware(request: Request, call_next: RequestResponseEndpoint) -> Response:
         """Protect REST data endpoints when a desktop process token is configured."""
         if service_config.token is None or not _requires_local_token(request.url.path):
             return await call_next(request)
