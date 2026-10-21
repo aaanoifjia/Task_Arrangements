@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M8-UI-037",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Expose explicit Skip and Mark Success only for server-supported task states."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M8-UI-038",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -171,7 +166,8 @@
     "M8-UI-033",
     "M8-UI-034",
     "M8-UI-035",
-    "M8-UI-036"
+    "M8-UI-036",
+    "M8-UI-037"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -453,5 +449,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-UI-037 IN_PROGRESS: wire explicit Skip/Mark Success through RunControls and TaskRunDrawer without broadening state semantics."
+  "last_validation_note": "M8-UI-037 COMPLETE: Skip/Mark Success visibility and invocation tests passed 34/34; frontend tsc -b and lint passed; M8-UI-038 is next."
 }

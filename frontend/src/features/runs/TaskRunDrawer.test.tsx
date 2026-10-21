@@ -64,4 +64,26 @@ describe('TaskRunDrawer', () => {
     )
     expect(screen.getByRole('button', { name: 'Cancel…' })).toBeDisabled()
   })
+
+  it.each(['BLOCKED', 'READY'] as const)('shows and invokes Skip for %s', async (status) => {
+    const onSkip = vi.fn()
+    const user = userEvent.setup()
+    render(<TaskRunDrawer task={{ ...fixtureTaskRun, status }} onClose={vi.fn()} onSkip={onSkip} attemptApi={attemptApi} />)
+    await user.click(screen.getByRole('button', { name: 'Skip' }))
+    expect(onSkip).toHaveBeenCalledOnce()
+  })
+
+  it('shows and invokes Mark success only for READY', async () => {
+    const onMarkSuccess = vi.fn()
+    const user = userEvent.setup()
+    render(<TaskRunDrawer task={{ ...fixtureTaskRun, status: 'READY' }} onClose={vi.fn()} onMarkSuccess={onMarkSuccess} attemptApi={attemptApi} />)
+    await user.click(screen.getByRole('button', { name: 'Mark success' }))
+    expect(onMarkSuccess).toHaveBeenCalledOnce()
+  })
+
+  it('does not show Skip or Mark success for a running task', () => {
+    render(<TaskRunDrawer task={fixtureTaskRun} onClose={vi.fn()} onSkip={vi.fn()} onMarkSuccess={vi.fn()} attemptApi={attemptApi} />)
+    expect(screen.queryByRole('button', { name: 'Skip' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Mark success' })).not.toBeInTheDocument()
+  })
 })

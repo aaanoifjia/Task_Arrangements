@@ -12,6 +12,8 @@ export type TaskRunDrawerProps = {
   attemptApi?: Pick<RunApi, 'attempts'>
   onRetry?: () => void
   onCancel?: () => void
+  onSkip?: () => void
+  onMarkSuccess?: () => void
   pendingAction?: RunControlAction | null
 }
 
@@ -19,7 +21,7 @@ function optionalValue(value: string | null): string {
   return value ?? 'Not available'
 }
 
-function TaskRunDrawer({ task, onClose, attemptApi, onRetry, onCancel, pendingAction }: TaskRunDrawerProps) {
+function TaskRunDrawer({ task, onClose, attemptApi, onRetry, onCancel, onSkip, onMarkSuccess, pendingAction }: TaskRunDrawerProps) {
   if (!task) return null
   return (
     <aside className="task-run-drawer" role="dialog" aria-modal="false" aria-labelledby="task-run-drawer-heading" data-testid="task-run-drawer">
@@ -44,6 +46,8 @@ function TaskRunDrawer({ task, onClose, attemptApi, onRetry, onCancel, pendingAc
         disabled={pendingAction !== null && pendingAction !== undefined}
         onRetry={onRetry}
         onCancel={onCancel}
+        onSkip={onSkip}
+        onMarkSuccess={onMarkSuccess}
       />
       <AttemptHistory runId={task.workflow_run_id} taskId={task.task_id} api={attemptApi} />
     </aside>

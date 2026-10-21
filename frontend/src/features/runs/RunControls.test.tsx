@@ -64,4 +64,23 @@ describe('RunControls', () => {
     await user.click(screen.getByRole('button', { name: 'Retry' }))
     expect(onRetry).toHaveBeenCalledOnce()
   })
+
+  it('keeps Skip and Mark success scoped to their canonical states', async () => {
+    const user = userEvent.setup()
+    const onSkip = vi.fn()
+    const onMarkSuccess = vi.fn()
+    const { rerender } = render(
+      <RunControls runStatus="SUCCESS" paused={false} taskStatus="BLOCKED" onSkip={onSkip} onMarkSuccess={onMarkSuccess} />,
+    )
+    await user.click(screen.getByRole('button', { name: 'Skip' }))
+    expect(onSkip).toHaveBeenCalledOnce()
+    expect(screen.queryByRole('button', { name: 'Mark success' })).not.toBeInTheDocument()
+
+    rerender(<RunControls runStatus="SUCCESS" paused={false} taskStatus="READY" onSkip={onSkip} onMarkSuccess={onMarkSuccess} />)
+    await user.click(screen.getByRole('button', { name: 'Mark success' }))
+    expect(onMarkSuccess).toHaveBeenCalledOnce()
+    rerender(<RunControls runStatus="SUCCESS" paused={false} taskStatus="RUNNING" onSkip={onSkip} onMarkSuccess={onMarkSuccess} />)
+    expect(screen.queryByRole('button', { name: 'Skip' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Mark success' })).not.toBeInTheDocument()
+  })
 })

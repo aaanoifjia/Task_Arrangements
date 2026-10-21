@@ -91,6 +91,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M8-UI-034 — pause/resume controls with pending/error feedback and durable refresh; focused tests 17/17, `tsc -b`, and ESLint PASS
 - M8-UI-035 — explicit Retry for failed/interrupted/attention tasks; focused tests 22/22, `tsc -b`, and ESLint PASS
 - M8-UI-036 — Cancel for allowed queued/active task states with pending feedback; focused tests 29/29, `tsc -b`, and ESLint PASS
+- M8-UI-037 — Skip and Mark Success limited to canonical server-supported states; focused tests 34/34, `tsc -b`, and ESLint PASS
 
 ## Verified Codex Runtime
 
@@ -122,10 +123,10 @@ unexpected_files = []
 
 Current active task:
 
-`M8-UI-037` — Skip & Mark-Success UI (IN_PROGRESS)
+`M8-UI-038` — Destructive Action Confirmation
 
 M8-UI-032 is blocked only because its typed RunApi layer depends on six low-level control methods that are missing from non-owned `frontend/src/api/client.ts`. The bounded remediation task owns only `client.ts` and its tests, adds the six typed endpoint mappings, and verifies frontend type safety.
 
-M8-UI-032A through M8-UI-036 are COMPLETE: the typed control client, RunApi mappings, RunControls visibility matrix, pause/resume flow, Retry, and Cancel behavior pass with frontend typecheck/lint. This task wires Skip and Mark Success only for server-supported states, then the remaining M8 → M9 → M10 sequence continues.
+M8-UI-032A through M8-UI-037 are COMPLETE: the typed control client, RunApi mappings, RunControls visibility matrix, pause/resume flow, Retry, Cancel, Skip, and Mark Success behavior pass with frontend typecheck/lint. Continue with destructive-action confirmation, then the remaining M8 → M9 → M10 sequence.
 
 All manual Desktop checks remain deferred until after M10 automated completion.
