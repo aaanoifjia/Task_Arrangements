@@ -100,6 +100,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M8-GATE-043 — M8 reliability acceptance matrix; backend non-live 235 passed, frontend 49 files/160 tests, `tsc -b`, ESLint, and production build PASS
 - M8-REPORT-044 — M8 human-in-the-loop reliability report with exact PASS evidence and deferred manual limits
 - M9-DESKTOP-001 — Tauri v2/Python sidecar desktop runtime contract; contract consistency acceptance PASS
+- M9-DESKTOP-002 — Tauri v2 API/CLI dependencies and desktop scripts; npm install, typecheck, lint, and build PASS
 
 ## Verified Codex Runtime
 
@@ -131,8 +132,8 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M9-DESKTOP-002` — Tauri NPM Tooling (IN_PROGRESS)
+`M9-DESKTOP-003` — Tauri Rust Scaffold
 
-M8-UI-032A through M9-DESKTOP-001 are COMPLETE. M9-DESKTOP-002 is active for the Tauri v2 NPM dependencies and desktop scripts.
+M8-UI-032A through M9-DESKTOP-002 are COMPLETE. M9-DESKTOP-003 is the next dependency-ready task for the minimal Tauri v2 Windows shell.
 
 All manual Desktop checks remain deferred until after M10 automated completion.
