@@ -147,6 +147,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M10-HARDEN-029 — duplicate-prevention property matrix PASS; deterministic success, tool failure, interrupt, terminal failure, attention, stream crash, and manual retry scenarios 7 passed, each Attempt had one external prompt, and non-SUCCESS parents kept children BLOCKED; full backend non-live 347 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed
 - M10-HARDEN-030 — frontend degraded backend recovery PASS; temporary 503, malformed response, WebSocket loss/reconnect, and backend restart retry matrix 18 passed; full frontend 52 files/177 tests, typecheck, and ESLint passed
 - M10-HARDEN-031 — desktop sidecar restart soak PASS; deterministic eight-cycle Fake sidecar start/crash/relaunch matrix reused one app-data DB path, generated unique restart identities, rejected relaunch loops, cleaned child processes, and full Tauri Rust tests passed 26/26; Cargo fmt was unavailable because rustfmt is not installed in the existing toolchain
+- M10-HARDEN-032 — accelerated long-run soak PASS; Fake workflow soak covered 24 deterministic mixed success/tool-failure iterations with no leaked runtime tasks, no active runs, and consistent attempts/events; frontend reconnect soak covered 100 cursor-resumed reconnects with dedupe; full backend non-live 348 passed/6 deselected/2 known xfailed, full frontend 52 files/177 tests, typecheck, and ESLint passed
 
 ## Verified Codex Runtime
 
@@ -178,7 +179,7 @@ unexpected_files = []
 
 Current active task:
 
-`M10-HARDEN-032` — Accelerated Long-run Soak (IN_PROGRESS)
+`M10-HARDEN-033` — Full Product Regression (next)
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 

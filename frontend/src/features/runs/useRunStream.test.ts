@@ -112,7 +112,7 @@ describe('useRunStream', () => {
     FakeWebSocket.instances = []
     const { result, unmount } = renderHook(() => useRunStream('run-1', { webSocketFactory: FakeWebSocket }))
 
-    for (let index = 1; index <= 20; index += 1) {
+    for (let index = 1; index <= 100; index += 1) {
       const socket = FakeWebSocket.instances[index - 1]!
       const previousId = index > 1 ? `event-${index - 1}` : null
       const currentId = `event-${index}`
@@ -130,9 +130,9 @@ describe('useRunStream', () => {
       act(() => vi.advanceTimersByTime([250, 500, 1000, 2000, 4000][Math.min(index - 1, 4)]!))
     }
 
-    expect(result.current.latestEventId).toBe('event-20')
-    expect(FakeWebSocket.instances).toHaveLength(21)
-    expect(FakeWebSocket.instances[20]!.url).toContain('after=event-20')
+    expect(result.current.latestEventId).toBe('event-100')
+    expect(FakeWebSocket.instances).toHaveLength(101)
+    expect(FakeWebSocket.instances[100]!.url).toContain('after=event-100')
     unmount()
   })
 })

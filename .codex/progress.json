@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M10-HARDEN-032",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Running accelerated repeated Fake workflows and frontend reconnects without wall-clock sleeping, checking leaks and consistency."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M10-HARDEN-033",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -254,7 +249,8 @@
     "M10-HARDEN-028",
     "M10-HARDEN-029",
     "M10-HARDEN-030",
-    "M10-HARDEN-031"
+    "M10-HARDEN-031",
+    "M10-HARDEN-032"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -640,5 +636,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M10-HARDEN-031 PASS: deterministic eight-cycle Fake sidecar start/crash/relaunch soak reused one app-data DB path, generated unique restart identities, rejected relaunch loops, and cleaned child processes; focused and full Tauri Rust tests passed (26 total). Cargo fmt was unavailable because rustfmt is not installed in the existing toolchain."
+  "last_validation_note": "M10-HARDEN-032 PASS: accelerated Fake workflow soak 1 passed across 24 deterministic iterations with mixed success/tool-failure paths, no leaked runtime tasks, no active runs, and consistent attempts/events; frontend reconnect soak 7 passed with 100 cursor-resumed reconnects and dedupe; full backend non-live 348 passed/6 deselected/2 known xfailed, full frontend 52 files/177 tests, typecheck, and ESLint passed."
 }
