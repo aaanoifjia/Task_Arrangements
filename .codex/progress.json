@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M8-UI-038",
+  "active_task": {
+    "id": "M8-UI-038",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Require accessible confirmation for Cancel, Skip, and Mark Success while keeping Retry/Pause/Resume one-step."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -449,5 +454,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-UI-037 COMPLETE: Skip/Mark Success visibility and invocation tests passed 34/34; frontend tsc -b and lint passed; M8-UI-038 is next."
+  "last_validation_note": "M8-UI-038 IN_PROGRESS: add keyboard-accessible destructive-action confirmation and integrate it with RunControls."
 }
