@@ -17,11 +17,11 @@
   },
   "active_task": {
     "id": "M10-HARDEN-009",
-    "status": "IN_PROGRESS",
+    "status": "COMPLETE",
     "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Running the persistent A → B/C → D fork/join through DurableRunner with database state, parallel branches, exact join release, and no premature D start."
+    "note": "Persistent fork/join PASS: database-backed A→B/C→D run overlaps B/C, starts D only after both complete, and ends with all task/run states SUCCESS."
   },
-  "next_task": null,
+  "next_task": "M10-HARDEN-010",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -231,7 +231,8 @@
     "M10-HARDEN-005",
     "M10-HARDEN-006",
     "M10-HARDEN-007",
-    "M10-HARDEN-008"
+    "M10-HARDEN-008",
+    "M10-HARDEN-009"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -603,5 +604,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M10-HARDEN-008 PASS: same-thread continuation lock test passed, full backend non-live 277 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed."
+  "last_validation_note": "M10-HARDEN-009 PASS: persistent fork/join test 7 passed, full backend non-live 278 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed; D starts only after B and C terminal success."
 }
