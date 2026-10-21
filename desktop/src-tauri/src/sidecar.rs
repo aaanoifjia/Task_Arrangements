@@ -7,7 +7,10 @@ use std::path::{Path, PathBuf};
 use std::process::{Child, Command, Stdio};
 use std::sync::mpsc::{self, Receiver, Sender};
 use std::thread::{self, JoinHandle};
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::time::{Instant, SystemTime, UNIX_EPOCH};
+
+#[path = "handshake.rs"]
+pub mod handshake;
 
 const SIDECAR_BASENAME: &str = "codex-flow-server";
 const WINDOWS_TARGET: &str = "x86_64-pc-windows-msvc";
@@ -140,6 +143,34 @@ pub fn launch_sidecar(paths: &RuntimePaths) -> io::Result<SidecarProcess> {
         _stdout_thread: stdout_thread,
         _stderr_thread: stderr_thread,
     })
+}
+
+pub fn wait_for_readiness(
+    receiver: &Receiver<SidecarOutput>,
+    timeout: std::time::Duration,
+) -> Result<handshake::Readiness, handshake::HandshakeError> {
+    let deadline = Instant::now() + timeout;
+    loop {
+        let remaining = deadline.saturating_duration_since(Instant::now());
+        if remaining.is_zero() {
+            return Err(handshake::HandshakeError::Timeout);
+        }
+        match receiver.recv_timeout(remaining) {
+            Ok(output) if output.stream == SidecarStream::Stdout => {
+                match handshake::parse_readiness_line(&output.line)? {
+                    Some(readiness) => return Ok(readiness),
+                    None => continue,
+                }
+            }
+            Ok(_) => continue,
+            Err(mpsc::RecvTimeoutError::Timeout) => {
+                return Err(handshake::HandshakeError::Timeout)
+            }
+            Err(mpsc::RecvTimeoutError::Disconnected) => {
+                return Err(handshake::HandshakeError::StreamClosed)
+            }
+        }
+    }
 }
 
 fn spawn_output_reader<R: Read + Send + 'static>(
