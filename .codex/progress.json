@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M8-INTEGRATE-042",
+  "active_task": {
+    "id": "M8-INTEGRATE-042",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Run the integrated M8 Fake human-in-the-loop flow and make only bounded M8 repairs if validation exposes defects."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -453,5 +458,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-UI-041 COMPLETE: notification permission/dedupe tests passed 4/4; frontend tsc -b and lint passed; M8-INTEGRATE-042 is next."
+  "last_validation_note": "M8-INTEGRATE-042 IN_PROGRESS: run fail/retry/readiness, pause/resume, cancellation, skip, mark-success, attention, audit, and frontend control integration checks."
 }
