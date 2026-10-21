@@ -98,6 +98,8 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M8-UI-041 — granted-only browser notification adapter with TaskRun-id dedupe; focused tests 4/4, `tsc -b`, and ESLint PASS
 - M8-INTEGRATE-042 — full Fake human-in-the-loop integration and bounded v2 test-fixture repairs; backend non-live 235 passed, frontend 49 files/160 tests, `tsc -b`, ESLint, and production build PASS
 - M8-GATE-043 — M8 reliability acceptance matrix; backend non-live 235 passed, frontend 49 files/160 tests, `tsc -b`, ESLint, and production build PASS
+- M8-REPORT-044 — M8 human-in-the-loop reliability report with exact PASS evidence and deferred manual limits
+- M9-DESKTOP-001 — Tauri v2/Python sidecar desktop runtime contract; contract consistency acceptance PASS
 
 ## Verified Codex Runtime
 
@@ -129,8 +131,8 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M9-DESKTOP-001` — Desktop Architecture Contract (IN_PROGRESS)
+`M9-DESKTOP-002` — Tauri NPM Tooling
 
-M8-UI-032A through M8-REPORT-044 are COMPLETE. M9-DESKTOP-001 is now active to freeze the Tauri v2, React bundle, Python sidecar, loopback security, app-data paths, graceful shutdown, and no-private-Codex-Desktop runtime contract.
+M8-UI-032A through M9-DESKTOP-001 are COMPLETE. M9-DESKTOP-002 is the next dependency-ready task for the Tauri v2 NPM dependencies and desktop scripts.
 
 All manual Desktop checks remain deferred until after M10 automated completion.

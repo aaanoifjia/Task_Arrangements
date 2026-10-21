@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M9-DESKTOP-001",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Freeze the Tauri v2, React bundle, Python sidecar, loopback security, app-data paths, shutdown, and no-private-Codex-Desktop runtime contract."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M9-DESKTOP-002",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -179,7 +174,8 @@
     "M8-UI-041",
     "M8-INTEGRATE-042",
     "M8-GATE-043",
-    "M8-REPORT-044"
+    "M8-REPORT-044",
+    "M9-DESKTOP-001"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -461,5 +457,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-REPORT-044 COMPLETE: report records M8 PASS evidence, exact commands/counts, integration coverage, and deferred manual limits; M9-DESKTOP-001 is next."
+  "last_validation_note": "M9-DESKTOP-001 COMPLETE: Tauri v2, React bundle, Python sidecar, stdout readiness handshake, loopback token security, app-data paths, graceful shutdown, and no-private-Codex-Desktop contract are consistent with ADR-006 and the roadmap; M9-DESKTOP-002 is next."
 }
