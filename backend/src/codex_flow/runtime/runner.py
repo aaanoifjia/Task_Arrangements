@@ -147,6 +147,7 @@ class DurableRunner:
             )
         self._active_turns[task_run_id] = turn
         failed_command_observed = False
+        turn_started = False
         try:
             stream = cast("AsyncIterator[CodexEvent]", self._adapter.stream_turn(turn))
             async for event in stream:
@@ -157,6 +158,7 @@ class DurableRunner:
                     attempt_id=attempt_id,
                 )
                 if event.event_type is EventType.TURN_STARTED:
+                    turn_started = True
                     if self._update_execution_state(
                         task_run_id, TaskStatus.RUNNING.value, turn.thread_id, turn.turn_id
                     ):
@@ -170,7 +172,7 @@ class DurableRunner:
                             task_run_id, status.value, turn.thread_id, turn.turn_id
                         ):
                             self._repository.update_attempt_state(attempt_id, status.value)
-                        return status is TaskStatus.NEEDS_ATTENTION and self._is_transient_event(event)
+                        return self._is_retryable_transport_event(event, turn_started)
             if self._update_execution_state(
                 task_run_id, TaskStatus.FAILED.value, turn.thread_id, turn.turn_id
             ):
@@ -186,6 +188,13 @@ class DurableRunner:
             is_transient_error(event.details.get(key))
             for key in ("code", "error_code", "signal", "type")
         )
+
+    @classmethod
+    def _is_retryable_transport_event(cls, event: CodexEvent, turn_started: bool) -> bool:
+        """Retry only an explicit transport failure seen before turn start."""
+        if event.event_type is EventType.ATTENTION_REQUIRED:
+            return cls._is_transient_event(event)
+        return event.event_type is EventType.TRANSPORT_ERROR and not turn_started and cls._is_transient_event(event)
 
     async def _start_continuation_attempt(
         self, task_run_id: str, task: TaskDefinition
