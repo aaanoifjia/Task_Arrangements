@@ -93,6 +93,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M8-UI-036 — Cancel for allowed queued/active task states with pending feedback; focused tests 29/29, `tsc -b`, and ESLint PASS
 - M8-UI-037 — Skip and Mark Success limited to canonical server-supported states; focused tests 34/34, `tsc -b`, and ESLint PASS
 - M8-UI-038 — keyboard-accessible confirmation for Cancel/Skip/Mark Success; focused tests 20/20, `tsc -b`, and ESLint PASS
+- M8-UI-039 — stable control feedback and 409 durable-state refresh; focused tests 22/22, `tsc -b`, and ESLint PASS
 
 ## Verified Codex Runtime
 
@@ -124,10 +125,10 @@ unexpected_files = []
 
 Current active task:
 
-`M8-UI-039` — Control Feedback & Conflict Recovery (IN_PROGRESS)
+`M8-UI-040` — Run Detail Reliability Polish
 
 M8-UI-032 is blocked only because its typed RunApi layer depends on six low-level control methods that are missing from non-owned `frontend/src/api/client.ts`. The bounded remediation task owns only `client.ts` and its tests, adds the six typed endpoint mappings, and verifies frontend type safety.
 
-M8-UI-032A through M8-UI-038 are COMPLETE: the typed control client, RunApi mappings, RunControls visibility matrix, pause/resume flow, Retry, Cancel, Skip, Mark Success, and accessible confirmation behavior pass with frontend typecheck/lint. This task adds stable control feedback and 409 durable-state recovery, then the remaining M8 → M9 → M10 sequence continues.
+M8-UI-032A through M8-UI-039 are COMPLETE: the typed control client, RunApi mappings, RunControls visibility matrix, pause/resume flow, Retry, Cancel, Skip, Mark Success, accessible confirmation, and 409 recovery behavior pass with frontend typecheck/lint. Continue with Run Detail reliability polish, then the remaining M8 → M9 → M10 sequence.
 
 All manual Desktop checks remain deferred until after M10 automated completion.

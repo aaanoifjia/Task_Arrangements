@@ -17,6 +17,12 @@ function isNotFound(cause: unknown): boolean {
   return error.status === 404 || error.code === 'NOT_FOUND'
 }
 
+function isConflict(cause: unknown): boolean {
+  if (!cause || typeof cause !== 'object') return false
+  const error = cause as { status?: number; code?: string }
+  return error.status === 409 || error.code === 'CONFLICT'
+}
+
 function RunDetailPage({ api, streamOptions }: RunDetailPageProps) {
   const { runId } = useParams<{ runId: string }>()
   const stableApi = useMemo(() => api ?? createRunApi(), [api])
@@ -89,6 +95,9 @@ function RunDetailPage({ api, streamOptions }: RunDetailPageProps) {
       setPaused(action === 'pause')
       await refreshRun()
     } catch (cause: unknown) {
+      if (isConflict(cause)) {
+        await refreshRun().catch(() => undefined)
+      }
       setControlError(cause instanceof Error ? cause.message : `Unable to ${action} run.`)
     } finally {
       setPendingControl(null)
