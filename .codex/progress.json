@@ -15,8 +15,13 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M9-DESKTOP-019",
+  "active_task": {
+    "id": "M9-DESKTOP-019",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Resolve the per-user Windows app-data directory through Tauri APIs and expose deterministic Codex Flow runtime paths."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -512,5 +517,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-018 PASS: allowed/disallowed desktop CORS tests and token/config regressions passed 7/7; Ruff and strict mypy passed. Next: M9-DESKTOP-019."
+  "last_validation_note": "M9-DESKTOP-019 IN_PROGRESS: implementing Tauri app-data path resolution and deterministic runtime child paths."
 }
