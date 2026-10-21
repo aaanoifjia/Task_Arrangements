@@ -424,4 +424,43 @@ mod tests {
             std::io::ErrorKind::AlreadyExists
         );
     }
+
+    #[test]
+    fn repeated_fake_restart_cycles_reuse_app_data_without_duplicate_identity() {
+        let app_data = PathBuf::from("C:/Temp/Codex Flow M10 Harden 031");
+        let paths = RuntimePaths {
+            root: app_data.clone(),
+            db_path: app_data.join("codex-flow.sqlite3"),
+            log_dir: app_data.join("logs"),
+            executable: PathBuf::from("cmd.exe"),
+        };
+        let mut seen_tokens = std::collections::HashSet::new();
+
+        for _ in 0..8 {
+            let mut process = super::launch_sidecar(&paths).expect("launch fake sidecar");
+            let first_token = process.token.clone();
+            assert!(seen_tokens.insert(first_token.clone()));
+            assert_eq!(process.paths.db_path, paths.db_path);
+
+            for _ in 0..100 {
+                if process.poll_exit().expect("poll fake sidecar").is_some() {
+                    break;
+                }
+                thread::sleep(std::time::Duration::from_millis(1));
+            }
+            assert!(process.poll_exit().expect("observe fake sidecar exit").is_some());
+
+            process.relaunch().expect("bounded relaunch after fake crash");
+            assert_ne!(process.token, first_token);
+            assert!(seen_tokens.insert(process.token.clone()));
+            assert_eq!(process.paths.db_path, paths.db_path);
+            assert_eq!(
+                process.relaunch().expect_err("one relaunch per process").kind(),
+                std::io::ErrorKind::AlreadyExists
+            );
+            process.shutdown().expect("clean up relaunched fake sidecar");
+        }
+
+        assert_eq!(seen_tokens.len(), 16);
+    }
 }
