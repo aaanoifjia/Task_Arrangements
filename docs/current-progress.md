@@ -101,6 +101,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M8-REPORT-044 — M8 human-in-the-loop reliability report with exact PASS evidence and deferred manual limits
 - M9-DESKTOP-001 — Tauri v2/Python sidecar desktop runtime contract; contract consistency acceptance PASS
 - M9-DESKTOP-002 — Tauri v2 API/CLI dependencies and desktop scripts; npm install, typecheck, lint, and build PASS
+- M9-PREFLIGHT-003A — complete Windows/Tauri prerequisite audit; official Rustup stable installation authorized and verified; all declared prerequisites PASS
 
 ## Verified Codex Runtime
 
@@ -132,7 +133,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M9-PREFLIGHT-003A` — Windows Desktop Toolchain Preflight (IN_PROGRESS)
+`M9-DESKTOP-003` — Tauri Rust Scaffold (RESUMED)
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 
@@ -144,4 +145,4 @@ The repository protocol now supports:
 
 M9-PREFLIGHT-003A audits Python/Node/PyInstaller/Rust/MSVC/Windows SDK/WebView2/Git. If the current invocation explicitly authorizes Rust, it may install the official Rust toolchain only. Other missing system components remain genuine blockers.
 
-The preflight is active: it will audit the complete declared Windows/Tauri toolchain and may install only the explicitly authorized official Rust toolchain. After it passes, clear the M9-DESKTOP-003 environment blocker and resume M9-DESKTOP-003 automatically.
+M9-PREFLIGHT-003A passed. The complete declared Windows/Tauri prerequisite audit is recorded in `docs/m9-environment-preflight.md`; the authorized official Rustup stable toolchain is installed and verified. The prior M9-DESKTOP-003 environment blocker is cleared, and M9-DESKTOP-003 is resumed.
