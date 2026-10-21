@@ -122,16 +122,34 @@ class DurableRunner:
             if task.execution_mode is ExecutionMode.CONTINUE_THREAD:
                 source_thread_id = self._continuation_source_thread_id(task_run_id, task)
                 async with self._thread_locks.acquire_turn(source_thread_id):
-                    transient = await self._execute_task_external(task_run_id, task)
+                    transient, reason_class = await self._execute_task_external(task_run_id, task)
             else:
-                transient = await self._execute_task_external(task_run_id, task)
+                transient, reason_class = await self._execute_task_external(task_run_id, task)
             if not transient or attempt_number == task.retry_policy.max_attempts:
+                if transient:
+                    self._append_auto_retry_audit(
+                        task_run_id,
+                        "AUTO_RETRY_EXHAUSTED",
+                        attempt_number=attempt_number,
+                        max_attempts=task.retry_policy.max_attempts,
+                        reason_class=reason_class or "UNKNOWN_TRANSIENT",
+                    )
                 return
+            self._append_auto_retry_audit(
+                task_run_id,
+                "AUTO_RETRY_SCHEDULED",
+                attempt_number=attempt_number,
+                max_attempts=task.retry_policy.max_attempts,
+                reason_class=reason_class or "UNKNOWN_TRANSIENT",
+                next_attempt_number=attempt_number + 1,
+            )
             self._repository.reset_task_for_retry(task_run_id)
             await sleep_backoff(attempt_number)
             self._repository.update_task_run_state(task_run_id, TaskStatus.READY.value)
 
-    async def _execute_task_external(self, task_run_id: str, task: TaskDefinition) -> bool:
+    async def _execute_task_external(
+        self, task_run_id: str, task: TaskDefinition
+    ) -> tuple[bool, str | None]:
         config = CodexExecutionConfig(
             cwd=task.cwd,
             sandbox=task.sandbox,
@@ -172,29 +190,63 @@ class DurableRunner:
                             task_run_id, status.value, turn.thread_id, turn.turn_id
                         ):
                             self._repository.update_attempt_state(attempt_id, status.value)
-                        return self._is_retryable_transport_event(event, turn_started)
+                        return self._retry_reason(event, turn_started)
             if self._update_execution_state(
                 task_run_id, TaskStatus.FAILED.value, turn.thread_id, turn.turn_id
             ):
                 self._repository.update_attempt_state(attempt_id, TaskStatus.FAILED.value)
-            return False
+            return False, None
         finally:
             self._active_turns.pop(task_run_id, None)
 
     @staticmethod
-    def _is_transient_event(event: CodexEvent) -> bool:
-        """Recognize only explicit transient signals attached to an event."""
-        return any(
-            is_transient_error(event.details.get(key))
-            for key in ("code", "error_code", "signal", "type")
-        )
+    def _explicit_reason_class(event: CodexEvent) -> str | None:
+        """Return only a normalized explicit signal, never free-form payload text."""
+        for key in ("code", "error_code", "signal", "type"):
+            value = event.details.get(key)
+            if isinstance(value, str) and is_transient_error(value):
+                return value.strip().upper().replace("-", "_").replace(" ", "_")
+        return None
 
     @classmethod
-    def _is_retryable_transport_event(cls, event: CodexEvent, turn_started: bool) -> bool:
-        """Retry only an explicit transport failure seen before turn start."""
+    def _retry_reason(cls, event: CodexEvent, turn_started: bool) -> tuple[bool, str | None]:
+        """Return a retry reason only for an explicit safe transient boundary."""
+        reason_class = cls._explicit_reason_class(event)
         if event.event_type is EventType.ATTENTION_REQUIRED:
-            return cls._is_transient_event(event)
-        return event.event_type is EventType.TRANSPORT_ERROR and not turn_started and cls._is_transient_event(event)
+            return reason_class is not None, reason_class
+        if event.event_type is EventType.TRANSPORT_ERROR and not turn_started:
+            return reason_class is not None, reason_class
+        return False, None
+
+    def _append_auto_retry_audit(
+        self,
+        task_run_id: str,
+        event_type: str,
+        *,
+        attempt_number: int,
+        max_attempts: int,
+        reason_class: str,
+        next_attempt_number: int | None = None,
+    ) -> None:
+        task_row = self._repository.get_task_run(task_run_id)
+        if task_row is None:
+            raise ValueError(f"task run not found: {task_run_id}")
+        payload: dict[str, object] = {
+            "attempt_number": attempt_number,
+            "max_attempts": max_attempts,
+            "reason_class": reason_class,
+        }
+        if next_attempt_number is not None:
+            payload["next_attempt_number"] = next_attempt_number
+        attempts = self._repository.load_attempts(task_run_id)
+        attempt_id = str(attempts[-1]["id"]) if attempts else None
+        self._repository.append_event(
+            event_type,
+            payload,
+            workflow_run_id=str(task_row["workflow_run_id"]),
+            task_run_id=task_run_id,
+            attempt_id=attempt_id,
+        )
 
     async def _start_continuation_attempt(
         self, task_run_id: str, task: TaskDefinition
