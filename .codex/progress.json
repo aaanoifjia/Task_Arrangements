@@ -3,17 +3,20 @@
   "project": "Codex Flow",
   "repository": "aaanoifjia/Task_Arrangements",
   "branch": "master",
-  "updated_at": "2026-10-21",
+  "updated_at": "2026-10-22",
   "execution_policy": {
     "automatic_push": true,
     "commit_each_completed_task": true,
     "checkpoint_task_start": true,
     "fail_closed": true,
     "task_selection": "next_task_only",
-    "automatic_pull": "safe_when_clean"
+    "automatic_pull": "safe_when_clean",
+    "bounded_remediation": true,
+    "milestone_preflight": true,
+    "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
   "active_task": null,
-  "next_task": null,
+  "next_task": "M9-PREFLIGHT-003A",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -182,7 +185,7 @@
     "M9-DESKTOP-003": {
       "reason": "BLOCKED: cargo and rustc are unavailable on the host. M9-DESKTOP-003 acceptance requires cargo metadata, and the repository forbids silently installing a system-level Rust/Windows toolchain.",
       "last_successful_validation": "M9-DESKTOP-003 IN_PROGRESS checkpoint committed; Get-Command cargo and Get-Command rustc returned no executable.",
-      "next_action": "Provide a supported Rust toolchain on the host, then resume M9-DESKTOP-003 and run cargo metadata/config validation."
+      "next_action": "Execute M9-PREFLIGHT-003A. If the current user invocation explicitly authorizes Rust installation, install only the official Rust toolchain when missing; audit all other M9 prerequisites together. On PASS, clear this blocker and resume M9-DESKTOP-003."
     }
   },
   "blocker_history": [
@@ -218,7 +221,8 @@
       "task": "M9-DESKTOP-003",
       "reason": "BLOCKED: cargo and rustc are unavailable on the host. M9-DESKTOP-003 acceptance requires cargo metadata, and the repository forbids silently installing a system-level Rust/Windows toolchain.",
       "last_successful_validation": "M9-DESKTOP-003 IN_PROGRESS checkpoint committed; Get-Command cargo and Get-Command rustc returned no executable.",
-      "next_action": "Provide a supported Rust toolchain on the host, then resume M9-DESKTOP-003 and run cargo metadata/config validation."
+      "next_action": "Execute M9-PREFLIGHT-003A, then resume M9-DESKTOP-003 after the desktop toolchain preflight passes.",
+      "resolved_by": null
     }
   ],
   "task_queue_after_current": [
@@ -373,6 +377,7 @@
     "M8-REPORT-044",
     "M9-DESKTOP-001",
     "M9-DESKTOP-002",
+    "M9-PREFLIGHT-003A",
     "M9-DESKTOP-003",
     "M9-DESKTOP-004",
     "M9-DESKTOP-005",
@@ -470,5 +475,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-003 BLOCKED: cargo and rustc are unavailable; cargo metadata acceptance cannot run, and no system-level toolchain was installed."
+  "last_validation_note": "Protocol upgraded: bounded adjacent integration repairs are now auto-remediated and milestones use prerequisite preflight. Current next task is M9-PREFLIGHT-003A to audit the full Windows/Tauri toolchain; Rust may be installed only when the current user invocation explicitly authorizes the Rust toolchain."
 }
