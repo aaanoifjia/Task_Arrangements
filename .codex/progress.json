@@ -274,6 +274,18 @@
       "intended_acceptance": "The sidecar build stages the target-named Windows executable in desktop/src-tauri/binaries so Tauri cargo checks can resolve externalBin without shell invocation.",
       "status": "COMPLETE",
       "validation": "PyInstaller build completed and staged desktop/src-tauri/binaries/codex-flow-server-x86_64-pc-windows-msvc.exe; the target-named externalBin resource is now present for Tauri validation."
+    },
+    {
+      "id": "M9-DESKTOP-028-R1",
+      "parent_task": "M9-DESKTOP-028",
+      "reason": "The authoritative task Owned Files omit the Tauri command-registration entrypoint, but the native open-in-Codex bridge cannot be callable from the frontend without registering its command.",
+      "files": [
+        "desktop/src-tauri/src/main.rs"
+      ],
+      "failing_validation": "Frontend bridge tests validate the command contract, but the command is not registered in the Tauri invoke handler until the direct entrypoint integration is added.",
+      "intended_acceptance": "Register the validated open_external command in the existing Tauri invoke handler without changing the frozen architecture.",
+      "status": "IN_PROGRESS",
+      "validation": null
     }
   ],
   "task_queue_after_current": [
