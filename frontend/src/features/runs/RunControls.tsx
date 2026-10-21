@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import type { RunStatus, TaskStatus } from '../../api/types'
+import ConfirmActionDialog, { type DestructiveAction } from './ConfirmActionDialog'
 import './RunControls.css'
 
 export type RunControlAction = 'pause' | 'resume' | 'retry' | 'cancel' | 'skip' | 'mark-success'
@@ -55,22 +57,39 @@ function RunControls({
   onSkip,
   onMarkSuccess,
 }: RunControlsProps) {
+  const [confirmation, setConfirmation] = useState<DestructiveAction | null>(null)
   const canControlRun = activeRunStatuses.has(runStatus)
   const hasTask = taskStatus !== null
+  const requestCancel = onCancel ? () => setConfirmation('cancel') : undefined
+  const requestSkip = onSkip ? () => setConfirmation('skip') : undefined
+  const requestMarkSuccess = onMarkSuccess ? () => setConfirmation('mark-success') : undefined
+  const confirmAction = () => {
+    const callback = confirmation === 'cancel' ? onCancel : confirmation === 'skip' ? onSkip : onMarkSuccess
+    setConfirmation(null)
+    callback?.()
+  }
 
   return (
-    <section className="run-controls" aria-labelledby="run-controls-heading" data-testid="run-controls">
-      <h2 id="run-controls-heading">Controls</h2>
-      {error && <p role="alert" className="run-controls__error">{error}</p>}
-      <div className="run-controls__actions">
-        {canControlRun && !paused && <ControlButton action="pause" label="Pause" disabled={disabled} pending={pendingAction === 'pause'} onClick={onPause} />}
-        {canControlRun && paused && <ControlButton action="resume" label="Resume" disabled={disabled} pending={pendingAction === 'resume'} onClick={onResume} />}
-        {hasTask && retryableTaskStatuses.has(taskStatus) && <ControlButton action="retry" label="Retry" disabled={disabled} pending={pendingAction === 'retry'} onClick={onRetry} />}
-        {hasTask && cancellableTaskStatuses.has(taskStatus) && <ControlButton action="cancel" label="Cancel" disabled={disabled} pending={pendingAction === 'cancel'} onClick={onCancel} />}
-        {hasTask && skippableTaskStatuses.has(taskStatus) && <ControlButton action="skip" label="Skip" disabled={disabled} pending={pendingAction === 'skip'} onClick={onSkip} />}
-        {hasTask && taskStatus === 'READY' && <ControlButton action="mark-success" label="Mark success" disabled={disabled} pending={pendingAction === 'mark-success'} onClick={onMarkSuccess} />}
-      </div>
-    </section>
+    <>
+      <section className="run-controls" aria-labelledby="run-controls-heading" data-testid="run-controls">
+        <h2 id="run-controls-heading">Controls</h2>
+        {error && <p role="alert" className="run-controls__error">{error}</p>}
+        <div className="run-controls__actions">
+          {canControlRun && !paused && <ControlButton action="pause" label="Pause" disabled={disabled} pending={pendingAction === 'pause'} onClick={onPause} />}
+          {canControlRun && paused && <ControlButton action="resume" label="Resume" disabled={disabled} pending={pendingAction === 'resume'} onClick={onResume} />}
+          {hasTask && retryableTaskStatuses.has(taskStatus) && <ControlButton action="retry" label="Retry" disabled={disabled} pending={pendingAction === 'retry'} onClick={onRetry} />}
+          {hasTask && cancellableTaskStatuses.has(taskStatus) && <ControlButton action="cancel" label="Cancel" disabled={disabled} pending={pendingAction === 'cancel'} onClick={requestCancel} />}
+          {hasTask && skippableTaskStatuses.has(taskStatus) && <ControlButton action="skip" label="Skip" disabled={disabled} pending={pendingAction === 'skip'} onClick={requestSkip} />}
+          {hasTask && taskStatus === 'READY' && <ControlButton action="mark-success" label="Mark success" disabled={disabled} pending={pendingAction === 'mark-success'} onClick={requestMarkSuccess} />}
+        </div>
+      </section>
+      <ConfirmActionDialog
+        action={confirmation ?? 'cancel'}
+        open={confirmation !== null}
+        onConfirm={confirmAction}
+        onCancel={() => setConfirmation(null)}
+      />
+    </>
   )
 }
 
