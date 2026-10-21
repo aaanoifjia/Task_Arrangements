@@ -110,6 +110,58 @@ If an implementation choice is not defined but multiple choices are equivalent a
 
 If the choice changes architecture or public contracts, block instead of deciding.
 
+## Bounded Automatic Remediation
+
+Do not turn every adjacent integration defect into a user-facing blocker.
+
+When the active task's deterministic validation fails because a small, directly implicated non-owned file must be repaired, first evaluate the Bounded Automatic Remediation criteria in `AGENTS.md`.
+
+If it qualifies:
+
+1. keep the parent task logically IN_PROGRESS;
+2. create a deterministic remediation ID `<PARENT>-R<n>`;
+3. append a remediation record to `.codex/progress.json.remediation_history` containing:
+   - remediation ID;
+   - parent task;
+   - reason;
+   - exact remediation files;
+   - failing validation;
+   - intended acceptance;
+   - status;
+4. checkpoint:
+   `chore(progress): start <REMEDIATION_ID>`
+5. push the checkpoint;
+6. edit only the remediation files plus progress/current-progress;
+7. run the failing validation and the smallest relevant regression;
+8. mark the remediation COMPLETE in `remediation_history`;
+9. commit:
+   `task(<REMEDIATION_ID>): complete bounded remediation`
+10. push;
+11. resume the parent task automatically;
+12. re-run the parent acceptance and continue.
+
+Do not edit the authoritative roadmap just to represent a bounded remediation; the durable remediation record in progress is sufficient.
+
+A bounded remediation must become a real blocker if it requires:
+- architecture or product-scope decisions;
+- a new/unapproved external dependency;
+- credentials, login, GUI confirmation, elevation, reboot, or destructive Git;
+- a broad refactor or unrelated cleanup;
+- a system-level toolchain that is not explicitly authorized.
+
+## Milestone Preflight
+
+When an authoritative milestone preflight task/checklist exists, execute it before implementation-heavy milestone work.
+
+If a missing host prerequisite is found mid-milestone, prefer one bounded preflight/remediation that checks the complete declared toolchain set instead of repeatedly failing task-by-task.
+
+System-level installation rules:
+- default: detect and report, do not install;
+- install only an exact named toolchain explicitly authorized by the authoritative task or the user's current invocation;
+- use official vendor sources and least-privileged supported mode;
+- never infer authorization for adjacent components;
+- if installation requires elevation, interactive acceptance, reboot, credentials, or another unapproved system component, BLOCK.
+
 ## Completing a Task
 
 A task can become COMPLETE only when all explicit acceptance checks pass.
@@ -151,8 +203,9 @@ Block rather than guess when:
 - user login/approval/manual GUI check is required;
 - canonical docs conflict;
 - an external dependency fails in a way not covered by the task;
-- completing the task requires modifying non-owned files;
-- required credentials or environment state are unavailable.
+- completing the task requires a non-owned-file change that does not qualify for bounded automatic remediation;
+- required credentials or environment state are unavailable;
+- a required system-level prerequisite is missing and its exact installation is not explicitly authorized.
 
 Update progress with:
 - task ID;
