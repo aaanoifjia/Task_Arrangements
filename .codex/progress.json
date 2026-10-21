@@ -342,7 +342,8 @@
       ],
       "failing_validation": "M10-HARDEN-002 targeted suite failed with XPASS(strict) in test_durable_runner_continuation_parity_gap after continuation behavior passed.",
       "intended_acceptance": "The parity audit records durable continuation as PASS, removes the obsolete strict xfail, and all parent continuation/parity tests pass.",
-      "status": "IN_PROGRESS"
+      "status": "COMPLETE",
+      "validation": "Removed the obsolete continuation strict xfail and updated the audit to PASS; durable continuation/parity suite passed 4 tests with 2 remaining known-gap xfails, Ruff passed, and strict mypy passed."
     }
   ],
   "task_queue_after_current": [

@@ -86,7 +86,6 @@ class FailedCommandAdapter(FakeCodexAdapter):
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(strict=True, reason="M10-HARDEN-002 adds durable CONTINUE_THREAD execution")
 async def test_durable_runner_continuation_parity_gap(tmp_path: Path) -> None:
     repository = StorageRepositories(open_database(tmp_path / "flow.sqlite3"))
     adapter = FakeCodexAdapter()

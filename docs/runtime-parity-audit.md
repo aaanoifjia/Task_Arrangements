@@ -12,11 +12,12 @@ changes.
 The audit test file is `backend/tests/integration/test_runtime_parity.py`.
 Known gaps are represented as strict `xfail` tests so they fail before the
 corresponding authoritative hardening task and become ordinary passing tests
-when that task closes the gap.
+when that task closes the gap. M10-HARDEN-002 has now closed the continuation
+gap, so its audit test is an ordinary passing test.
 
 | Frozen behavior | Current durable result | Follow-up |
 | --- | --- | --- |
-| `CONTINUE_THREAD` resumes the successful source thread and starts a new turn | Known gap: durable runner currently always uses `create_thread` | M10-HARDEN-002, then M10-HARDEN-003/004 |
+| `CONTINUE_THREAD` resumes the successful source thread and starts a new turn | PASS: durable runner validates the successful source and calls `resume_thread` before the distinct new turn | M10-HARDEN-003/004 |
 | Independent ready work may run concurrently under a configured global limit | Known gap: durable runner is sequential and has no configured concurrency setting | M10-HARDEN-005/006 and M10-HARDEN-011 |
 | Same-workspace writes remain serialized | PASS conservatively: current runner serializes all tasks; no concurrent same-workspace writes occur | M10-HARDEN-007 and M10-HARDEN-010 add the explicit durable lock contract |
 | One active turn per Codex thread | Not independently exercisable until durable continuation exists; continuation gap is the blocking known gap | M10-HARDEN-002 and M10-HARDEN-008 |
