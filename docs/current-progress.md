@@ -127,12 +127,10 @@ unexpected_files = []
 
 ## Current Task
 
-Current active task:
+Current deterministic next task:
 
-`M8-REPORT-044` — M8 Milestone Report (IN_PROGRESS)
+`M9-DESKTOP-001` — Desktop Packaging Foundation
 
-M8-UI-032 is blocked only because its typed RunApi layer depends on six low-level control methods that are missing from non-owned `frontend/src/api/client.ts`. The bounded remediation task owns only `client.ts` and its tests, adds the six typed endpoint mappings, and verifies frontend type safety.
-
-M8-UI-032A through M8-GATE-043 are COMPLETE: the typed control client, RunApi mappings, all human-control UI states, AttentionCenter, notifications, full Fake integration, and the complete reliability matrix pass. This task records exact M8 evidence and deferred browser/native notification limits before M9 → M10.
+M8-UI-032A through M8-REPORT-044 are COMPLETE. The M8 report records exact PASS evidence, integration coverage, and deferred browser/native notification limits. M9 is now the next authoritative milestone.
 
 All manual Desktop checks remain deferred until after M10 automated completion.
