@@ -27,7 +27,7 @@ class RuntimeManager:
         self._repository = repository
         self._adapter = adapter
         self._max_concurrency = max_concurrency
-        self._runner = DurableRunner(repository, adapter)
+        self._runner = DurableRunner(repository, adapter, max_concurrency=max_concurrency)
         self._tasks: dict[str, asyncio.Task[None]] = {}
         self._workflows: dict[str, WorkflowDefinition] = {}
         self._accepting = True

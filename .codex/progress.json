@@ -17,11 +17,11 @@
   },
   "active_task": {
     "id": "M10-HARDEN-007",
-    "status": "IN_PROGRESS",
+    "status": "COMPLETE",
     "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Reusing canonical WorkspaceLockManager so same-cwd durable write tasks serialize while different workspaces may overlap under the global limit."
+    "note": "Durable workspace lock PASS: canonical WorkspaceLockManager serializes same-cwd writes and permits different-cwd overlap under global capacity; manager now passes configured capacity to runner."
   },
-  "next_task": null,
+  "next_task": "M10-HARDEN-008",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -229,7 +229,8 @@
     "M10-HARDEN-003",
     "M10-HARDEN-004",
     "M10-HARDEN-005",
-    "M10-HARDEN-006"
+    "M10-HARDEN-006",
+    "M10-HARDEN-007"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -601,5 +602,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M10-HARDEN-006 PASS: delayed parallel matrix passed at limits 1/2 with deterministic A→B selection; full backend non-live 274 passed/6 deselected/2 known xfailed and Ruff passed."
+  "last_validation_note": "M10-HARDEN-007 PASS: same-cwd/different-cwd durable workspace matrix 9 passed, full backend non-live 276 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed."
 }

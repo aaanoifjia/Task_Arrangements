@@ -11,10 +11,11 @@ from codex_flow.codex_adapter.models import (
     CodexTurnRef,
     EventType,
 )
-from codex_flow.domain.models import ExecutionMode, TaskDefinition, WorkflowDefinition
+from codex_flow.domain.models import ExecutionMode, SandboxMode, TaskDefinition, WorkflowDefinition
 from codex_flow.domain.status import TaskStatus
 from codex_flow.scheduler.executor import command_completion_failed, terminal_status
 from codex_flow.scheduler.graph import dependency_map, topological_order
+from codex_flow.scheduler.locks import GlobalConcurrencyLimiter, WorkspaceLockManager
 from codex_flow.scheduler.readiness import ready_task_ids
 from codex_flow.storage.attempts import AttemptStarter
 from codex_flow.storage.recovery import StartupReconciler
@@ -32,7 +33,8 @@ class DurableRunner:
             raise ValueError("max_concurrency must be positive")
         self._repository = repository
         self._adapter = adapter
-        self._capacity = asyncio.Semaphore(max_concurrency)
+        self._limiter = GlobalConcurrencyLimiter(max_concurrency)
+        self._workspace_locks = WorkspaceLockManager()
         self._active_turns: dict[str, CodexTurnRef] = {}
 
     def active_turn(self, task_run_id: str) -> CodexTurnRef | None:
@@ -101,8 +103,12 @@ class DurableRunner:
             )
 
     async def _execute_task(self, task_run_id: str, task: TaskDefinition) -> None:
-        async with self._capacity:
-            await self._execute_task_unlimited(task_run_id, task)
+        async with self._limiter.slot():
+            if task.sandbox is SandboxMode.READ_ONLY:
+                await self._execute_task_unlimited(task_run_id, task)
+            else:
+                async with self._workspace_locks.acquire_write(task.cwd):
+                    await self._execute_task_unlimited(task_run_id, task)
 
     async def _execute_task_unlimited(self, task_run_id: str, task: TaskDefinition) -> None:
         config = CodexExecutionConfig(
