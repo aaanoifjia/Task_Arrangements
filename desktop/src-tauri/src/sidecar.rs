@@ -381,4 +381,47 @@ mod tests {
             std::io::ErrorKind::AlreadyExists
         );
     }
+
+    #[test]
+    fn launched_process_retains_app_data_paths_and_auth_token_contract() {
+        let paths = paths();
+        let token = "integration-session-token";
+        let command = super::build_command(&paths, token);
+        let arguments = command
+            .get_args()
+            .map(|argument| argument.to_string_lossy().to_string())
+            .collect::<Vec<_>>();
+        let db_path = paths.db_path.to_string_lossy().to_string();
+        let log_dir = paths.log_dir.to_string_lossy().to_string();
+
+        assert!(arguments.windows(2).any(|pair| pair == ["--db-path", &db_path]));
+        assert!(arguments.windows(2).any(|pair| pair == ["--log-dir", &log_dir]));
+        assert!(arguments.windows(2).any(|pair| pair == ["--token", token]));
+        assert_eq!(arguments[1], "127.0.0.1");
+    }
+
+    #[test]
+    fn crashed_process_is_observable_before_bounded_relaunch() {
+        let paths = RuntimePaths {
+            executable: PathBuf::from("cmd.exe"),
+            ..paths()
+        };
+        let mut process = super::launch_sidecar(&paths).expect("launch test sidecar");
+        let original_token = process.token.clone();
+        let mut exit = None;
+        for _ in 0..100 {
+            exit = process.poll_exit().expect("poll child");
+            if exit.is_some() {
+                break;
+            }
+            thread::sleep(std::time::Duration::from_millis(1));
+        }
+        assert!(exit.is_some(), "test sidecar should exit");
+        process.relaunch().expect("relaunch once after crash");
+        assert_ne!(process.token, original_token);
+        assert_eq!(
+            process.relaunch().expect_err("relaunch loop must be blocked").kind(),
+            std::io::ErrorKind::AlreadyExists
+        );
+    }
 }

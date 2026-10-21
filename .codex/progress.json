@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M9-DESKTOP-037",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "M9-DESKTOP-037-R1 complete: the official Tauri-generated engineering icon set is present; resume the parent desktop integration acceptance and completion commit."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M9-DESKTOP-038",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -219,7 +214,8 @@
       "M9-DESKTOP-033",
       "M9-DESKTOP-034",
       "M9-DESKTOP-035",
-      "M9-DESKTOP-036"
+      "M9-DESKTOP-036",
+      "M9-DESKTOP-037"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -571,5 +567,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-037-R1 COMPLETE: official Tauri-generated engineering icon unblocked the Rust suite; cargo test 25/25, focused frontend desktop tests 8/8, typecheck, and ESLint PASS."
+  "last_validation_note": "M9-DESKTOP-037 PASS: official Tauri-generated engineering icon unblocked the Rust suite; cargo test 25/25, focused frontend desktop tests 8/8, typecheck, and ESLint PASS."
 }

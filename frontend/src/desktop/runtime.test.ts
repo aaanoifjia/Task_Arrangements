@@ -28,4 +28,17 @@ describe('desktop runtime bridge', () => {
     await expect(loadRuntimeState({ __TAURI_INTERNALS__: {} }, invoker)).resolves.toEqual(runtimeState)
     expect(invoker).toHaveBeenCalledWith('runtime_state')
   })
+
+  it('keeps the sidecar URL and opaque token returned by the desktop runtime', async () => {
+    const runtimeState = {
+      baseUrl: 'http://127.0.0.1:43128',
+      token: 'fresh-session-token',
+    }
+    const invoker = vi.fn().mockResolvedValue(runtimeState)
+
+    await expect(loadRuntimeState({ __TAURI_INTERNALS__: {} }, invoker)).resolves.toMatchObject({
+      baseUrl: runtimeState.baseUrl,
+      token: runtimeState.token,
+    })
+  })
 })
