@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "identifier": "com.codexflow.desktop",
   "build": {
-    "beforeDevCommand": "npm --prefix ../../frontend run dev",
+    "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:5173",
-    "beforeBuildCommand": "npm --prefix ../../frontend run build",
+    "beforeBuildCommand": "npm run build",
     "frontendDist": "../../frontend/dist"
   },
   "app": {
@@ -27,6 +27,12 @@
   },
   "bundle": {
     "active": true,
+    "icon": [
+      "icons/icon.ico",
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png"
+    ],
     "externalBin": ["binaries/codex-flow-server"]
   }
 }

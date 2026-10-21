@@ -17,11 +17,11 @@
   },
   "active_task": {
     "id": "M9-DESKTOP-038",
-    "status": "BLOCKED",
+    "status": "COMPLETE",
     "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Windows release executable built, but MSI and NSIS bundling require missing downloaded WiX/NSIS toolchains; host network access failed with WinSock 10013 and no system-level installation is authorized."
+    "note": "Windows frontend, PyInstaller sidecar, Tauri release executable, MSI, and NSIS bundle all passed. Artifact manifest records exact filenames, sizes, and SHA256 hashes."
   },
-  "next_task": null,
+  "next_task": "M9-GATE-039",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -220,15 +220,10 @@
       "M9-DESKTOP-034",
       "M9-DESKTOP-035",
       "M9-DESKTOP-036",
-      "M9-DESKTOP-037"
+    "M9-DESKTOP-037",
+    "M9-DESKTOP-038"
   ],
-  "blocked_tasks": {
-    "M9-DESKTOP-038": {
-      "reason": "BLOCKED: Tauri release executable builds, but both supported Windows installer targets require downloading missing WiX (MSI) or NSIS tooling. The host denied the required download with WinSock error 10013, and the current invocation does not authorize installation of additional system-level packaging components.",
-      "last_successful_validation": "Frontend production build and PyInstaller sidecar staging passed; Tauri release executable built at desktop/src-tauri/target/release/codex-flow-desktop.exe, size 9128448 bytes, SHA256 C0BFE551670AC25C5716596E199B43D277AF9E3C6EABBB13DDCB716A1F3A4C30. MSI and NSIS bundle attempts both failed while downloading their missing official toolchain.",
-      "next_action": "Provide an approved local WiX/NSIS toolchain or authorize its official installation/network access, then resume M9-DESKTOP-038 without discarding the existing build-script and Tauri-config fixes."
-    }
-  },
+  "blocked_tasks": {},
   "blocker_history": [
     {
       "task": "M5-RESTART-005",
@@ -277,7 +272,7 @@
       "reason": "BLOCKED: Tauri release executable builds, but both supported Windows installer targets require downloading missing WiX (MSI) or NSIS tooling. The host denied the required download with WinSock error 10013, and the current invocation does not authorize installation of additional system-level packaging components.",
       "last_successful_validation": "Frontend production build and PyInstaller sidecar staging passed; Tauri release executable built at desktop/src-tauri/target/release/codex-flow-desktop.exe, size 9128448 bytes, SHA256 C0BFE551670AC25C5716596E199B43D277AF9E3C6EABBB13DDCB716A1F3A4C30. MSI and NSIS bundle attempts both failed while downloading their missing official toolchain.",
       "next_action": "Provide an approved local WiX/NSIS toolchain or authorize its official installation/network access, then resume M9-DESKTOP-038 without discarding the existing build-script and Tauri-config fixes.",
-      "resolved_by": null
+      "resolved_by": "M9-DESKTOP-038"
     }
   ],
   "remediation_history": [
@@ -585,5 +580,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-038 BLOCKED: release executable PASS; MSI and NSIS installer targets require missing downloaded WiX/NSIS toolchains and host network access failed with WinSock 10013."
+  "last_validation_note": "M9-DESKTOP-038 PASS: frontend production build, PyInstaller sidecar staging, Tauri release executable, MSI bundle, and NSIS installer all succeeded; docs/windows-build-artifacts.md records exact artifact sizes and SHA256 hashes."
 }
