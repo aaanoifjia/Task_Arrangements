@@ -17,11 +17,11 @@
   },
   "active_task": {
     "id": "M10-HARDEN-010",
-    "status": "IN_PROGRESS",
+    "status": "COMPLETE",
     "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Proving same-workspace fork branches serialize under workspace_write while downstream D remains correct."
+    "note": "Same-workspace fork serialization PASS: B/C never overlap, D starts only after both branch completions, and all durable task states finish SUCCESS."
   },
-  "next_task": null,
+  "next_task": "M10-HARDEN-011",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -232,7 +232,8 @@
     "M10-HARDEN-006",
     "M10-HARDEN-007",
     "M10-HARDEN-008",
-    "M10-HARDEN-009"
+    "M10-HARDEN-009",
+    "M10-HARDEN-010"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -604,5 +605,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M10-HARDEN-009 PASS: persistent fork/join test 7 passed, full backend non-live 278 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed; D starts only after B and C terminal success."
+  "last_validation_note": "M10-HARDEN-010 PASS: same-workspace fork serialization test 4 passed, full backend non-live 279 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed; B/C do not overlap and D remains correct."
 }
