@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M8-UI-034",
+  "active_task": {
+    "id": "M8-UI-034",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Wire durable pause/resume controls with pending state, errors, and refresh/stream updates."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -445,5 +450,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-UI-033 COMPLETE: RunControls visibility matrix passed 11/11, frontend tsc -b and lint passed; M8-UI-034 is next."
+  "last_validation_note": "M8-UI-034 IN_PROGRESS: integrate RunControls pause/resume actions with RunDetailPage durable state refresh and stream updates."
 }

@@ -119,10 +119,10 @@ unexpected_files = []
 
 Current active task:
 
-`M8-UI-034` — Pause & Resume UI
+`M8-UI-034` — Pause & Resume UI (IN_PROGRESS)
 
 M8-UI-032 is blocked only because its typed RunApi layer depends on six low-level control methods that are missing from non-owned `frontend/src/api/client.ts`. The bounded remediation task owns only `client.ts` and its tests, adds the six typed endpoint mappings, and verifies frontend type safety.
 
-M8-UI-032A, M8-UI-032, and M8-UI-033 are COMPLETE: the typed control client, RunApi mappings, and RunControls visibility matrix pass with frontend typecheck/lint. Continue with pause/resume UI wiring, then the remaining M8 → M9 → M10 sequence.
+M8-UI-032A, M8-UI-032, and M8-UI-033 are COMPLETE: the typed control client, RunApi mappings, and RunControls visibility matrix pass with frontend typecheck/lint. This task wires pause/resume through durable state and stream refreshes, then the remaining M8 → M9 → M10 sequence continues.
 
 All manual Desktop checks remain deferred until after M10 automated completion.
