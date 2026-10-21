@@ -103,6 +103,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M9-DESKTOP-002 — Tauri v2 API/CLI dependencies and desktop scripts; npm install, typecheck, lint, and build PASS
 - M9-PREFLIGHT-003A — complete Windows/Tauri prerequisite audit; official Rustup stable installation authorized and verified; all declared prerequisites PASS
 - M9-DESKTOP-003 — minimal Tauri v2 Windows shell scaffold; cargo metadata and Tauri config/capability schema parsing PASS
+- M9-DESKTOP-004 — independent production uvicorn server entrypoint; argument parsing/no-import-side-effect tests 3/3, Ruff, and strict mypy PASS
 
 ## Verified Codex Runtime
 
@@ -134,7 +135,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M9-DESKTOP-004` — Backend Server Entrypoint (IN_PROGRESS)
+`M9-DESKTOP-005` — Loopback Binding Guard
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 
@@ -146,4 +147,4 @@ The repository protocol now supports:
 
 M9-PREFLIGHT-003A audits Python/Node/PyInstaller/Rust/MSVC/Windows SDK/WebView2/Git. If the current invocation explicitly authorizes Rust, it may install the official Rust toolchain only. Other missing system components remain genuine blockers.
 
-M9-PREFLIGHT-003A and M9-DESKTOP-003 are complete. The complete declared Windows/Tauri prerequisite audit is recorded in `docs/m9-environment-preflight.md`; the authorized official Rustup stable toolchain is installed and verified. M9-DESKTOP-004 is active for the independent production uvicorn entrypoint.
+M9-PREFLIGHT-003A through M9-DESKTOP-004 are complete. The complete declared Windows/Tauri prerequisite audit is recorded in `docs/m9-environment-preflight.md`; the authorized official Rustup stable toolchain is installed and verified. M9-DESKTOP-005 is the next dependency-ready task.

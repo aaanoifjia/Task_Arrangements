@@ -25,6 +25,7 @@ dev = [
 
 [project.scripts]
 codex-flow = "codex_flow.cli.main:main"
+codex-flow-server = "codex_flow.server:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/codex_flow"]
