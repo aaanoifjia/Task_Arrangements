@@ -131,8 +131,8 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M9-DESKTOP-002` — Tauri NPM Tooling
+`M9-DESKTOP-002` — Tauri NPM Tooling (IN_PROGRESS)
 
-M8-UI-032A through M9-DESKTOP-001 are COMPLETE. M9-DESKTOP-002 is the next dependency-ready task for the Tauri v2 NPM dependencies and desktop scripts.
+M8-UI-032A through M9-DESKTOP-001 are COMPLETE. M9-DESKTOP-002 is active for the Tauri v2 NPM dependencies and desktop scripts.
 
 All manual Desktop checks remain deferred until after M10 automated completion.

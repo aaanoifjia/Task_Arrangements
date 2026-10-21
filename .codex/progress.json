@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M9-DESKTOP-002",
+  "active_task": {
+    "id": "M9-DESKTOP-002",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Add only the Tauri v2 API/CLI dependencies and desktop development/build scripts without upgrading unrelated frontend dependencies."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
