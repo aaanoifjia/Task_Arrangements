@@ -16,12 +16,12 @@
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
   "active_task": {
-    "id": "M10-HARDEN-001",
+    "id": "M10-HARDEN-002",
     "status": "COMPLETE",
     "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Parity audit PASS: 2 direct parity checks passed, 3 strict xfails identify only known continuation, parallelism, and timeout gaps; relevant runtime/scheduler regression 33 passed."
+    "note": "Implementing durable CONTINUE_THREAD using the explicit successful source thread_id and a distinct new turn without creating a new thread."
   },
-  "next_task": "M10-HARDEN-002",
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
