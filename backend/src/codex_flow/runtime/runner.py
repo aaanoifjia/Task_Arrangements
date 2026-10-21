@@ -15,7 +15,11 @@ from codex_flow.domain.models import ExecutionMode, SandboxMode, TaskDefinition,
 from codex_flow.domain.status import TaskStatus
 from codex_flow.scheduler.executor import command_completion_failed, terminal_status
 from codex_flow.scheduler.graph import dependency_map, topological_order
-from codex_flow.scheduler.locks import GlobalConcurrencyLimiter, WorkspaceLockManager
+from codex_flow.scheduler.locks import (
+    GlobalConcurrencyLimiter,
+    ThreadTurnLockManager,
+    WorkspaceLockManager,
+)
 from codex_flow.scheduler.readiness import ready_task_ids
 from codex_flow.storage.attempts import AttemptStarter
 from codex_flow.storage.recovery import StartupReconciler
@@ -35,6 +39,7 @@ class DurableRunner:
         self._adapter = adapter
         self._limiter = GlobalConcurrencyLimiter(max_concurrency)
         self._workspace_locks = WorkspaceLockManager()
+        self._thread_locks = ThreadTurnLockManager()
         self._active_turns: dict[str, CodexTurnRef] = {}
 
     def active_turn(self, task_run_id: str) -> CodexTurnRef | None:
@@ -111,6 +116,14 @@ class DurableRunner:
                     await self._execute_task_unlimited(task_run_id, task)
 
     async def _execute_task_unlimited(self, task_run_id: str, task: TaskDefinition) -> None:
+        if task.execution_mode is ExecutionMode.CONTINUE_THREAD:
+            source_thread_id = self._continuation_source_thread_id(task_run_id, task)
+            async with self._thread_locks.acquire_turn(source_thread_id):
+                await self._execute_task_external(task_run_id, task)
+            return
+        await self._execute_task_external(task_run_id, task)
+
+    async def _execute_task_external(self, task_run_id: str, task: TaskDefinition) -> None:
         config = CodexExecutionConfig(
             cwd=task.cwd,
             sandbox=task.sandbox,
@@ -161,6 +174,12 @@ class DurableRunner:
         self, task_run_id: str, task: TaskDefinition
     ) -> tuple[str, CodexTurnRef]:
         """Resume the explicit successful source thread for a continuation task."""
+        source_thread_id = self._continuation_source_thread_id(task_run_id, task)
+        return await AttemptStarter(self._repository._connection, self._adapter).start_continuation(
+            task_run_id, source_thread_id, task.prompt
+        )
+
+    def _continuation_source_thread_id(self, task_run_id: str, task: TaskDefinition) -> str:
         source_id = task.continue_from_task_id
         if source_id is None:
             raise ValueError("continue_from_task_id is required")
@@ -182,10 +201,7 @@ class DurableRunner:
         source_thread_id = source["thread_id"]
         if not isinstance(source_thread_id, str) or not source_thread_id:
             raise ValueError("continuation source has no thread_id")
-
-        return await AttemptStarter(self._repository._connection, self._adapter).start_continuation(
-            task_run_id, source_thread_id, task.prompt
-        )
+        return source_thread_id
 
     def _update_execution_state(
         self, task_run_id: str, status: str, thread_id: str, turn_id: str
