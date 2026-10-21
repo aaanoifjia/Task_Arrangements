@@ -284,21 +284,21 @@ class StorageRepositories:
     def load_events_for_run(self, workflow_run_id: str) -> list[sqlite3.Row]:
         return list(
             self._connection.execute(
-                "SELECT * FROM events WHERE workflow_run_id = ? ORDER BY created_at, id",
+                "SELECT * FROM events WHERE workflow_run_id = ? ORDER BY rowid",
                 (workflow_run_id,),
             )
         )
 
     def load_events_after(self, workflow_run_id: str, event_id: str) -> list[sqlite3.Row]:
         cursor = self._connection.execute(
-            "SELECT created_at, id FROM events WHERE workflow_run_id = ? AND id = ?",
+            "SELECT rowid FROM events WHERE workflow_run_id = ? AND id = ?",
             (workflow_run_id, event_id),
         ).fetchone()
         if cursor is None:
             raise ValueError("event cursor not found")
         return list(
             self._connection.execute(
-                "SELECT * FROM events WHERE workflow_run_id = ? AND (created_at > ? OR (created_at = ? AND id > ?)) ORDER BY created_at, id",
-                (workflow_run_id, cursor["created_at"], cursor["created_at"], cursor["id"]),
+                "SELECT * FROM events WHERE workflow_run_id = ? AND rowid > ? ORDER BY rowid",
+                (workflow_run_id, cursor["rowid"]),
             )
         )

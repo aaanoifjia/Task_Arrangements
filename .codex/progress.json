@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M8-GATE-043",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Run the full M8 reliability acceptance matrix and all required backend/frontend regression checks."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M8-REPORT-044",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -177,7 +172,8 @@
     "M8-UI-039",
     "M8-UI-040",
     "M8-UI-041",
-    "M8-INTEGRATE-042"
+    "M8-INTEGRATE-042",
+    "M8-GATE-043"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -459,5 +455,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-GATE-043 IN_PROGRESS: execute full manual-control legality, audit, race, pause, retry, UI, notification, and M5-M7/M8 regression gates."
+  "last_validation_note": "M8-GATE-043 COMPLETE: backend non-live 235 passed; frontend Vitest 49 files/160 tests, tsc -b, ESLint, and production build passed; M8-REPORT-044 is next."
 }

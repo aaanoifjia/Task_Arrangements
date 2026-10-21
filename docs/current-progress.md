@@ -97,6 +97,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M8-UI-040 — AttentionCenter NEEDS_ATTENTION aggregation/count/navigation; focused tests 3/3, `tsc -b`, and ESLint PASS
 - M8-UI-041 — granted-only browser notification adapter with TaskRun-id dedupe; focused tests 4/4, `tsc -b`, and ESLint PASS
 - M8-INTEGRATE-042 — full Fake human-in-the-loop integration and bounded v2 test-fixture repairs; backend non-live 235 passed, frontend 49 files/160 tests, `tsc -b`, ESLint, and production build PASS
+- M8-GATE-043 — M8 reliability acceptance matrix; backend non-live 235 passed, frontend 49 files/160 tests, `tsc -b`, ESLint, and production build PASS
 
 ## Verified Codex Runtime
 
@@ -128,10 +129,10 @@ unexpected_files = []
 
 Current active task:
 
-`M8-GATE-043` — M8 Reliability Acceptance Matrix (IN_PROGRESS)
+`M8-REPORT-044` — M8 Milestone Report
 
 M8-UI-032 is blocked only because its typed RunApi layer depends on six low-level control methods that are missing from non-owned `frontend/src/api/client.ts`. The bounded remediation task owns only `client.ts` and its tests, adds the six typed endpoint mappings, and verifies frontend type safety.
 
-M8-UI-032A through M8-INTEGRATE-042 are COMPLETE: the typed control client, RunApi mappings, all human-control UI states, AttentionCenter, notifications, and full Fake integration pass. This gate reruns the complete M8 reliability matrix and M5-M7/M8 regressions before the M8 report and M9 → M10.
+M8-UI-032A through M8-GATE-043 are COMPLETE: the typed control client, RunApi mappings, all human-control UI states, AttentionCenter, notifications, full Fake integration, and the complete reliability matrix pass. Backend non-live is 235 passed; frontend is 49 files/160 tests with typecheck, lint, and production build passing. Continue with the M8 report, then M9 → M10.
 
 All manual Desktop checks remain deferred until after M10 automated completion.
