@@ -22,3 +22,12 @@ The frozen runtime contract is documented in
 Desktop implementation files are added in the following M9 tasks. This task
 only freezes the contract and does not install Rust, build a Windows
 installer, or access private Codex Desktop state.
+
+## Production bundle wiring
+
+The Tauri configuration uses `frontend/dist` as `frontendDist` and runs the
+frontend build before `tauri build`. Vite emits relative asset URLs so the
+same bundle works from the Tauri asset protocol. The frontend does not bake a
+backend URL into the production bundle: in desktop mode it loads the runtime
+base URL and bearer token through the Tauri `runtime_state` bridge, while the
+browser path continues to use its current origin.
