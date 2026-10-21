@@ -45,6 +45,8 @@ When the user tells you to continue the project automatically:
 13. Do not estimate, infer, or reason about remaining quota, context, time, turn budget, execution budget, or session budget. These are host-level constraints, not project stopping conditions.
 14. Never voluntarily stop because you believe such a budget may be low or nearly exhausted. If the host actually terminates execution, the checkpoint/progress mechanism handles recovery.
 15. If a task requires user interaction, credentials, GUI confirmation, or a decision not encoded in the task spec, mark it BLOCKED and stop at that task.
+16. If a deterministic validation reveals a bounded adjacent integration repair, apply the Bounded Automatic Remediation rules in Section 5 instead of stopping.
+17. When a milestone preflight task/checklist exists, execute it before continuing implementation-heavy work in that milestone.
 
 Never skip a failed/blocked prerequisite.
 
@@ -55,7 +57,8 @@ In autonomous mode, Codex may stop voluntarily only when one of these is true:
 - the requested project target is complete;
 - a genuine user/manual gate is reached;
 - required credentials or external interaction are unavailable;
-- an authoritative task specification is missing;
+- an authoritative task specification is missing and the issue does not qualify for bounded automatic remediation;
+- a required host/system prerequisite is missing and is not explicitly authorized for installation;
 - a real blocker or architectural conflict prevents deterministic continuation.
 
 Completion of one task, elapsed wall-clock time, long context, token usage, perceived quota pressure, or a guessed execution/session budget are not stop conditions.
@@ -80,12 +83,54 @@ If the working tree is clean and `active_task` is set, continue from the task sp
 For every task:
 
 - Modify only its Owned Files plus `.codex/progress.json` and `docs/current-progress.md`.
-- Do not expand scope.
 - Do not perform unrelated refactors.
 - Do not change dependencies or package versions unless the task explicitly requires it.
 - Do not run repository-wide autofix commands.
-- If the task requires a non-owned file change, stop and record:
-  `BLOCKED: requires change to <path>`
+
+### Bounded Automatic Remediation
+
+A non-owned-file requirement is no longer automatically a stop condition.
+
+If a failing compiler, typecheck, test, import, route wiring check, or other deterministic acceptance check proves that the active task requires a small adjacent repair outside its Owned Files, Codex may create and execute a bounded remediation automatically.
+
+A bounded remediation is allowed only when all of these are true:
+
+1. the required file/path is directly identified by the failing validation or is the immediate typed/wiring dependency that caused it;
+2. the repair is necessary to satisfy the already-authoritative task contract;
+3. the repair does not change architecture, product scope, TaskStatus semantics, persistence authority, public behavior beyond the already-authoritative contract, or dependency graph semantics;
+4. it does not add/upgrade an external package unless the parent task already explicitly requires that package;
+5. it does not require credentials, GUI confirmation, privileged system changes, destructive Git operations, or user product decisions;
+6. the repair is a small explicit set of files in the same subsystem, not a broad refactor.
+
+When allowed:
+
+- derive a remediation ID from the parent task, e.g. `<PARENT>-R1`, `<PARENT>-R2`;
+- record the parent task, reason, remediation files, failing validation, and acceptance in `.codex/progress.json.remediation_history`;
+- checkpoint and push the remediation before editing;
+- modify only the recorded remediation files plus progress/current-progress;
+- run the narrow failing validation and relevant regression;
+- commit/push the remediation;
+- restore/resume the parent task automatically and continue;
+- do not stop merely to ask for authorization for this bounded repair.
+
+If any criterion above is false, record a real BLOCKED state and stop.
+
+### Milestone Preflight
+
+Before the first implementation-heavy task of a new milestone, or when a milestone first encounters a missing host toolchain, run the milestone's authoritative preflight task/checklist if one exists.
+
+Preflight should check declared host prerequisites early (for example Python, Node/npm, Rust/Cargo, compiler/build tools, WebView2, PyInstaller) and report all known missing prerequisites together instead of discovering them one task at a time.
+
+Host/system installation policy:
+
+- repository-local dependencies explicitly required by a task may be installed normally;
+- system-level toolchains or runtimes are not installed silently by default;
+- a system-level toolchain may be installed only when either:
+  1. an authoritative task explicitly authorizes that exact installation, or
+  2. the user's current invocation explicitly authorizes that exact named toolchain;
+- use the official vendor installer/source and the least-privileged supported install mode;
+- if elevation, license acceptance, interactive GUI, reboot, credentials, or an additional unapproved system component is required, stop and report it;
+- never broaden one authorization (for example Rust) into another (for example Visual Studio Build Tools).
 
 ## 6. Git Protocol
 
