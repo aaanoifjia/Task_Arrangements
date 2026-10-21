@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M9-DESKTOP-019",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Resolve the per-user Windows app-data directory through Tauri APIs and expose deterministic Codex Flow runtime paths."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M9-DESKTOP-020",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -201,7 +196,8 @@
       "M9-DESKTOP-015",
       "M9-DESKTOP-016",
       "M9-DESKTOP-017",
-      "M9-DESKTOP-018"
+      "M9-DESKTOP-018",
+      "M9-DESKTOP-019"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -517,5 +513,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-019 IN_PROGRESS: implementing Tauri app-data path resolution and deterministic runtime child paths."
+  "last_validation_note": "M9-DESKTOP-019 PASS: Tauri cargo test compiled the desktop binary and passed 7/7 path/runtime/sidecar tests, including spaces/non-ASCII normalization and deterministic child names. Next: M9-DESKTOP-020."
 }

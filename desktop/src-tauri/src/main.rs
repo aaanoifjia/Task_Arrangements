@@ -2,6 +2,7 @@
 
 mod sidecar;
 mod runtime_state;
+mod paths;
 
 use std::time::Duration;
 use std::sync::Mutex;
@@ -11,6 +12,8 @@ use tauri::Manager;
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
+            let runtime_paths = paths::resolve_runtime_paths(app.handle())?;
+            app.manage(runtime_paths);
             let paths = sidecar::default_runtime_paths()?;
             let process = sidecar::launch_sidecar(&paths)?;
             let readiness = sidecar::wait_for_readiness(
