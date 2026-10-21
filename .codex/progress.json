@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M9-DESKTOP-030",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Use native Tauri notifications for newly observed NEEDS_ATTENTION tasks in desktop mode while retaining browser fallback and dedupe."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M9-DESKTOP-031",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -212,7 +207,8 @@
       "M9-DESKTOP-026",
       "M9-DESKTOP-027",
       "M9-DESKTOP-028",
-      "M9-DESKTOP-029"
+      "M9-DESKTOP-029",
+      "M9-DESKTOP-030"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -540,5 +536,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-030 IN_PROGRESS: implementing desktop/browser notification adapters and dedupe-preserving tests."
+  "last_validation_note": "M9-DESKTOP-030 PASS: desktop notification adapter tests 2/2 and browser notification/dedupe tests 4/4; frontend typecheck and ESLint passed."
 }

@@ -1,4 +1,6 @@
 import type { TaskRunView } from '../../api/types'
+import { isTauriEnvironment } from '../../desktop/runtime'
+import { notifyDesktopAttention } from '../../desktop/notifications'
 
 export type AttentionNotificationTask = Pick<TaskRunView, 'id' | 'task_id' | 'workflow_run_id' | 'status'>
 
@@ -22,6 +24,12 @@ export function notifyAttentionTasks(
   let notified = 0
   for (const task of tasks) {
     if (task.status !== 'NEEDS_ATTENTION' || notifiedTaskRunIds.has(task.id)) continue
+    if (isTauriEnvironment()) {
+      notifiedTaskRunIds.add(task.id)
+      void notifyDesktopAttention(task).catch(() => undefined)
+      notified += 1
+      continue
+    }
     new notificationConstructor(`Task needs attention: ${task.task_id}`, {
       body: `Run ${task.workflow_run_id} requires review.`,
       tag: `codex-flow-${task.id}`,
