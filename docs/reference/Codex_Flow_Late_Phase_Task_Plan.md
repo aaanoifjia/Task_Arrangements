@@ -98,6 +98,8 @@ M8-UI-031A
 ↓
 M8-UI-031
 ↓
+M8-UI-032A
+↓
 M8-UI-032
 ↓
 M8-UI-033
@@ -886,11 +888,53 @@ After this task passes, resume `M8-UI-031` exactly where it was blocked. Do not 
 
 ---
 
-## M8-UI-032 — Frontend Control API Client
+## M8-UI-032A — Typed Control ApiClient Repair
 
 ### Dependencies
 
 `M8-UI-031`
+
+### Owned Files
+
+```text
+frontend/src/api/client.ts
+frontend/src/api/client.test.ts
+```
+
+### Implementation
+
+Add the six typed low-level control methods required by M8-UI-032 to the default ApiClient:
+
+- `pauseRun(runId)`
+- `resumeRun(runId)`
+- `retryTask(runId, taskId)`
+- `cancelTask(runId, taskId)`
+- `skipTask(runId, taskId)`
+- `markSuccessTask(runId, taskId)`
+
+Requirements:
+
+- use only the existing `requestJson` transport;
+- return `ManualActionResponse`;
+- use the authoritative M8 REST paths;
+- URL-encode run/task ids;
+- preserve stable ApiError propagation;
+- do not add retries, state inference, or direct fetch usage outside the existing client boundary.
+
+### Acceptance
+
+- focused ApiClient tests cover all six endpoint mappings and encoded ids;
+- stable API error propagation remains green;
+- frontend `tsc -b` passes;
+- no unrelated frontend files change.
+
+---
+
+## M8-UI-032 — Frontend Control API Client
+
+### Dependencies
+
+`M8-UI-032A`
 
 ### Owned Files
 
