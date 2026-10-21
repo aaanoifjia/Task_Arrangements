@@ -12,12 +12,7 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M9-DESKTOP-003",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Create the minimal Tauri v2 Windows shell scaffold with minimal permissions and frontend dist/dev-server wiring."
-  },
+  "active_task": null,
   "next_task": null,
   "completed_tasks": [
     "PREP-000",
@@ -183,7 +178,13 @@
     "M9-DESKTOP-001",
     "M9-DESKTOP-002"
   ],
-  "blocked_tasks": {},
+  "blocked_tasks": {
+    "M9-DESKTOP-003": {
+      "reason": "BLOCKED: cargo and rustc are unavailable on the host. M9-DESKTOP-003 acceptance requires cargo metadata, and the repository forbids silently installing a system-level Rust/Windows toolchain.",
+      "last_successful_validation": "M9-DESKTOP-003 IN_PROGRESS checkpoint committed; Get-Command cargo and Get-Command rustc returned no executable.",
+      "next_action": "Provide a supported Rust toolchain on the host, then resume M9-DESKTOP-003 and run cargo metadata/config validation."
+    }
+  },
   "blocker_history": [
     {
       "task": "M5-RESTART-005",
@@ -212,6 +213,12 @@
       "last_successful_validation": "M8-UI-031 complete; M8-UI-032 checkpoint committed before implementation. No M8-UI-032 implementation files changed.",
       "next_action": "Execute M8-UI-032A, then resume M8-UI-032.",
       "resolved_by": "M8-UI-032A"
+    },
+    {
+      "task": "M9-DESKTOP-003",
+      "reason": "BLOCKED: cargo and rustc are unavailable on the host. M9-DESKTOP-003 acceptance requires cargo metadata, and the repository forbids silently installing a system-level Rust/Windows toolchain.",
+      "last_successful_validation": "M9-DESKTOP-003 IN_PROGRESS checkpoint committed; Get-Command cargo and Get-Command rustc returned no executable.",
+      "next_action": "Provide a supported Rust toolchain on the host, then resume M9-DESKTOP-003 and run cargo metadata/config validation."
     }
   ],
   "task_queue_after_current": [
@@ -463,5 +470,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-003 IN_PROGRESS: Tauri v2 Rust scaffold is being implemented and cargo/config acceptance will be run if the required Rust toolchain is available."
+  "last_validation_note": "M9-DESKTOP-003 BLOCKED: cargo and rustc are unavailable; cargo metadata acceptance cannot run, and no system-level toolchain was installed."
 }

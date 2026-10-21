@@ -132,8 +132,8 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M9-DESKTOP-003` — Tauri Rust Scaffold (IN_PROGRESS)
+`M9-DESKTOP-003` — Tauri Rust Scaffold (BLOCKED)
 
-M8-UI-032A through M9-DESKTOP-002 are COMPLETE. M9-DESKTOP-003 is active for the minimal Tauri v2 Windows shell; Rust/toolchain availability will determine the task acceptance path.
+M8-UI-032A through M9-DESKTOP-002 are COMPLETE. M9-DESKTOP-003 is blocked because `cargo` and `rustc` are unavailable on the host, while the task requires `cargo metadata` and the repository forbids silently installing a system-level Rust/Windows toolchain. Resume this task after a supported Rust toolchain is provided.
 
 All manual Desktop checks remain deferred until after M10 automated completion.
