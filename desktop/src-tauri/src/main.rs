@@ -5,11 +5,12 @@ mod runtime_state;
 mod paths;
 mod open_external;
 mod single_instance;
+mod window_state;
 
 use std::time::Duration;
 use std::sync::Mutex;
 
-use tauri::{Manager, RunEvent};
+use tauri::{Manager, PhysicalPosition, PhysicalSize, RunEvent, WindowEvent};
 
 fn main() {
     let app = tauri::Builder::default()
@@ -19,6 +20,39 @@ fn main() {
         .setup(|app| {
             let runtime_paths = paths::resolve_runtime_paths(app.handle())?;
             app.manage(runtime_paths);
+            let main_window = app
+                .get_webview_window("main")
+                .ok_or_else(|| std::io::Error::other("main window missing"))?;
+            let window_state_path = app
+                .path()
+                .app_data_dir()
+                .map_err(|error| std::io::Error::other(error.to_string()))?
+                .join("window-state.json");
+            if let Ok(Some(saved)) = window_state::load(&window_state_path) {
+                let saved = window_state::clamp(saved, window_state::ScreenBounds::default());
+                let _ = main_window.set_size(PhysicalSize::new(saved.width, saved.height));
+                let _ = main_window.set_position(PhysicalPosition::new(saved.x, saved.y));
+                if saved.maximized { let _ = main_window.maximize(); }
+            }
+            let persist_path = window_state_path.clone();
+            let persist_window = main_window.clone();
+            main_window.on_window_event(move |event| {
+                if !matches!(event, WindowEvent::CloseRequested { .. }) { return; }
+                if let (Ok(position), Ok(size), Ok(maximized)) = (
+                    persist_window.outer_position(),
+                    persist_window.inner_size(),
+                    persist_window.is_maximized(),
+                ) {
+                    let state = window_state::WindowState {
+                        x: position.x,
+                        y: position.y,
+                        width: size.width,
+                        height: size.height,
+                        maximized,
+                    };
+                    let _ = window_state::save(&persist_path, &state);
+                }
+            });
             let paths = sidecar::default_runtime_paths()?;
             let process = sidecar::launch_sidecar(&paths)?;
             let readiness = sidecar::wait_for_readiness(

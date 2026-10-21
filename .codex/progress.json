@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M9-DESKTOP-032",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Persist only safe window geometry/maximized state and clamp invalid off-screen coordinates on restore."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M9-DESKTOP-033",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -214,7 +209,8 @@
       "M9-DESKTOP-028",
       "M9-DESKTOP-029",
       "M9-DESKTOP-030",
-      "M9-DESKTOP-031"
+      "M9-DESKTOP-031",
+      "M9-DESKTOP-032"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -542,5 +538,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-032 IN_PROGRESS: implementing window-state serialization, clamping, and Tauri lifecycle persistence."
+  "last_validation_note": "M9-DESKTOP-032 PASS: Tauri cargo test passed 23/23, including safe window-state serialization and off-screen geometry clamping."
 }
