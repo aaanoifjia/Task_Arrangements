@@ -106,4 +106,33 @@ describe('useRunStream', () => {
     act(() => vi.advanceTimersByTime(5000))
     expect(FakeWebSocket.instances).toHaveLength(1)
   })
+
+  it('survives repeated reconnects with cursor resume and event dedupe', () => {
+    vi.useFakeTimers()
+    FakeWebSocket.instances = []
+    const { result, unmount } = renderHook(() => useRunStream('run-1', { webSocketFactory: FakeWebSocket }))
+
+    for (let index = 1; index <= 20; index += 1) {
+      const socket = FakeWebSocket.instances[index - 1]!
+      const previousId = index > 1 ? `event-${index - 1}` : null
+      const currentId = `event-${index}`
+      act(() => {
+        if (previousId) {
+          socket.onmessage?.({
+            data: JSON.stringify({ kind: 'event', payload: { id: previousId, event_type: 'DUPLICATE', payload: {}, created_at: 'now' } }),
+          } as MessageEvent)
+        }
+        socket.onmessage?.({
+          data: JSON.stringify({ kind: 'event', payload: { id: currentId, event_type: 'TURN_STARTED', payload: {}, created_at: 'now' } }),
+        } as MessageEvent)
+        socket.onclose?.({ code: 1006 } as CloseEvent)
+      })
+      act(() => vi.advanceTimersByTime([250, 500, 1000, 2000, 4000][Math.min(index - 1, 4)]!))
+    }
+
+    expect(result.current.latestEventId).toBe('event-20')
+    expect(FakeWebSocket.instances).toHaveLength(21)
+    expect(FakeWebSocket.instances[20]!.url).toContain('after=event-20')
+    unmount()
+  })
 })
