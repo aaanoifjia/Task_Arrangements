@@ -3,5 +3,5 @@
   "identifier": "default",
   "description": "Minimal Codex Flow desktop capability",
   "windows": ["main"],
-  "permissions": ["core:default"]
+  "permissions": ["core:default", "notification:default"]
 }
