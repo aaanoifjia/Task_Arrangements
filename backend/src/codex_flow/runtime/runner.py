@@ -13,6 +13,8 @@ from codex_flow.codex_adapter.models import (
 )
 from codex_flow.domain.models import ExecutionMode, SandboxMode, TaskDefinition, WorkflowDefinition
 from codex_flow.domain.status import TaskStatus
+from codex_flow.runtime.backoff import sleep_backoff
+from codex_flow.runtime.transient import is_transient_error
 from codex_flow.scheduler.executor import command_completion_failed, terminal_status
 from codex_flow.scheduler.graph import dependency_map, topological_order
 from codex_flow.scheduler.locks import (
@@ -116,14 +118,20 @@ class DurableRunner:
                     await self._execute_task_unlimited(task_run_id, task)
 
     async def _execute_task_unlimited(self, task_run_id: str, task: TaskDefinition) -> None:
-        if task.execution_mode is ExecutionMode.CONTINUE_THREAD:
-            source_thread_id = self._continuation_source_thread_id(task_run_id, task)
-            async with self._thread_locks.acquire_turn(source_thread_id):
-                await self._execute_task_external(task_run_id, task)
-            return
-        await self._execute_task_external(task_run_id, task)
+        for attempt_number in range(1, task.retry_policy.max_attempts + 1):
+            if task.execution_mode is ExecutionMode.CONTINUE_THREAD:
+                source_thread_id = self._continuation_source_thread_id(task_run_id, task)
+                async with self._thread_locks.acquire_turn(source_thread_id):
+                    transient = await self._execute_task_external(task_run_id, task)
+            else:
+                transient = await self._execute_task_external(task_run_id, task)
+            if not transient or attempt_number == task.retry_policy.max_attempts:
+                return
+            self._repository.reset_task_for_retry(task_run_id)
+            await sleep_backoff(attempt_number)
+            self._repository.update_task_run_state(task_run_id, TaskStatus.READY.value)
 
-    async def _execute_task_external(self, task_run_id: str, task: TaskDefinition) -> None:
+    async def _execute_task_external(self, task_run_id: str, task: TaskDefinition) -> bool:
         config = CodexExecutionConfig(
             cwd=task.cwd,
             sandbox=task.sandbox,
@@ -162,13 +170,22 @@ class DurableRunner:
                             task_run_id, status.value, turn.thread_id, turn.turn_id
                         ):
                             self._repository.update_attempt_state(attempt_id, status.value)
-                        return
+                        return status is TaskStatus.NEEDS_ATTENTION and self._is_transient_event(event)
             if self._update_execution_state(
                 task_run_id, TaskStatus.FAILED.value, turn.thread_id, turn.turn_id
             ):
                 self._repository.update_attempt_state(attempt_id, TaskStatus.FAILED.value)
+            return False
         finally:
             self._active_turns.pop(task_run_id, None)
+
+    @staticmethod
+    def _is_transient_event(event: CodexEvent) -> bool:
+        """Recognize only explicit transient signals attached to an event."""
+        return any(
+            is_transient_error(event.details.get(key))
+            for key in ("code", "error_code", "signal", "type")
+        )
 
     async def _start_continuation_attempt(
         self, task_run_id: str, task: TaskDefinition

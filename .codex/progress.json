@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M10-HARDEN-014",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Implementing automatic retry for explicit transient server-busy outcomes within TaskDefinition max_attempts, preserving distinct durable Attempts."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M10-HARDEN-015",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -236,7 +231,8 @@
     "M10-HARDEN-010",
     "M10-HARDEN-011",
     "M10-HARDEN-012",
-    "M10-HARDEN-013"
+    "M10-HARDEN-013",
+    "M10-HARDEN-014"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -608,5 +604,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M10-HARDEN-013 PASS: deterministic exponential backoff sequence and cap tests 12 passed, injectable sleeper verified, Ruff and strict mypy passed."
+  "last_validation_note": "M10-HARDEN-014 PASS: explicit SERVER_BUSY retried within max_attempts with distinct Attempts and RETRY_REQUESTED audit; focused regression 5 passed/2 known xfailed, full backend non-live 307 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed."
 }
