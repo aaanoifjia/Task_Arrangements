@@ -246,6 +246,17 @@
       "intended_acceptance": "Rebuilt sidecar --help prints usage and --version prints 0.1.0 with exit code 0; no token is emitted.",
       "status": "COMPLETE",
       "validation": "Rebuilt PyInstaller sidecar --help prints usage and --version prints 0.1.0 with exit code 0; readiness token is not printed."
+    },
+    {
+      "id": "M9-DESKTOP-012-R1",
+      "parent_task": "M9-DESKTOP-012",
+      "reason": "Tauri cargo check cannot validate the active Rust launcher because M9-DESKTOP-011 externalBin requires the target-named sidecar binary, while M9-DESKTOP-010 build staging only emitted the generic PyInstaller directory artifact.",
+      "files": [
+        "backend/scripts/build_sidecar.py"
+      ],
+      "failing_validation": "cargo check failed in tauri-build: resource path binaries\\codex-flow-server-x86_64-pc-windows-msvc.exe does not exist.",
+      "intended_acceptance": "The sidecar build stages the target-named Windows executable in desktop/src-tauri/binaries so Tauri cargo checks can resolve externalBin without shell invocation.",
+      "status": "IN_PROGRESS"
     }
   ],
   "task_queue_after_current": [
