@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M8-UI-040",
+  "active_task": {
+    "id": "M8-UI-040",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Aggregate NEEDS_ATTENTION tasks from durable run history and expose count/navigation in the app shell."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -451,5 +456,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-UI-039 COMPLETE: RunDetailPage/RunControls regression tests passed 22/22; frontend tsc -b and lint passed; M8-UI-040 is next."
+  "last_validation_note": "M8-UI-040 IN_PROGRESS: implement AttentionCenter aggregation, count, run/task navigation, and AppShell presentation."
 }
