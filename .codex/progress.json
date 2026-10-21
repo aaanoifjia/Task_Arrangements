@@ -17,11 +17,11 @@
   },
   "active_task": {
     "id": "M10-HARDEN-004",
-    "status": "IN_PROGRESS",
+    "status": "COMPLETE",
     "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Hardening continuation recovery so ambiguous resume/start-turn crash points fail closed and never resend the prompt."
+    "note": "Continuation recovery safety PASS: 4 crash points fail closed, preserve downstream BLOCKED state, and never call create/resume/start-turn during ambiguous recovery."
   },
-  "next_task": null,
+  "next_task": "M10-HARDEN-005",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -226,7 +226,8 @@
     "M9-REPORT-040",
     "M10-HARDEN-001",
     "M10-HARDEN-002",
-    "M10-HARDEN-003"
+    "M10-HARDEN-003",
+    "M10-HARDEN-004"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -598,5 +599,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M10-HARDEN-003 PASS: continuation attempt transaction/ref tests 5 passed, attempt/recovery/retry regression 12 passed, Ruff and strict mypy passed; Attempt is persisted before external resume/start-turn."
+  "last_validation_note": "M10-HARDEN-004 PASS: continuation recovery matrix 6 passed and recovery/duplicate/attempt/continuation regression 15 passed; ambiguous resume/start-turn states fail closed without prompt resend."
 }
