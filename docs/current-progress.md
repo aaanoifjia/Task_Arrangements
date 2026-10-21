@@ -115,6 +115,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M9-DESKTOP-037 — automated desktop integration harness for sidecar lifecycle, runtime state, auth token, app-data paths, crash/relaunch, and frontend bridge; Tauri cargo test 25/25, focused frontend desktop tests 8/8, typecheck, and ESLint PASS; bounded remediation M9-DESKTOP-037-R1 generated the reproducible temporary engineering icon set through the official Tauri CLI
 - M9-DESKTOP-038 — Windows frontend, PyInstaller sidecar, Tauri release executable, MSI bundle, and NSIS installer all PASS; exact artifact filenames, sizes, and SHA256 hashes recorded in `docs/windows-build-artifacts.md`
 - M9-GATE-039 — automated M9 gate PASS; backend non-live 257 passed/6 deselected, frontend 52 files/173 tests with typecheck/lint/build, Tauri 25/25 plus cargo check, PyInstaller/Tauri/MSI/NSIS bundles, strict mypy, and token/log/path security scans
+- M9-REPORT-040 — automated M9 desktop packaging report PASS; exact sidecar, bundle, runtime, path, auth-home, token-security, notification, Open-in-Codex, and regression evidence recorded; manual Desktop checks explicitly deferred
 
 ## Verified Codex Runtime
 
@@ -146,7 +147,7 @@ unexpected_files = []
 
 Current active task:
 
-`M9-REPORT-040` — M9 Desktop Packaging Report (IN_PROGRESS)
+`M10-HARDEN-001` — Runtime Parity Audit
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 

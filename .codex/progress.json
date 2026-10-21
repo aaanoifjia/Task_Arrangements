@@ -17,11 +17,11 @@
   },
   "active_task": {
     "id": "M9-REPORT-040",
-    "status": "IN_PROGRESS",
+    "status": "COMPLETE",
     "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Recording exact automated M9 packaging and runtime results; manual installer launch and visual Desktop checks remain explicitly deferred."
+    "note": "M9 automated packaging report PASS with exact bundle evidence; manual installer launch and visual Desktop checks remain explicitly deferred."
   },
-  "next_task": null,
+  "next_task": "M10-HARDEN-001",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -222,7 +222,8 @@
       "M9-DESKTOP-036",
     "M9-DESKTOP-037",
     "M9-DESKTOP-038",
-    "M9-GATE-039"
+    "M9-GATE-039",
+    "M9-REPORT-040"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -581,5 +582,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-GATE-039 PASS: backend non-live 257 passed/6 deselected, frontend 52 files/173 tests plus typecheck/lint/build, Tauri 25/25 plus cargo check, PyInstaller/Tauri/MSI/NSIS bundles, strict mypy, and token/log/path security scans passed."
+  "last_validation_note": "M9-REPORT-040 PASS: docs/desktop-packaging-test-report.md records exact automated results for sidecar, Tauri, MSI/NSIS, startup/shutdown, app-data, auth home, token security, notification, Open-in-Codex, and regression checks; manual Desktop checks are explicitly deferred."
 }
