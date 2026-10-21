@@ -83,6 +83,10 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M8-CONTROL-028 — failed-parent retry releases blocked descendants exactly once; dependency-release and retry regression 2/2 PASS
 - M8-CONTROL-029 — retry creates distinct immutable Attempts with fresh thread/turn references; identity integration, Ruff, and strict mypy PASS
 - M8-CONTROL-030 — deterministic cancellation race matrix for queued, pre-turn, running, and late-terminal paths; 8/8 race tests PASS
+- M8-UI-031A — repaired canonical frontend SKIPPED status mapping; focused status tests and `tsc -b` PASS
+- M8-UI-031 — frontend run view model types; focused type tests and `tsc -b` PASS
+- M8-UI-032A — typed low-level control ApiClient repair; endpoint/error tests 6/6 and `tsc -b` PASS
+- M8-UI-032 — frontend RunApi control mappings; endpoint/error tests 2/2 and `tsc -b` PASS
 
 ## Verified Codex Runtime
 
@@ -112,12 +116,12 @@ unexpected_files = []
 
 ## Current Task
 
-Current active task:
+Current deterministic next task:
 
-`M8-UI-032` — Frontend Control API Client (IN_PROGRESS)
+`M8-UI-033` — Run Controls Component Shell
 
 M8-UI-032 is blocked only because its typed RunApi layer depends on six low-level control methods that are missing from non-owned `frontend/src/api/client.ts`. The bounded remediation task owns only `client.ts` and its tests, adds the six typed endpoint mappings, and verifies frontend type safety.
 
-M8-UI-032A is COMPLETE: the six typed control endpoint mappings and encoded-id/error-propagation tests pass, and frontend `tsc -b` passes. This task resumes the RunApi layer using those typed methods, then the remaining M8 → M9 → M10 sequence continues automatically.
+M8-UI-032A and M8-UI-032 are COMPLETE: the typed control client and RunApi endpoint/error tests pass, and frontend `tsc -b` passes. Continue with the Run Controls component shell, then the remaining M8 → M9 → M10 sequence.
 
 All manual Desktop checks remain deferred until after M10 automated completion.

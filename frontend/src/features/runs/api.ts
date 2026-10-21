@@ -1,7 +1,9 @@
-import { createApiClient, type ApiClient } from '../../api/client'
-import type { AttemptView, RunDetail, RunStartResponse, RunSummary, TaskRunView } from '../../api/types'
+import { createApiClient, type ControlApiClient } from '../../api/client'
+import type {
+  AttemptView, ManualActionResponse, RunDetail, RunStartResponse, RunSummary, TaskRunView,
+} from '../../api/types'
 
-export type RunApi = {
+type RunApiCore = {
   start: (workflowId: string) => Promise<RunStartResponse>
   list: () => Promise<RunSummary[]>
   get: (runId: string) => Promise<RunDetail>
@@ -9,12 +11,30 @@ export type RunApi = {
   attempts: (runId: string, taskId: string) => Promise<AttemptView[]>
 }
 
-export function createRunApi(client: ApiClient = createApiClient()): RunApi {
+type RunControlMethods = {
+  pause: (runId: string) => Promise<ManualActionResponse>
+  resume: (runId: string) => Promise<ManualActionResponse>
+  retry: (runId: string, taskId: string) => Promise<ManualActionResponse>
+  cancel: (runId: string, taskId: string) => Promise<ManualActionResponse>
+  skip: (runId: string, taskId: string) => Promise<ManualActionResponse>
+  markSuccess: (runId: string, taskId: string) => Promise<ManualActionResponse>
+}
+
+export type RunApi = RunApiCore & Partial<RunControlMethods>
+export type RunControlApi = RunApiCore & RunControlMethods
+
+export function createRunApi(client: ControlApiClient = createApiClient()): RunControlApi {
   return {
     start: (workflowId) => client.startRun(workflowId),
     list: () => client.listRuns(),
     get: (runId) => client.getRun(runId),
     tasks: (runId) => client.listTasks(runId),
     attempts: (runId, taskId) => client.listAttempts(runId, taskId),
+    pause: (runId) => client.pauseRun(runId),
+    resume: (runId) => client.resumeRun(runId),
+    retry: (runId, taskId) => client.retryTask(runId, taskId),
+    cancel: (runId, taskId) => client.cancelTask(runId, taskId),
+    skip: (runId, taskId) => client.skipTask(runId, taskId),
+    markSuccess: (runId, taskId) => client.markSuccessTask(runId, taskId),
   }
 }
