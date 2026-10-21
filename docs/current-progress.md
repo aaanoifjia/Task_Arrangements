@@ -146,7 +146,7 @@ unexpected_files = []
 
 Current active task:
 
-`M9-REPORT-040` — M9 Desktop Packaging Report
+`M9-REPORT-040` — M9 Desktop Packaging Report (IN_PROGRESS)
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 

@@ -16,12 +16,12 @@
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
   "active_task": {
-    "id": "M9-GATE-039",
-    "status": "COMPLETE",
+    "id": "M9-REPORT-040",
+    "status": "IN_PROGRESS",
     "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "All authoritative automated M9 gates passed: backend non-live, frontend test/typecheck/lint/build, PyInstaller sidecar, Tauri Rust tests/check, Windows MSI/NSIS bundles, strict mypy, and token/log/path security scans."
+    "note": "Recording exact automated M9 packaging and runtime results; manual installer launch and visual Desktop checks remain explicitly deferred."
   },
-  "next_task": "M9-REPORT-040",
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
