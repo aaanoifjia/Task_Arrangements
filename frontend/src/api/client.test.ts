@@ -12,6 +12,24 @@ describe('API client', () => {
     expect(fetcher).toHaveBeenCalledWith('/api/workflows', expect.objectContaining({ headers: { Accept: 'application/json' } }))
   })
 
+  it('uses the injected desktop URL and bearer token', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(response(200, []))
+    await createApiClient(fetcher, {
+      baseUrl: 'http://127.0.0.1:43127',
+      token: 'opaque-session-token',
+    }).listWorkflows()
+
+    expect(fetcher).toHaveBeenCalledWith(
+      'http://127.0.0.1:43127/api/workflows',
+      expect.objectContaining({
+        headers: {
+          Accept: 'application/json',
+          Authorization: 'Bearer opaque-session-token',
+        },
+      }),
+    )
+  })
+
   it.each([
     [404, 'NOT_FOUND'], [409, 'CONFLICT'], [500, 'SERVER_ERROR'],
   ])('maps stable %s errors', async (status, code) => {

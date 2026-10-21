@@ -1,5 +1,10 @@
 import type { ErrorResponse } from './types'
 
+export type HttpRuntime = {
+  baseUrl?: string
+  token?: string
+}
+
 export class ApiError extends Error {
   readonly status: number
   readonly code: string
@@ -24,10 +29,17 @@ export async function requestJson<T>(
   input: string,
   init: RequestInit = {},
   fetcher: typeof fetch = fetch,
+  runtime: HttpRuntime = {},
 ): Promise<T> {
-  const response = await fetcher(input, {
+  const headers: Record<string, string> = { Accept: 'application/json' }
+  if (init.headers && !(init.headers instanceof Headers)) Object.assign(headers, init.headers)
+  if (runtime.token) headers.Authorization = 'Bearer ' + runtime.token
+  const url = runtime.baseUrl
+    ? new URL(input, runtime.baseUrl.replace(/\/+$/, '') + '/').toString()
+    : input
+  const response = await fetcher(url, {
     ...init,
-    headers: { Accept: 'application/json', ...init.headers },
+    headers,
   })
   let body: unknown
   try {

@@ -2,7 +2,7 @@ import type {
   AttemptView, RunDetail, RunStartResponse, RunSummary, TaskRunView,
   ManualActionResponse, WorkflowDefinition, WorkflowDetail, WorkflowSummary,
 } from './types'
-import { requestJson } from './http'
+import { requestJson as requestJsonWithRuntime, type HttpRuntime } from './http'
 
 const jsonHeaders = { 'Content-Type': 'application/json' }
 
@@ -29,7 +29,11 @@ export type ControlApiClient = ApiClientCore & {
   markSuccessTask: (runId: string, taskId: string) => Promise<ManualActionResponse>
 }
 
-export function createApiClient(fetcher: typeof fetch = fetch): ControlApiClient {
+export function createApiClient(fetcher: typeof fetch = fetch, runtime: HttpRuntime = {}): ControlApiClient {
+  const requestJson = <T>(input: string, init: RequestInit = {}, legacyFetcher?: typeof fetch) => {
+    void legacyFetcher
+    return requestJsonWithRuntime<T>(input, init, fetcher, runtime)
+  }
   return {
     listWorkflows: () => requestJson<WorkflowSummary[]>('/api/workflows', {}, fetcher),
     getWorkflow: (id: string) => requestJson<WorkflowDetail>(`/api/workflows/${encodeURIComponent(id)}`, {}, fetcher),
