@@ -15,8 +15,13 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M9-DESKTOP-033",
+  "active_task": {
+    "id": "M9-DESKTOP-033",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Wire production frontend assets for Tauri and document the desktop runtime bridge without baking a backend URL into the bundle."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -538,5 +543,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-032 PASS: Tauri cargo test passed 23/23, including safe window-state serialization and off-screen geometry clamping."
+  "last_validation_note": "M9-DESKTOP-033 IN_PROGRESS: configuring relative production assets, Tauri dev/build wiring, and runtime-bridge documentation."
 }
