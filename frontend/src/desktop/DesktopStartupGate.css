@@ -1,0 +1,18 @@
+.desktop-startup-gate {
+  display: grid;
+  min-height: 100vh;
+  place-content: center;
+  gap: 0.75rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.desktop-startup-gate h1,
+.desktop-startup-gate p {
+  margin: 0;
+}
+
+.desktop-startup-gate button {
+  justify-self: center;
+  padding: 0.55rem 1rem;
+}
