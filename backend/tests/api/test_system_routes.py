@@ -19,7 +19,7 @@ def test_health_and_system_status_are_local_and_secret_free(tmp_path: Path) -> N
         assert body == {
             "service": "ok",
             "database": "reachable",
-            "schema_version": 2,
+                "schema_version": 3,
             "active_runtime_count": 0,
         }
         serialized = response.text.lower()

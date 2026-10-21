@@ -15,7 +15,7 @@ def test_explicit_db_path_is_migrated_and_closed_on_shutdown(tmp_path: Path) -> 
     with TestClient(app):
         assert database.exists()
         with sqlite3.connect(database) as connection:
-            assert connection.execute("PRAGMA user_version").fetchone()[0] == 2
+            assert connection.execute("PRAGMA user_version").fetchone()[0] == 3
     with pytest.raises(sqlite3.ProgrammingError):
         app.state.connection.execute("SELECT 1")
 

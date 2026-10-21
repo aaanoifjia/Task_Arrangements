@@ -17,8 +17,8 @@ def test_fresh_database_applies_run_control_metadata(tmp_path: Path) -> None:
 
     migrate(connection)
 
-    assert MIGRATION_VERSION == 2
-    assert connection.execute("PRAGMA user_version").fetchone()[0] == 2
+    assert MIGRATION_VERSION == 3
+    assert connection.execute("PRAGMA user_version").fetchone()[0] == 3
     assert {"paused", "paused_at"} <= _columns(connection)
     assert connection.execute("SELECT count(*) FROM schema_version").fetchone()[0] == 1
 
@@ -36,7 +36,7 @@ def test_v1_database_upgrades_to_v2_and_is_idempotent(tmp_path: Path) -> None:
     migrate(connection)
     migrate(connection)
 
-    assert connection.execute("PRAGMA user_version").fetchone()[0] == 2
+    assert connection.execute("PRAGMA user_version").fetchone()[0] == 3
     assert {"paused", "paused_at"} <= _columns(connection)
     assert connection.execute("SELECT count(*) FROM schema_version").fetchone()[0] == 1
     assert _defaults(connection)["paused"] == "0"

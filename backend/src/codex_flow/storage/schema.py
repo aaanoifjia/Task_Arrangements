@@ -3,11 +3,12 @@
 import sqlite3
 from pathlib import Path
 
-MIGRATION_VERSION = 2
+MIGRATION_VERSION = 3
 _MIGRATION_DIRECTORY = Path(__file__).with_name("migrations")
 _MIGRATION_PATHS = {
     1: _MIGRATION_DIRECTORY / "0001_initial.sql",
     2: _MIGRATION_DIRECTORY / "0002_run_controls.sql",
+    3: _MIGRATION_DIRECTORY / "0003_query_indexes.sql",
 }
 
 

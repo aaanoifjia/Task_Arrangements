@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M10-HARDEN-023",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Adding query-pattern indexes through migration 0003 and verifying fresh/v1/v2 upgrades plus query plans."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M10-HARDEN-024",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -245,7 +240,8 @@
     "M10-HARDEN-019",
     "M10-HARDEN-020",
     "M10-HARDEN-021",
-    "M10-HARDEN-022"
+    "M10-HARDEN-022",
+    "M10-HARDEN-023"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -371,11 +367,14 @@
       "parent_task": "M10-HARDEN-023",
       "reason": "Adding migration 0003 correctly advances the authoritative schema version, while the existing migration 0002 regression test still asserted the obsolete version 2 contract.",
       "files": [
-        "backend/tests/integration/test_migration_0002.py"
+        "backend/tests/integration/test_migration_0002.py",
+        "backend/tests/api/test_service_config.py",
+        "backend/tests/api/test_system_routes.py"
       ],
-      "failing_validation": "Migration 0002 regression tests failed because MIGRATION_VERSION and upgraded user_version are now 3 after the required query-index migration.",
+      "failing_validation": "Migration 0002, explicit service database, and system-status regression tests failed because the required query-index migration advances the authoritative schema version from 2 to 3.",
       "intended_acceptance": "The existing migration regression test asserts the preserved v1/v2 upgrade behavior and the current schema version 3 without changing schema semantics.",
-      "status": "IN_PROGRESS"
+      "status": "COMPLETE",
+      "validation": "Updated the three directly implicated migration-version assertions to schema version 3; migration/API compatibility suite 10 passed, full backend non-live 328 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed."
     }
   ],
   "task_queue_after_current": [
@@ -628,5 +627,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M10-HARDEN-022 PASS: SQLite WAL, foreign_keys, and 5000ms busy_timeout guards plus concurrent short-lock write test 2 passed; full backend non-live 325 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed."
+  "last_validation_note": "M10-HARDEN-023 PASS: migration 0003 query indexes, fresh/v1/v2 upgrade/idempotence, and query-plan assertions passed; migration/API compatibility suite 10 passed, full backend non-live 328 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed; bounded remediation M10-HARDEN-023-R1 updated three directly implicated v2 assertions."
 }
