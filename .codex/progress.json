@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M9-DESKTOP-003",
+  "active_task": {
+    "id": "M9-DESKTOP-003",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Create the minimal Tauri v2 Windows shell scaffold with minimal permissions and frontend dist/dev-server wiring."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -458,5 +463,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-002 COMPLETE: npm install, typecheck, lint, and production build PASS with only Tauri v2 API/CLI dependencies and desktop dev/build scripts added; M9-DESKTOP-003 is next."
+  "last_validation_note": "M9-DESKTOP-003 IN_PROGRESS: Tauri v2 Rust scaffold is being implemented and cargo/config acceptance will be run if the required Rust toolchain is available."
 }

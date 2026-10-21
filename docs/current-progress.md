@@ -132,8 +132,8 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M9-DESKTOP-003` — Tauri Rust Scaffold
+`M9-DESKTOP-003` — Tauri Rust Scaffold (IN_PROGRESS)
 
-M8-UI-032A through M9-DESKTOP-002 are COMPLETE. M9-DESKTOP-003 is the next dependency-ready task for the minimal Tauri v2 Windows shell.
+M8-UI-032A through M9-DESKTOP-002 are COMPLETE. M9-DESKTOP-003 is active for the minimal Tauri v2 Windows shell; Rust/toolchain availability will determine the task acceptance path.
 
 All manual Desktop checks remain deferred until after M10 automated completion.
