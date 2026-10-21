@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M9-DESKTOP-010",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Build the PyInstaller sidecar, smoke its help/version entrypoint, and verify packaged migrations/resources."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M9-DESKTOP-011",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -192,7 +187,8 @@
     "M9-DESKTOP-006",
     "M9-DESKTOP-007",
     "M9-DESKTOP-008",
-    "M9-DESKTOP-009"
+    "M9-DESKTOP-009",
+    "M9-DESKTOP-010"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -496,5 +492,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-010 IN_PROGRESS: executing the real PyInstaller sidecar build and packaged executable/resource smoke checks."
+  "last_validation_note": "M9-DESKTOP-010 COMPLETE: real PyInstaller 6.22.3 build succeeded; packaged --help and --version smoke PASS (0.1.0), both SQL migrations present, packaging tests 2/2 and Ruff PASS; bounded remediation M9-DESKTOP-010-R1 is complete; M9-DESKTOP-011 is next."
 }

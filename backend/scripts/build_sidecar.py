@@ -25,8 +25,6 @@ def build_command(output_root: Path = DEFAULT_OUTPUT_ROOT) -> list[str]:
         str(output_root / "dist"),
         "--workpath",
         str(output_root / "build"),
-        "--specpath",
-        str(output_root),
         str(SPEC_PATH),
     ]
 
