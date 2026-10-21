@@ -10,6 +10,9 @@ use std::time::{Instant, SystemTime, UNIX_EPOCH};
 
 #[path = "handshake.rs"]
 pub mod handshake;
+#[cfg(test)]
+#[path = "sidecar_test.rs"]
+mod sidecar_test;
 
 const SIDECAR_BASENAME: &str = "codex-flow-server";
 const WINDOWS_TARGET: &str = "x86_64-pc-windows-msvc";
@@ -127,7 +130,16 @@ pub fn build_command(paths: &RuntimePaths, token: &str) -> Command {
         .stdin(Stdio::null())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped());
+    preserve_codex_environment(&mut command);
     command
+}
+
+pub fn preserve_codex_environment(command: &mut Command) {
+    for key in ["HOME", "USERPROFILE", "PATH"] {
+        if let Some(value) = env::var_os(key) {
+            command.env(key, value);
+        }
+    }
 }
 
 pub fn launch_sidecar(paths: &RuntimePaths) -> io::Result<SidecarProcess> {
