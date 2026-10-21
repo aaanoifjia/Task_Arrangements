@@ -1263,6 +1263,8 @@ M9-DESKTOP-001
 ↓
 M9-DESKTOP-002
 ↓
+M9-PREFLIGHT-003A
+↓
 M9-DESKTOP-003
 ↓
 M9-DESKTOP-004
@@ -1390,11 +1392,58 @@ npm install, typecheck, lint, build remain green.
 
 ---
 
-## M9-DESKTOP-003 — Tauri Rust Scaffold
+## M9-PREFLIGHT-003A — Windows Desktop Toolchain Preflight
 
 ### Dependencies
 
 `M9-DESKTOP-002`
+
+### Owned Files
+
+```text
+docs/m9-environment-preflight.md
+```
+
+### Implementation
+
+Run one deterministic Windows desktop prerequisite audit before resuming Rust/Tauri implementation.
+
+Check and record at minimum:
+
+- Python 3.11+ and project virtual environment;
+- Node and npm;
+- PyInstaller availability from the project environment;
+- `cargo`, `rustc`, and `rustup`;
+- Microsoft C++/MSVC build tools presence using `vswhere`, `cl`, or installed Visual Studio Build Tools evidence;
+- Windows SDK evidence required by the installed MSVC toolchain;
+- WebView2 Runtime presence;
+- Git;
+- current relevant versions/paths.
+
+Installation policy for this task:
+
+- do not install any system component by default;
+- if the user's current invocation explicitly authorizes the exact named `Rust toolchain`, and `cargo`/`rustc` are missing, install Rust only from the official Rustup source using a per-user, non-interactive supported mode, then refresh the current process PATH and verify `rustc --version` and `cargo --version`;
+- that Rust authorization does not authorize Visual Studio Build Tools, Windows SDK, WebView2, or any other component;
+- if another required component is missing, record all missing prerequisites together and BLOCK once with exact evidence and next action;
+- do not request or perform a reboot, elevation, GUI installer flow, or license interaction.
+
+If all required prerequisites are present after any explicitly authorized Rust installation, write the evidence report and clear the existing M9-DESKTOP-003 environment blocker.
+
+### Acceptance
+
+- `docs/m9-environment-preflight.md` records each declared prerequisite as PASS or BLOCKED with command/version evidence;
+- if Rust installation was explicitly authorized and needed, official Rustup installation succeeds and `cargo --version` / `rustc --version` pass in the same invocation;
+- all other required M9 toolchains are present without unapproved system installation;
+- on PASS, resume M9-DESKTOP-003 automatically.
+
+---
+
+## M9-DESKTOP-003 — Tauri Rust Scaffold
+
+### Dependencies
+
+`M9-PREFLIGHT-003A`
 
 ### Owned Files
 
