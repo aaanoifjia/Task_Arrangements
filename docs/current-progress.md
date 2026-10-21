@@ -112,12 +112,12 @@ unexpected_files = []
 
 ## Current Task
 
-Current active task:
+Current deterministic next task:
 
-`M8-UI-032A` — Typed Control ApiClient Repair (IN_PROGRESS)
+`M8-UI-032` — Frontend Control API Client
 
 M8-UI-032 is blocked only because its typed RunApi layer depends on six low-level control methods that are missing from non-owned `frontend/src/api/client.ts`. The bounded remediation task owns only `client.ts` and its tests, adds the six typed endpoint mappings, and verifies frontend type safety.
 
-The task checkpoint is committed. It owns the bounded typed ApiClient repair in `frontend/src/api/client.ts` and its focused tests. After it passes, resume M8-UI-032, complete it, then continue automatically through the remaining M8 → M9 → M10 sequence.
+M8-UI-032A is COMPLETE: the six typed control endpoint mappings and encoded-id/error-propagation tests pass, and frontend `tsc -b` passes. Resume M8-UI-032 using the repaired client, then continue automatically through the remaining M8 → M9 → M10 sequence.
 
 All manual Desktop checks remain deferred until after M10 automated completion.

@@ -12,13 +12,8 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": {
-    "id": "M8-UI-032A",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-21T00:00:00.0000000Z",
-    "note": "Implement the six typed low-level control methods in the existing ApiClient boundary and validate endpoint mappings."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M8-UI-032",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -165,16 +160,10 @@
     "M8-CONTROL-029",
     "M8-CONTROL-030",
     "M8-UI-031A",
-    "M8-UI-031"
+    "M8-UI-031",
+    "M8-UI-032A"
   ],
-  "blocked_tasks": {
-    "M8-UI-032": {
-      "status": "BLOCKED",
-      "reason": "BLOCKED: the task requires six RunApi methods using the typed ApiClient, but frontend/src/api/client.ts is outside the task Owned Files and currently exposes no control methods. Implementing only features/runs/api.ts cannot make the default client issue the required endpoints without bypassing the typed API boundary.",
-      "last_successful_validation": "M8-UI-031 complete; M8-UI-032 checkpoint committed before implementation. No M8-UI-032 implementation files changed.",
-      "next_action": "Execute M8-UI-032A, then resume M8-UI-032."
-    }
-  },
+  "blocked_tasks": {},
   "blocker_history": [
     {
       "task": "M5-RESTART-005",
@@ -202,7 +191,7 @@
       "reason": "BLOCKED: requires change to frontend/src/api/client.ts. The typed default ApiClient has no control methods, but M8-UI-032 owns only frontend/src/features/runs/api.ts and its tests.",
       "last_successful_validation": "M8-UI-031 complete; M8-UI-032 checkpoint committed before implementation. No M8-UI-032 implementation files changed.",
       "next_action": "Execute M8-UI-032A, then resume M8-UI-032.",
-      "resolved_by": null
+      "resolved_by": "M8-UI-032A"
     }
   ],
   "task_queue_after_current": [
@@ -454,5 +443,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-UI-032A IN_PROGRESS: bounded remediation owns the typed ApiClient control methods and tests; after acceptance, resume M8-UI-032."
+  "last_validation_note": "M8-UI-032A COMPLETE: focused ApiClient tests passed 6/6 and frontend tsc -b passed; M8-UI-032 is next."
 }
