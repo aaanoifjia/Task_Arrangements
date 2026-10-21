@@ -171,7 +171,7 @@ unexpected_files = []
 
 Current active task:
 
-`M10-HARDEN-025` — High Event Volume (next)
+`M10-HARDEN-025` — High Event Volume (IN_PROGRESS)
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 
