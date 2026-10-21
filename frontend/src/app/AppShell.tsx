@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { NavLink } from 'react-router-dom'
+import AttentionCenter from '../features/attention/AttentionCenter'
 import './AppShell.css'
 
 type AppShellProps = { children: ReactNode }
@@ -13,6 +14,7 @@ function AppShell({ children }: AppShellProps) {
           <NavLink to="/">Workflows</NavLink>
           <NavLink to="/runs">Runs</NavLink>
         </nav>
+        <AttentionCenter />
       </header>
       <main className="app-shell__content">{children}</main>
     </div>

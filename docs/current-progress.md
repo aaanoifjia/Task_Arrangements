@@ -94,6 +94,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M8-UI-037 — Skip and Mark Success limited to canonical server-supported states; focused tests 34/34, `tsc -b`, and ESLint PASS
 - M8-UI-038 — keyboard-accessible confirmation for Cancel/Skip/Mark Success; focused tests 20/20, `tsc -b`, and ESLint PASS
 - M8-UI-039 — stable control feedback and 409 durable-state refresh; focused tests 22/22, `tsc -b`, and ESLint PASS
+- M8-UI-040 — AttentionCenter NEEDS_ATTENTION aggregation/count/navigation; focused tests 3/3, `tsc -b`, and ESLint PASS
 
 ## Verified Codex Runtime
 
@@ -125,10 +126,10 @@ unexpected_files = []
 
 Current active task:
 
-`M8-UI-040` — Attention Center (IN_PROGRESS)
+`M8-UI-041` — Browser Notification Adapter
 
 M8-UI-032 is blocked only because its typed RunApi layer depends on six low-level control methods that are missing from non-owned `frontend/src/api/client.ts`. The bounded remediation task owns only `client.ts` and its tests, adds the six typed endpoint mappings, and verifies frontend type safety.
 
-M8-UI-032A through M8-UI-039 are COMPLETE: the typed control client, RunApi mappings, RunControls visibility matrix, pause/resume flow, Retry, Cancel, Skip, Mark Success, accessible confirmation, and 409 recovery behavior pass with frontend typecheck/lint. This task adds the AttentionCenter count/list/navigation from durable run history, then the remaining M8 → M9 → M10 sequence continues.
+M8-UI-032A through M8-UI-040 are COMPLETE: the typed control client, RunApi mappings, RunControls visibility matrix, pause/resume flow, Retry, Cancel, Skip, Mark Success, accessible confirmation, 409 recovery, and AttentionCenter aggregation pass with frontend typecheck/lint. Continue with the browser notification adapter, then the remaining M8 → M9 → M10 sequence.
 
 All manual Desktop checks remain deferred until after M10 automated completion.
