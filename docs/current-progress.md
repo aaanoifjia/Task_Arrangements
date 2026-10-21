@@ -142,6 +142,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M10-HARDEN-024 — large DAG determinism PASS; deterministic 100-node mixed chain/fork/join DAG ran twice with identical start/completion order, all tasks SUCCESS, and one Attempt each; stress test passed, full backend non-live 329 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed
 - M10-HARDEN-025 — high event volume PASS; 5,000 persisted events delivered through 127-event cursor batches with no duplication/loss across 40 bounded polls; event-volume suite 4 passed, full backend non-live 330 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed
 - M10-HARDEN-026 — WebSocket reconnect storm PASS; backend reconnect stress 3 passed, frontend targeted reconnect/dedupe 7 passed, full frontend 52 files/174 tests with typecheck/lint, and full backend non-live 331 passed/6 deselected/2 known xfailed; cursor resume produced no duplicate events
+- M10-HARDEN-027 — concurrent API read/control stress PASS; stable allowed responses, valid task/run states, and JSON audit payloads under concurrent controls; focused stress passed, full backend non-live 332 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed
 
 ## Verified Codex Runtime
 
@@ -173,7 +174,7 @@ unexpected_files = []
 
 Current active task:
 
-`M10-HARDEN-027` — Concurrent API Read/Control Stress (IN_PROGRESS)
+`M10-HARDEN-028` — Crash Fault Matrix Expansion (next)
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 
