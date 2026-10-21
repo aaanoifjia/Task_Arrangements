@@ -17,7 +17,7 @@
   },
   "active_task": {
     "id": "M9-DESKTOP-037",
-    "status": "IN_PROGRESS",
+    "status": "BLOCKED",
     "started_at": "2026-10-22T00:00:00.0000000Z",
     "note": "Automate desktop integration coverage for sidecar lifecycle, runtime state, auth token, app-data paths, crash/relaunch, and frontend bridge without GUI interaction."
   },
@@ -221,7 +221,13 @@
       "M9-DESKTOP-035",
       "M9-DESKTOP-036"
   ],
-  "blocked_tasks": {},
+  "blocked_tasks": {
+    "M9-DESKTOP-037": {
+      "reason": "BLOCKED: the required Tauri Rust integration suite cannot compile because the existing desktop package has no desktop/src-tauri/icons/icon.ico resource; cargo test fails in tauri-build before compiling the owned sidecar integration tests. Creating or choosing an application icon is outside the task Owned Files and requires a product asset decision.",
+      "last_successful_validation": "Frontend desktop integration tests 8/8, frontend typecheck, and ESLint passed. cargo test --manifest-path desktop/src-tauri/Cargo.toml failed before test compilation: desktop/src-tauri/icons/icon.ico not found.",
+      "next_action": "Provide the authoritative desktop icon resource or authorize the required non-owned asset repair, then resume M9-DESKTOP-037 without reimplementing the existing changes."
+    }
+  },
   "blocker_history": [
     {
       "task": "M5-RESTART-005",
@@ -256,6 +262,13 @@
       "reason": "BLOCKED: cargo and rustc are unavailable on the host. M9-DESKTOP-003 acceptance requires cargo metadata, and the repository forbids silently installing a system-level Rust/Windows toolchain.",
       "last_successful_validation": "M9-DESKTOP-003 IN_PROGRESS checkpoint committed; Get-Command cargo and Get-Command rustc returned no executable.",
       "next_action": "Execute M9-PREFLIGHT-003A, then resume M9-DESKTOP-003 after the desktop toolchain preflight passes.",
+      "resolved_by": null
+    },
+    {
+      "task": "M9-DESKTOP-037",
+      "reason": "BLOCKED: the required Tauri Rust integration suite cannot compile because the existing desktop package has no desktop/src-tauri/icons/icon.ico resource; cargo test fails in tauri-build before compiling the owned sidecar integration tests. Creating or choosing an application icon is outside the task Owned Files and requires a product asset decision.",
+      "last_successful_validation": "Frontend desktop integration tests 8/8, frontend typecheck, and ESLint passed. cargo test --manifest-path desktop/src-tauri/Cargo.toml failed before test compilation: desktop/src-tauri/icons/icon.ico not found.",
+      "next_action": "Provide the authoritative desktop icon resource or authorize the required non-owned asset repair, then resume M9-DESKTOP-037 without reimplementing the existing changes.",
       "resolved_by": null
     }
   ],
@@ -547,5 +560,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-037 IN_PROGRESS: implementing automated desktop integration coverage without GUI interaction."
+  "last_validation_note": "M9-DESKTOP-037 BLOCKED: frontend desktop integration tests 8/8, typecheck, and ESLint PASS; Tauri cargo test is blocked before compilation by missing non-owned desktop/src-tauri/icons/icon.ico."
 }
