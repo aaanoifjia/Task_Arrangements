@@ -15,8 +15,13 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M9-DESKTOP-005",
+  "active_task": {
+    "id": "M9-DESKTOP-005",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Reject non-loopback bind hosts in desktop mode while accepting IPv4 and IPv6 loopback addresses."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -472,5 +477,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-004 COMPLETE: server argument parsing/no-import-side-effect tests 3/3, Ruff, and strict mypy PASS; explicit host/port/db/token/log-dir options and loopback default are implemented; M9-DESKTOP-005 is next."
+  "last_validation_note": "M9-DESKTOP-005 IN_PROGRESS: implementing the desktop loopback binding guard and its IPv4/IPv6/wildcard/LAN matrix."
 }
