@@ -17,11 +17,11 @@
   },
   "active_task": {
     "id": "M9-GATE-039",
-    "status": "IN_PROGRESS",
+    "status": "COMPLETE",
     "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Running the authoritative automated M9 desktop gate: frontend, backend non-live, sidecar packaging, Rust/Tauri checks, Windows bundle, and security scans."
+    "note": "All authoritative automated M9 gates passed: backend non-live, frontend test/typecheck/lint/build, PyInstaller sidecar, Tauri Rust tests/check, Windows MSI/NSIS bundles, strict mypy, and token/log/path security scans."
   },
-  "next_task": null,
+  "next_task": "M9-REPORT-040",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -221,7 +221,8 @@
       "M9-DESKTOP-035",
       "M9-DESKTOP-036",
     "M9-DESKTOP-037",
-    "M9-DESKTOP-038"
+    "M9-DESKTOP-038",
+    "M9-GATE-039"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -580,5 +581,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-038 PASS: frontend production build, PyInstaller sidecar staging, Tauri release executable, MSI bundle, and NSIS installer all succeeded; docs/windows-build-artifacts.md records exact artifact sizes and SHA256 hashes."
+  "last_validation_note": "M9-GATE-039 PASS: backend non-live 257 passed/6 deselected, frontend 52 files/173 tests plus typecheck/lint/build, Tauri 25/25 plus cargo check, PyInstaller/Tauri/MSI/NSIS bundles, strict mypy, and token/log/path security scans passed."
 }
