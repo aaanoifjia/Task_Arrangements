@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M9-DESKTOP-001",
+  "active_task": {
+    "id": "M9-DESKTOP-001",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Freeze the Tauri v2, React bundle, Python sidecar, loopback security, app-data paths, shutdown, and no-private-Codex-Desktop runtime contract."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",

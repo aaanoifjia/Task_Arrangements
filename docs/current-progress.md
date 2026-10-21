@@ -129,8 +129,8 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M9-DESKTOP-001` — Desktop Packaging Foundation
+`M9-DESKTOP-001` — Desktop Architecture Contract (IN_PROGRESS)
 
-M8-UI-032A through M8-REPORT-044 are COMPLETE. The M8 report records exact PASS evidence, integration coverage, and deferred browser/native notification limits. M9 is now the next authoritative milestone.
+M8-UI-032A through M8-REPORT-044 are COMPLETE. M9-DESKTOP-001 is now active to freeze the Tauri v2, React bundle, Python sidecar, loopback security, app-data paths, graceful shutdown, and no-private-Codex-Desktop runtime contract.
 
 All manual Desktop checks remain deferred until after M10 automated completion.
