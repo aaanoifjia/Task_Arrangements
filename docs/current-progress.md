@@ -127,6 +127,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M10-HARDEN-009 — persistent fork/join PASS; database-backed A→B/C→D overlaps B/C and releases D only after both complete; focused 7 passed, full backend non-live 278 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed
 - M10-HARDEN-010 — same-workspace fork serialization PASS; B/C peak=1 and D starts only after both complete; focused 4 passed, full backend non-live 279 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed
 - M10-HARDEN-011 — cross-run global capacity PASS; simultaneous workflows shared one RuntimeManager limiter; focused cross-run/workspace tests 3 passed, full backend non-live 281 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed
+- M10-HARDEN-012 — transient error classification PASS; only explicit server-busy, transport-overload, disconnect, and reset signals are retryable; classification table 13 passed, Ruff and strict mypy passed
 
 ## Verified Codex Runtime
 
@@ -158,7 +159,7 @@ unexpected_files = []
 
 Current active task:
 
-`M10-HARDEN-012` — Transient Error Classification (IN_PROGRESS)
+`M10-HARDEN-013` — Deterministic Retry Backoff (next)
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 
