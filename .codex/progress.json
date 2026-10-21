@@ -3,7 +3,7 @@
   "project": "Codex Flow",
   "repository": "aaanoifjia/Task_Arrangements",
   "branch": "master",
-  "updated_at": "2026-10-20",
+  "updated_at": "2026-10-21",
   "execution_policy": {
     "automatic_push": true,
     "commit_each_completed_task": true,
@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M8-UI-032A",
+  "active_task": {
+    "id": "M8-UI-032A",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-21T00:00:00.0000000Z",
+    "note": "Implement the six typed low-level control methods in the existing ApiClient boundary and validate endpoint mappings."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -449,5 +454,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-UI-032 is blocked only because the typed default ApiClient lacks the six M8 control methods in a non-owned file. M8-UI-032A is authorized as bounded remediation; after it passes, resume M8-UI-032 and continue M8→M9→M10."
+  "last_validation_note": "M8-UI-032A IN_PROGRESS: bounded remediation owns the typed ApiClient control methods and tests; after acceptance, resume M8-UI-032."
 }

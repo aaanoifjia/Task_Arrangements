@@ -1,6 +1,6 @@
 # Codex Flow — Current Progress
 
-Updated: 2026-10-20
+Updated: 2026-10-21
 
 ## Current Phase
 
@@ -112,12 +112,12 @@ unexpected_files = []
 
 ## Current Task
 
-Current deterministic next task:
+Current active task:
 
-`M8-UI-032A` — Typed Control ApiClient Repair
+`M8-UI-032A` — Typed Control ApiClient Repair (IN_PROGRESS)
 
 M8-UI-032 is blocked only because its typed RunApi layer depends on six low-level control methods that are missing from non-owned `frontend/src/api/client.ts`. The bounded remediation task owns only `client.ts` and its tests, adds the six typed endpoint mappings, and verifies frontend type safety.
 
-After M8-UI-032A passes, resume M8-UI-032, complete it, then continue automatically through the remaining M8 → M9 → M10 sequence.
+The task checkpoint is committed. It owns the bounded typed ApiClient repair in `frontend/src/api/client.ts` and its focused tests. After it passes, resume M8-UI-032, complete it, then continue automatically through the remaining M8 → M9 → M10 sequence.
 
 All manual Desktop checks remain deferred until after M10 automated completion.
