@@ -179,7 +179,7 @@ unexpected_files = []
 
 Current active task:
 
-`M10-HARDEN-033` — Full Product Regression (next)
+`M10-HARDEN-033` — Full Product Regression (IN_PROGRESS)
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 
