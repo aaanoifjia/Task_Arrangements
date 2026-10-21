@@ -139,6 +139,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M10-HARDEN-021 — timeout restart recovery PASS; timeout/interrupt restart matrix and continuation recovery 6 passed, no-thread crashes failed closed, referenced threads were only read, descendants remained BLOCKED; full backend non-live 323 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed
 - M10-HARDEN-022 — SQLite busy timeout and WAL guard PASS; WAL, foreign_keys, 5000ms busy_timeout, and concurrent short-lock write test 2 passed; full backend non-live 325 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed
 - M10-HARDEN-023 — storage query index migration PASS; migration 0003 indexes, fresh/v1/v2 upgrade/idempotence, and query-plan assertions passed; migration/API compatibility suite 10 passed, full backend non-live 328 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed; bounded remediation M10-HARDEN-023-R1 synchronized three directly implicated v2 assertions
+- M10-HARDEN-024 — large DAG determinism PASS; deterministic 100-node mixed chain/fork/join DAG ran twice with identical start/completion order, all tasks SUCCESS, and one Attempt each; stress test passed, full backend non-live 329 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed
 
 ## Verified Codex Runtime
 
@@ -170,7 +171,7 @@ unexpected_files = []
 
 Current active task:
 
-`M10-HARDEN-024` — Large DAG Determinism (IN_PROGRESS)
+`M10-HARDEN-025` — High Event Volume (next)
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 
