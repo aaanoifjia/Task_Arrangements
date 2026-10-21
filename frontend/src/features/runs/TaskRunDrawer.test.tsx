@@ -30,4 +30,17 @@ describe('TaskRunDrawer', () => {
     render(<TaskRunDrawer task={null} onClose={vi.fn()} />)
     expect(screen.queryByTestId('task-run-drawer')).not.toBeInTheDocument()
   })
+
+  it.each(['FAILED', 'INTERRUPTED', 'NEEDS_ATTENTION'] as const)('shows Retry for %s only with an explicit callback', async (status) => {
+    const onRetry = vi.fn()
+    const user = userEvent.setup()
+    render(<TaskRunDrawer task={{ ...fixtureTaskRun, status }} onClose={vi.fn()} onRetry={onRetry} attemptApi={attemptApi} />)
+    await user.click(screen.getByRole('button', { name: 'Retry' }))
+    expect(onRetry).toHaveBeenCalledOnce()
+  })
+
+  it('does not show Retry for a successful task', () => {
+    render(<TaskRunDrawer task={{ ...fixtureTaskRun, status: 'SUCCESS' }} onClose={vi.fn()} onRetry={vi.fn()} attemptApi={attemptApi} />)
+    expect(screen.queryByRole('button', { name: 'Retry' })).not.toBeInTheDocument()
+  })
 })

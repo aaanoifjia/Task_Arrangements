@@ -56,4 +56,12 @@ describe('RunControls', () => {
     rerender(<RunControls runStatus="RUNNING" paused={false} error="already paused" {...actions} />)
     expect(screen.getByRole('alert')).toHaveTextContent('already paused')
   })
+
+  it.each(['FAILED', 'INTERRUPTED', 'NEEDS_ATTENTION'] as const)('invokes Retry explicitly for %s', async (taskStatus) => {
+    const user = userEvent.setup()
+    const onRetry = vi.fn()
+    render(<RunControls runStatus="SUCCESS" paused={false} taskStatus={taskStatus} onRetry={onRetry} />)
+    await user.click(screen.getByRole('button', { name: 'Retry' }))
+    expect(onRetry).toHaveBeenCalledOnce()
+  })
 })
