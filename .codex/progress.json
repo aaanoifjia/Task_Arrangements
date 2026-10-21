@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M8-UI-036",
+  "active_task": {
+    "id": "M8-UI-036",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Expose explicit Cancel for allowed queued/active task states with pending feedback."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -447,5 +452,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-UI-035 COMPLETE: Retry visibility/invocation tests passed 22/22; frontend tsc -b and lint passed; M8-UI-036 is next."
+  "last_validation_note": "M8-UI-036 IN_PROGRESS: wire explicit Cancel through RunControls and TaskRunDrawer with pending-state disabling."
 }
