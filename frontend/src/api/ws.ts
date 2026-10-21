@@ -1,19 +1,26 @@
 import type { StreamMessage } from './types'
 
 type WebSocketLike = Pick<WebSocket, 'onmessage' | 'onclose' | 'onerror' | 'close'>
+export type WebSocketRuntime = {
+  baseUrl: string
+  token: string
+}
 export type WebSocketFactory = new (url: string) => WebSocketLike
 export type RunWebSocketOptions = {
   after?: string
+  runtime?: WebSocketRuntime
   onMessage?: (message: StreamMessage) => void
   onClose?: (event: CloseEvent) => void
   onError?: (event: Event) => void
   webSocketFactory?: WebSocketFactory
 }
 
-export function buildRunWebSocketUrl(runId: string, after?: string): string {
-  const origin = typeof window === 'undefined' ? 'http://localhost' : window.location.origin
+export function buildRunWebSocketUrl(runId: string, after?: string, runtime?: WebSocketRuntime): string {
+  const origin = runtime?.baseUrl
+    ?? (typeof window === 'undefined' ? 'http://localhost' : window.location.origin)
   const url = new URL(`/ws/runs/${encodeURIComponent(runId)}`, origin)
   if (after) url.searchParams.set('after', after)
+  if (runtime?.token) url.searchParams.set('token', runtime.token)
   url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:'
   return url.toString()
 }
@@ -34,7 +41,7 @@ export class RunWebSocketClient {
   connect(): void {
     if (this.socket) return
     const factory = this.options.webSocketFactory ?? WebSocket
-    const socket = new factory(buildRunWebSocketUrl(this.runId, this.options.after))
+    const socket = new factory(buildRunWebSocketUrl(this.runId, this.options.after, this.options.runtime))
     this.socket = socket
     socket.onmessage = (event) => {
       try {

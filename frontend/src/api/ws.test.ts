@@ -26,6 +26,13 @@ describe('run WebSocket client', () => {
     expect(onMessage).toHaveBeenCalledWith({ kind: 'snapshot', payload: { tasks: [] } })
   })
 
+  it('uses the desktop loopback URL and encodes the bearer token', () => {
+    expect(buildRunWebSocketUrl('run/1', 'cursor/2', {
+      baseUrl: 'http://127.0.0.1:43127',
+      token: 'token with/slash',
+    })).toBe('ws://127.0.0.1:43127/ws/runs/run%2F1?after=cursor%2F2&token=token+with%2Fslash')
+  })
+
   it('closes explicitly and does not mutate application state', () => {
     const client = new RunWebSocketClient('run', { webSocketFactory: FakeWebSocket })
     client.connect()
