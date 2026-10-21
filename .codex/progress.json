@@ -12,8 +12,13 @@
     "task_selection": "next_task_only",
     "automatic_pull": "safe_when_clean"
   },
-  "active_task": null,
-  "next_task": "M8-UI-041",
+  "active_task": {
+    "id": "M8-UI-041",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Implement granted-permission browser notifications for newly observed NEEDS_ATTENTION tasks with TaskRun-id dedupe."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -452,5 +457,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M8-UI-040 COMPLETE: AttentionCenter aggregation/count/navigation tests passed 3/3; frontend tsc -b and lint passed; M8-UI-041 is next."
+  "last_validation_note": "M8-UI-041 IN_PROGRESS: implement a no-permission-request notification adapter with deterministic TaskRun-id dedupe."
 }
