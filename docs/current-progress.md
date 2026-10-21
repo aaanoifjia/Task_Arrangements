@@ -138,7 +138,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M9-DESKTOP-008` — Sidecar Handshake Protocol
+`M9-DESKTOP-008` — Sidecar Handshake Protocol (IN_PROGRESS)
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 
@@ -150,4 +150,4 @@ The repository protocol now supports:
 
 M9-PREFLIGHT-003A audits Python/Node/PyInstaller/Rust/MSVC/Windows SDK/WebView2/Git. If the current invocation explicitly authorizes Rust, it may install the official Rust toolchain only. Other missing system components remain genuine blockers.
 
-M9-PREFLIGHT-003A through M9-DESKTOP-007 are complete. The complete declared Windows/Tauri prerequisite audit is recorded in `docs/m9-environment-preflight.md`; the authorized official Rustup stable toolchain is installed and verified. M9-DESKTOP-008 is the next dependency-ready task for the sidecar readiness handshake.
+M9-PREFLIGHT-003A through M9-DESKTOP-007 are complete. The complete declared Windows/Tauri prerequisite audit is recorded in `docs/m9-environment-preflight.md`; the authorized official Rustup stable toolchain is installed and verified. M9-DESKTOP-008 is active for the sidecar readiness handshake.
