@@ -129,10 +129,10 @@ unexpected_files = []
 
 Current active task:
 
-`M8-REPORT-044` — M8 Milestone Report
+`M8-REPORT-044` — M8 Milestone Report (IN_PROGRESS)
 
 M8-UI-032 is blocked only because its typed RunApi layer depends on six low-level control methods that are missing from non-owned `frontend/src/api/client.ts`. The bounded remediation task owns only `client.ts` and its tests, adds the six typed endpoint mappings, and verifies frontend type safety.
 
-M8-UI-032A through M8-GATE-043 are COMPLETE: the typed control client, RunApi mappings, all human-control UI states, AttentionCenter, notifications, full Fake integration, and the complete reliability matrix pass. Backend non-live is 235 passed; frontend is 49 files/160 tests with typecheck, lint, and production build passing. Continue with the M8 report, then M9 → M10.
+M8-UI-032A through M8-GATE-043 are COMPLETE: the typed control client, RunApi mappings, all human-control UI states, AttentionCenter, notifications, full Fake integration, and the complete reliability matrix pass. This task records exact M8 evidence and deferred browser/native notification limits before M9 → M10.
 
 All manual Desktop checks remain deferred until after M10 automated completion.
