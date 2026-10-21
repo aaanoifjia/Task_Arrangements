@@ -131,6 +131,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M10-HARDEN-013 — deterministic retry backoff PASS; bounded exponential sequence/cap and injectable sleeper tests 12 passed, Ruff and strict mypy passed
 - M10-HARDEN-014 — automatic server-busy retry PASS; explicit SERVER_BUSY retried within max_attempts with distinct Attempts and audit; focused regression 5 passed/2 known xfailed, full backend non-live 307 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed
 - M10-HARDEN-015 — automatic transport retry PASS; explicit transient disconnect before TURN_STARTED retried safely while ambiguous external start remained STARTING without retry; focused tests 3 passed, full backend non-live 309 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed
+- M10-HARDEN-016 — no automatic retry for task failure PASS; tool/task failure, permission/validation attention, interrupt, and unknown adapter failure matrix 6 passed; full backend non-live 315 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed
 
 ## Verified Codex Runtime
 
@@ -162,7 +163,7 @@ unexpected_files = []
 
 Current active task:
 
-`M10-HARDEN-016` — No Retry for Task Failure (IN_PROGRESS)
+`M10-HARDEN-017` — Max Attempts Enforcement (next)
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 
