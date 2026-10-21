@@ -142,7 +142,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M9-DESKTOP-013` — Handshake Parsing in Tauri
+`M9-DESKTOP-013` — Handshake Parsing in Tauri (IN_PROGRESS)
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 

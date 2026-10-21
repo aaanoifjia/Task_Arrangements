@@ -15,8 +15,13 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M9-DESKTOP-013",
+  "active_task": {
+    "id": "M9-DESKTOP-013",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Parse only the canonical sidecar readiness line, validate loopback port, enforce startup deadline, and ignore non-handshake log lines."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -506,5 +511,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-012 PASS: cargo metadata, standalone Rust library/test compilation, and 2 sidecar command-construction unit tests passed; M9-DESKTOP-012-R1 staged the target-named sidecar binary. Next: M9-DESKTOP-013."
+  "last_validation_note": "M9-DESKTOP-013 IN_PROGRESS: implementing canonical readiness-line parsing and loopback/deadline validation."
 }
