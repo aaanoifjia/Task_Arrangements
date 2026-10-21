@@ -15,8 +15,13 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M9-DESKTOP-022",
+  "active_task": {
+    "id": "M9-DESKTOP-022",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Launch the sidecar with canonical inherited HOME/USERPROFILE and PATH without redirecting Codex authentication."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -515,5 +520,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-021 PASS: bounded file logging/token-redaction and machine-readable readiness tests plus CLI regressions passed 11/11; Ruff and strict mypy passed. Next: M9-DESKTOP-022."
+  "last_validation_note": "M9-DESKTOP-022 IN_PROGRESS: implementing canonical auth-home/PATH inheritance and environment-construction tests."
 }
