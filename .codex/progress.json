@@ -15,8 +15,13 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M9-DESKTOP-010",
+  "active_task": {
+    "id": "M9-DESKTOP-010",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Build the PyInstaller sidecar, smoke its help/version entrypoint, and verify packaged migrations/resources."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -477,5 +482,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-009 COMPLETE: PyInstaller spec/command generation validation PASS, migration and openai-codex collection declared, secret scan PASS, py_compile and Ruff PASS; M9-DESKTOP-010 is next."
+  "last_validation_note": "M9-DESKTOP-010 IN_PROGRESS: executing the real PyInstaller sidecar build and packaged executable/resource smoke checks."
 }
