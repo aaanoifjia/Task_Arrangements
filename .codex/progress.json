@@ -16,12 +16,12 @@
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
   "active_task": {
-    "id": "M10-HARDEN-005",
-    "status": "COMPLETE",
+    "id": "M10-HARDEN-006",
+    "status": "IN_PROGRESS",
     "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Global concurrency configuration PASS: ServiceConfig defaults to one, rejects non-positive values, and wires validated capacity into RuntimeManager without changing current execution ordering."
+    "note": "Executing independent READY durable tasks concurrently up to the configured global limit while preserving deterministic selection order."
   },
-  "next_task": "M10-HARDEN-006",
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
