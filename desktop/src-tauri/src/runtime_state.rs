@@ -38,6 +38,10 @@ pub struct RuntimeStateStore {
 }
 
 impl RuntimeStateStore {
+    pub fn unavailable() -> Self {
+        Self::default()
+    }
+
     pub fn ready(state: RuntimeState) -> Self {
         Self {
             state: Mutex::new(Some(state)),
@@ -50,6 +54,14 @@ impl RuntimeStateStore {
             .map_err(|_| "backend runtime unavailable".to_owned())?
             .clone()
             .ok_or_else(|| "backend runtime unavailable".to_owned())
+    }
+
+    pub fn mark_unavailable(&self) -> Result<(), String> {
+        self.state
+            .lock()
+            .map_err(|_| "backend runtime unavailable".to_owned())?
+            .take();
+        Ok(())
     }
 }
 
@@ -74,6 +86,17 @@ mod tests {
             RuntimeStateStore::default().current(),
             Err("backend runtime unavailable".to_owned())
         );
+    }
+
+    #[test]
+    fn crashed_runtime_is_marked_unavailable() {
+        let store = RuntimeStateStore::ready(RuntimeState {
+            base_url: "http://127.0.0.1:43127".to_owned(),
+            token: "opaque-session-token".to_owned(),
+        });
+
+        store.mark_unavailable().expect("mark unavailable");
+        assert_eq!(store.current(), Err("backend runtime unavailable".to_owned()));
     }
 
     #[test]

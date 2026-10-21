@@ -19,16 +19,23 @@ export default function DesktopStartupGate({ children, loadState = defaultLoadSt
   useEffect(() => {
     if (isBrowser) return
     let mounted = true
+    let pollTimer: number | undefined
+    const shouldPoll = loadState === defaultLoadState
+    const checkRuntime = () => {
+      loadState()
+        .then(() => {
+          if (mounted) setStatus('ready')
+        })
+        .catch(() => {
+          if (mounted) setStatus('failed')
+        })
+    }
     setStatus('loading')
-    loadState()
-      .then(() => {
-        if (mounted) setStatus('ready')
-      })
-      .catch(() => {
-        if (mounted) setStatus('failed')
-      })
+    checkRuntime()
+    if (shouldPoll) pollTimer = window.setInterval(checkRuntime, 1000)
     return () => {
       mounted = false
+      if (pollTimer !== undefined) window.clearInterval(pollTimer)
     }
   }, [attempt, isBrowser, loadState])
 

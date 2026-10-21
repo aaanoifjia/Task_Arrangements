@@ -54,6 +54,10 @@ impl Drop for SidecarProcess {
 }
 
 impl SidecarProcess {
+    pub fn poll_exit(&mut self) -> io::Result<Option<std::process::ExitStatus>> {
+        self.child.try_wait()
+    }
+
     pub fn shutdown(&mut self) -> io::Result<()> {
         if self.child.try_wait()?.is_some() {
             return Ok(());
@@ -291,5 +295,31 @@ mod tests {
         process.shutdown().expect("first shutdown");
         process.shutdown().expect("second shutdown");
         assert_eq!(process.output.try_iter().count(), 0);
+    }
+
+    #[test]
+    fn unexpected_child_exit_is_observable_without_silently_restarting() {
+        let child = Command::new("cmd.exe")
+            .args(["/C", "exit", "7"])
+            .spawn()
+            .expect("spawn test child");
+        let (_sender, output) = mpsc::channel();
+        let mut process = SidecarProcess {
+            token: "test-token".to_owned(),
+            output,
+            child,
+            _stdout_thread: thread::spawn(|| {}),
+            _stderr_thread: thread::spawn(|| {}),
+        };
+
+        let mut exit = None;
+        for _ in 0..100 {
+            exit = process.poll_exit().expect("poll child");
+            if exit.is_some() {
+                break;
+            }
+            thread::sleep(std::time::Duration::from_millis(1));
+        }
+        assert_eq!(exit.expect("child exit").code(), Some(7));
     }
 }
