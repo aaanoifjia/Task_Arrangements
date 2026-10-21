@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M10-HARDEN-021",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Verifying restart during timeout/interrupt ambiguity fails closed without resending prompts or releasing descendants."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M10-HARDEN-022",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -243,7 +238,8 @@
     "M10-HARDEN-017",
     "M10-HARDEN-018",
     "M10-HARDEN-019",
-    "M10-HARDEN-020"
+    "M10-HARDEN-020",
+    "M10-HARDEN-021"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -615,5 +611,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M10-HARDEN-020 PASS: terminal-before-timeout and timeout-before-late-terminal race matrix 2 passed; compare-and-update prevented late overwrite, full backend non-live 321 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed."
+  "last_validation_note": "M10-HARDEN-021 PASS: timeout/interrupt restart matrix and continuation recovery 6 passed; no-thread crashes failed closed, referenced threads were only read, descendants remained BLOCKED, full backend non-live 323 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed."
 }
