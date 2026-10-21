@@ -19,13 +19,23 @@ from codex_flow.storage.repositories import StorageRepositories
 
 
 class RuntimeManager:
-    def __init__(self, repository: StorageRepositories, adapter: CodexAdapter) -> None:
+    def __init__(
+        self, repository: StorageRepositories, adapter: CodexAdapter, *, max_concurrency: int = 1
+    ) -> None:
+        if max_concurrency < 1:
+            raise ValueError("max_concurrency must be positive")
         self._repository = repository
         self._adapter = adapter
+        self._max_concurrency = max_concurrency
         self._runner = DurableRunner(repository, adapter)
         self._tasks: dict[str, asyncio.Task[None]] = {}
         self._workflows: dict[str, WorkflowDefinition] = {}
         self._accepting = True
+
+    @property
+    def max_concurrency(self) -> int:
+        """Return the configured global capacity for durable execution."""
+        return self._max_concurrency
 
     def restore_workflow(self, run_id: str, workflow: WorkflowDefinition) -> None:
         """Register a durable run snapshot for controls after process restart."""

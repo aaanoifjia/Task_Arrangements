@@ -36,7 +36,7 @@ async def lifespan(
     adapter = (adapter_factory or default_adapter_factory)()
     app.state.adapter = adapter
     await StartupReconciler(connection, adapter).reconcile()
-    runtime = RuntimeManager(repositories, adapter)
+    runtime = RuntimeManager(repositories, adapter, max_concurrency=config.max_concurrency)
     for row in repositories.load_active_runs():
         runtime.restore_workflow(
             str(row["id"]), WorkflowDefinition.model_validate_json(row["snapshot_json"])

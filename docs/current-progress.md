@@ -120,6 +120,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M10-HARDEN-002 — durable CONTINUE_THREAD PASS; successful source thread is resumed with no new source thread and a distinct new turn persisted; continuation/runtime regression 30 passed with 2 known-gap xfails, plus Ruff and strict mypy
 - M10-HARDEN-003 — continuation Attempt persistence PASS; STARTING plus one Attempt is committed before external resume, same source thread/new turn refs are recorded, transaction/ref tests 5 passed, regression 12 passed, and Ruff/strict mypy passed
 - M10-HARDEN-004 — continuation recovery safety PASS; four crash points fail closed without resending prompts or releasing downstream work, matrix 6 passed and recovery regression 15 passed
+- M10-HARDEN-005 — global concurrency configuration PASS; default one, non-positive rejection, and runtime wiring passed 11 tests; full backend non-live 271 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed
 
 ## Verified Codex Runtime
 
@@ -151,7 +152,7 @@ unexpected_files = []
 
 Current active task:
 
-`M10-HARDEN-005` — Global Concurrency Setting (IN_PROGRESS)
+`M10-HARDEN-006` — Parallel Ready Task Execution
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 
