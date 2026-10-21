@@ -41,6 +41,10 @@ pub fn resolve_runtime_paths(app: &AppHandle) -> tauri::Result<AppDataPaths> {
 }
 
 #[cfg(test)]
+#[path = "paths_test.rs"]
+mod paths_test;
+
+#[cfg(test)]
 mod tests {
     use super::{child_paths, prepare_paths};
     use std::path::Path;

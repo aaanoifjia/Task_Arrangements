@@ -1,7 +1,6 @@
 use std::collections::VecDeque;
 use std::env;
 use std::ffi::OsString;
-use std::fs;
 use std::io::{self, BufRead, BufReader, Read};
 use std::path::{Path, PathBuf};
 use std::process::{Child, Command, Stdio};
@@ -59,14 +58,23 @@ pub fn default_runtime_paths() -> io::Result<RuntimePaths> {
                 .map(|path| path.join("AppData").join("Local"))
         })
         .ok_or_else(|| io::Error::new(io::ErrorKind::NotFound, "local app-data directory missing"))?;
-    let root = local_app_data.join("Codex Flow");
-    let log_dir = root.join("logs");
-    fs::create_dir_all(&log_dir)?;
+    runtime_paths_from_app_data(&local_app_data)
+}
+
+pub fn runtime_paths_from_app_data(app_data_dir: &Path) -> io::Result<RuntimePaths> {
+    runtime_paths_with_executable(app_data_dir, find_sidecar_executable()?)
+}
+
+pub fn runtime_paths_with_executable(
+    app_data_dir: &Path,
+    executable: PathBuf,
+) -> io::Result<RuntimePaths> {
+    let app_paths = crate::paths::prepare_paths(app_data_dir)?;
     Ok(RuntimePaths {
-        db_path: root.join("codex-flow.sqlite3"),
-        executable: find_sidecar_executable()?,
-        log_dir,
-        root,
+        db_path: app_paths.db_path,
+        executable,
+        log_dir: app_paths.log_dir,
+        root: app_paths.root,
     })
 }
 
