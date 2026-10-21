@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M9-DESKTOP-031",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Prevent a second desktop instance from launching another sidecar/database writer and focus the existing main window."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M9-DESKTOP-032",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -213,7 +208,8 @@
       "M9-DESKTOP-027",
       "M9-DESKTOP-028",
       "M9-DESKTOP-029",
-      "M9-DESKTOP-030"
+      "M9-DESKTOP-030",
+      "M9-DESKTOP-031"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -541,5 +537,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-031 IN_PROGRESS: adding the Tauri single-instance plugin and focus callback tests."
+  "last_validation_note": "M9-DESKTOP-031 PASS: Tauri cargo check/test passed with tauri-plugin-single-instance 2.5.4; 21/21 tests passed including existing-window focus callback coverage."
 }

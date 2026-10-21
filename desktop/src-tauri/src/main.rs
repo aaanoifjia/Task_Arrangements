@@ -4,6 +4,7 @@ mod sidecar;
 mod runtime_state;
 mod paths;
 mod open_external;
+mod single_instance;
 
 use std::time::Duration;
 use std::sync::Mutex;
@@ -12,6 +13,9 @@ use tauri::{Manager, RunEvent};
 
 fn main() {
     let app = tauri::Builder::default()
+        .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
+            single_instance::focus_existing_window(app);
+        }))
         .setup(|app| {
             let runtime_paths = paths::resolve_runtime_paths(app.handle())?;
             app.manage(runtime_paths);
