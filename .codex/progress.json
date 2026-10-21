@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M10-HARDEN-017",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Proving retry execution never exceeds TaskDefinition max_attempts and leaves the final failure durable."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M10-HARDEN-018",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -239,7 +234,8 @@
     "M10-HARDEN-013",
     "M10-HARDEN-014",
     "M10-HARDEN-015",
-    "M10-HARDEN-016"
+    "M10-HARDEN-016",
+    "M10-HARDEN-017"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -611,5 +607,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M10-HARDEN-016 PASS: tool/task failure, permission/validation attention, interrupt, and unknown adapter failure never auto-retried; no-auto-retry matrix 6 passed, full backend non-live 315 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed."
+  "last_validation_note": "M10-HARDEN-017 PASS: persistent SERVER_BUSY stopped exactly at max_attempts=3 with three Attempts, parent NEEDS_ATTENTION, child BLOCKED, and two retry audits; focused test passed, Ruff and strict mypy passed."
 }
