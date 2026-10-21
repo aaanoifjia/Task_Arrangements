@@ -15,8 +15,13 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M9-DESKTOP-003",
+  "active_task": {
+    "id": "M9-DESKTOP-003",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Resume the minimal Tauri v2 Windows shell scaffold after the complete toolchain preflight passed."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -470,5 +475,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-PREFLIGHT-003A COMPLETE: all declared Python/venv/PyInstaller, Node/npm, Rust, MSVC/Windows SDK, WebView2, and Git prerequisites PASS; official per-user Rustup stable installation was authorized and verified; M9-DESKTOP-003 is resumed next."
+  "last_validation_note": "M9-DESKTOP-003 IN_PROGRESS: implementing the minimal Tauri v2 Windows shell after M9-PREFLIGHT-003A verified the complete declared toolchain."
 }
