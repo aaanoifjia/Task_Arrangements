@@ -24,5 +24,9 @@
     "security": {
       "csp": null
     }
+  },
+  "bundle": {
+    "active": true,
+    "externalBin": ["binaries/codex-flow-server"]
   }
 }

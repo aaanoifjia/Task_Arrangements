@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M9-DESKTOP-011",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Declare the packaged Python backend as the Tauri externalBin with Windows target naming and preserve the no-shell-launch boundary."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M9-DESKTOP-012",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -193,7 +188,8 @@
     "M9-DESKTOP-007",
     "M9-DESKTOP-008",
     "M9-DESKTOP-009",
-    "M9-DESKTOP-010"
+    "M9-DESKTOP-010",
+    "M9-DESKTOP-011"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -497,5 +493,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-011 IN_PROGRESS: adding Tauri externalBin configuration for the packaged Windows sidecar and validating the config."
+  "last_validation_note": "M9-DESKTOP-011 COMPLETE: Tauri config JSON/schema validation and cargo metadata PASS; bundle externalBin declares binaries/codex-flow-server with no shell launch directive; M9-DESKTOP-012 is next."
 }

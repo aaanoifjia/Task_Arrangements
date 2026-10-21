@@ -110,6 +110,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M9-DESKTOP-008 — post-bind sidecar readiness handshake; parser/stdout ordering/token-exclusion tests 9/9, Ruff, and strict mypy PASS
 - M9-DESKTOP-009 — reproducible PyInstaller sidecar spec with migrations/openai-codex collection; command generation, py_compile, Ruff, and secret scan PASS
 - M9-DESKTOP-010 — real PyInstaller sidecar build, packaged help/version smoke, and migration resource verification PASS; packaging tests 2/2 and Ruff PASS; bounded remediation R1 complete
+- M9-DESKTOP-011 — Tauri externalBin configuration for Windows sidecar; Tauri config/schema validation and cargo metadata PASS
 
 ## Verified Codex Runtime
 
@@ -141,7 +142,7 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M9-DESKTOP-011` — Tauri External Binary Config (IN_PROGRESS)
+`M9-DESKTOP-012` — Rust Sidecar Launcher
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 
@@ -153,4 +154,4 @@ The repository protocol now supports:
 
 M9-PREFLIGHT-003A audits Python/Node/PyInstaller/Rust/MSVC/Windows SDK/WebView2/Git. If the current invocation explicitly authorizes Rust, it may install the official Rust toolchain only. Other missing system components remain genuine blockers.
 
-M9-PREFLIGHT-003A through M9-DESKTOP-010 are complete. The complete declared Windows/Tauri prerequisite audit is recorded in `docs/m9-environment-preflight.md`; the authorized official Rustup stable toolchain is installed and verified. M9-DESKTOP-011 is active for the Tauri externalBin configuration. M9-DESKTOP-010-R1 repaired the packaged server entrypoint and is recorded complete in remediation history.
+M9-PREFLIGHT-003A through M9-DESKTOP-011 are complete. The complete declared Windows/Tauri prerequisite audit is recorded in `docs/m9-environment-preflight.md`; the authorized official Rustup stable toolchain is installed and verified. M9-DESKTOP-012 is the next dependency-ready task for the Rust sidecar launcher. M9-DESKTOP-010-R1 repaired the packaged server entrypoint and is recorded complete in remediation history.
