@@ -38,3 +38,7 @@ From the repository root, run `powershell -File scripts/dev_desktop.ps1`.
 Use `-Check` to validate Node/npm, Cargo/rustc, the project virtualenv, and
 required project files without starting or installing anything. The script
 builds the frontend first, then launches Tauri with the checked-in config.
+
+For a production build, run `powershell -File scripts/build_desktop.ps1` from
+the repository root. Use `-DryRun` to print and validate the fixed order
+(frontend, PyInstaller sidecar/staging, Tauri build) without executing it.
