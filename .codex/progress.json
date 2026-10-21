@@ -15,8 +15,13 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M9-DESKTOP-024",
+  "active_task": {
+    "id": "M9-DESKTOP-024",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "In Tauri mode, block normal routes until the local runtime is ready and show an actionable failure state without secrets."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -517,5 +522,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M9-DESKTOP-023 PASS: Tauri cargo test passed 14/14, including ready, delayed, and bounded-timeout health polling tests."
+  "last_validation_note": "M9-DESKTOP-024 IN_PROGRESS: frontend startup gate implementation is complete locally and validation is passing."
 }
