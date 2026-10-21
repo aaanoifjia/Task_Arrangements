@@ -149,7 +149,7 @@ unexpected_files = []
 
 Current active task:
 
-`M10-HARDEN-003` — Continuation Attempt Persistence
+`M10-HARDEN-003` — Continuation Attempt Persistence (IN_PROGRESS)
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 

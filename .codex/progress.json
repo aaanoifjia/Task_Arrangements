@@ -16,12 +16,12 @@
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
   "active_task": {
-    "id": "M10-HARDEN-002",
-    "status": "COMPLETE",
+    "id": "M10-HARDEN-003",
+    "status": "IN_PROGRESS",
     "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Durable continuation PASS: successful source thread_id is validated, resume_thread is used, no new source thread is created, and a distinct turn is persisted; bounded R1 repaired the parity audit XPASS."
+    "note": "Persisting continuation Attempts before external resume/start-turn and recording the source thread plus distinct new turn safely."
   },
-  "next_task": "M10-HARDEN-003",
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
