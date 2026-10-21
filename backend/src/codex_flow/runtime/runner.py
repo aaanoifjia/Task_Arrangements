@@ -1,5 +1,6 @@
 """Minimal durable runner using the frozen scheduler and storage contracts."""
 
+import asyncio
 from collections.abc import AsyncIterator, Mapping
 from typing import cast
 
@@ -24,9 +25,14 @@ from codex_flow.storage.snapshots import create_run_snapshot
 class DurableRunner:
     """Persist one deterministic workflow run without reimplementing DAG semantics."""
 
-    def __init__(self, repository: StorageRepositories, adapter: CodexAdapter) -> None:
+    def __init__(
+        self, repository: StorageRepositories, adapter: CodexAdapter, *, max_concurrency: int = 1
+    ) -> None:
+        if max_concurrency < 1:
+            raise ValueError("max_concurrency must be positive")
         self._repository = repository
         self._adapter = adapter
+        self._capacity = asyncio.Semaphore(max_concurrency)
         self._active_turns: dict[str, CodexTurnRef] = {}
 
     def active_turn(self, task_run_id: str) -> CodexTurnRef | None:
@@ -80,15 +86,25 @@ class DurableRunner:
             if not ready:
                 self._finish_run(run_id, statuses)
                 return
+            runnable: list[tuple[str, str]] = []
             for task_id in ready:
                 if self._repository.get_workflow_run_paused(run_id):
-                    return
+                    break
                 self._repository.update_task_run_state(
                     str(by_task[task_id]["id"]), TaskStatus.READY.value
                 )
-                await self._execute_task(str(by_task[task_id]["id"]), tasks[task_id])
+                runnable.append((str(by_task[task_id]["id"]), task_id))
+            if not runnable:
+                return
+            await asyncio.gather(
+                *(self._execute_task(task_run_id, tasks[task_id]) for task_run_id, task_id in runnable)
+            )
 
     async def _execute_task(self, task_run_id: str, task: TaskDefinition) -> None:
+        async with self._capacity:
+            await self._execute_task_unlimited(task_run_id, task)
+
+    async def _execute_task_unlimited(self, task_run_id: str, task: TaskDefinition) -> None:
         config = CodexExecutionConfig(
             cwd=task.cwd,
             sandbox=task.sandbox,

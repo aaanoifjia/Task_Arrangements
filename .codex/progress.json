@@ -17,11 +17,11 @@
   },
   "active_task": {
     "id": "M10-HARDEN-006",
-    "status": "IN_PROGRESS",
+    "status": "COMPLETE",
     "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Executing independent READY durable tasks concurrently up to the configured global limit while preserving deterministic selection order."
+    "note": "Parallel READY execution PASS: independent delayed tasks overlap at limit 2, serialize at limit 1, preserve A→B selection order, and pause-before-batch exits cleanly."
   },
-  "next_task": null,
+  "next_task": "M10-HARDEN-007",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -228,7 +228,8 @@
     "M10-HARDEN-002",
     "M10-HARDEN-003",
     "M10-HARDEN-004",
-    "M10-HARDEN-005"
+    "M10-HARDEN-005",
+    "M10-HARDEN-006"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -600,5 +601,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M10-HARDEN-005 PASS: config/runtime matrix 11 passed, full backend non-live 271 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed; positive global capacity is wired to RuntimeManager."
+  "last_validation_note": "M10-HARDEN-006 PASS: delayed parallel matrix passed at limits 1/2 with deterministic A→B selection; full backend non-live 274 passed/6 deselected/2 known xfailed and Ruff passed."
 }
