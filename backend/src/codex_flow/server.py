@@ -5,11 +5,13 @@ from __future__ import annotations
 import argparse
 import ipaddress
 import json
+import logging
 import os
 import socket
 import sys
 from collections.abc import Sequence
 from dataclasses import dataclass
+from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -18,6 +20,10 @@ from codex_flow.api.app import create_app
 from codex_flow.api.config import ServiceConfig
 
 BACKEND_VERSION = "0.1.0"
+LOG_FILE_NAME = "backend.log"
+LOG_MAX_BYTES = 1_048_576
+LOG_BACKUP_COUNT = 3
+SERVER_LOGGER_NAME = "codex_flow.server"
 
 
 @dataclass(frozen=True)
@@ -90,6 +96,41 @@ def emit_readiness(port: int, *, pid: int | None = None) -> None:
     sys.stdout.flush()
 
 
+def configure_logging(log_dir: Path | None) -> logging.Logger:
+    """Configure bounded file-only logging without exposing process credentials."""
+    logger = logging.getLogger(SERVER_LOGGER_NAME)
+    logger.setLevel(logging.INFO)
+    logger.propagate = False
+    for handler in list(logger.handlers):
+        if handler.name == SERVER_LOGGER_NAME:
+            logger.removeHandler(handler)
+            handler.close()
+    if log_dir is None:
+        return logger
+    log_dir.mkdir(parents=True, exist_ok=True)
+    handler = RotatingFileHandler(
+        log_dir / LOG_FILE_NAME,
+        maxBytes=LOG_MAX_BYTES,
+        backupCount=LOG_BACKUP_COUNT,
+        encoding="utf-8",
+    )
+    handler.name = SERVER_LOGGER_NAME
+    handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
+    logger.addHandler(handler)
+    return logger
+
+
+def log_startup(logger: logging.Logger, options: ServerOptions) -> None:
+    """Record non-secret startup context; the bearer token is intentionally omitted."""
+    logger.info(
+        "server starting host=%s port=%d db_path=%s log_dir=%s",
+        options.host,
+        options.port,
+        options.db_path,
+        options.log_dir,
+    )
+
+
 def _run_server(app: FastAPI, options: ServerOptions) -> None:
     import uvicorn
 
@@ -111,7 +152,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     """Start the production API server after parsing its explicit options."""
     options = parse_args(argv)
     validate_bind_host(options.host)
-    app = create_app(ServiceConfig.from_db_path(options.db_path))
+    logger = configure_logging(options.log_dir)
+    log_startup(logger, options)
+    app = create_app(
+        ServiceConfig.from_db_path(
+            options.db_path,
+            token=options.token,
+            desktop_mode=options.token is not None,
+        )
+    )
     _run_server(app, options)
     return 0
 
