@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M10-HARDEN-030",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Cover temporary 503, malformed responses, WebSocket loss, and backend restart recovery without inventing task state."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M10-HARDEN-031",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -252,7 +247,8 @@
     "M10-HARDEN-026",
     "M10-HARDEN-027",
     "M10-HARDEN-028",
-    "M10-HARDEN-029"
+    "M10-HARDEN-029",
+    "M10-HARDEN-030"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -638,5 +634,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M10-HARDEN-029 PASS: deterministic duplicate-prevention matrix 7 passed across success, tool failure, interrupt, terminal failure, attention, stream crash, and manual retry; each Attempt had one external prompt and non-SUCCESS parents kept children BLOCKED; full backend non-live 347 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed."
+  "last_validation_note": "M10-HARDEN-030 PASS: degraded frontend matrix 18 passed for temporary 503, malformed response, WebSocket loss/reconnect, and backend restart retry; full frontend 52 files/177 tests, typecheck, and ESLint passed."
 }

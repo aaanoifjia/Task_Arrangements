@@ -145,6 +145,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M10-HARDEN-027 — concurrent API read/control stress PASS; stable allowed responses, valid task/run states, and JSON audit payloads under concurrent controls; focused stress passed, full backend non-live 332 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed
 - M10-HARDEN-028 — crash fault matrix expansion PASS; deterministic crash fault plus duplicate/continuation recovery 17 passed, ambiguous states failed closed, descendants stayed BLOCKED, and no external create/start/resume repeated; full backend non-live 340 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed
 - M10-HARDEN-029 — duplicate-prevention property matrix PASS; deterministic success, tool failure, interrupt, terminal failure, attention, stream crash, and manual retry scenarios 7 passed, each Attempt had one external prompt, and non-SUCCESS parents kept children BLOCKED; full backend non-live 347 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed
+- M10-HARDEN-030 — frontend degraded backend recovery PASS; temporary 503, malformed response, WebSocket loss/reconnect, and backend restart retry matrix 18 passed; full frontend 52 files/177 tests, typecheck, and ESLint passed
 
 ## Verified Codex Runtime
 
@@ -176,7 +177,7 @@ unexpected_files = []
 
 Current active task:
 
-`M10-HARDEN-030` — Frontend Degraded Backend Recovery (IN_PROGRESS)
+`M10-HARDEN-031` — Desktop Sidecar Restart Soak (next)
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 

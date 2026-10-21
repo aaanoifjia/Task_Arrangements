@@ -31,7 +31,7 @@ describe('API client', () => {
   })
 
   it.each([
-    [404, 'NOT_FOUND'], [409, 'CONFLICT'], [500, 'SERVER_ERROR'],
+    [404, 'NOT_FOUND'], [409, 'CONFLICT'], [500, 'SERVER_ERROR'], [503, 'SERVICE_UNAVAILABLE'],
   ])('maps stable %s errors', async (status, code) => {
     const fetcher = vi.fn<typeof fetch>().mockResolvedValue(response(status, { error: { code, message: 'nope' } }))
     await expect(createApiClient(fetcher).listWorkflows()).rejects.toEqual(

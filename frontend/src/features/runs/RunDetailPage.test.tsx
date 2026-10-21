@@ -94,4 +94,29 @@ describe('RunDetailPage', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent('pause conflict')
     expect(screen.getByRole('button', { name: 'Pause' })).not.toBeDisabled()
   })
+
+  it('reconnects after backend loss and applies only the restarted backend snapshot', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true })
+    FakeWebSocket.instances = []
+    const runApi = api({ tasks: vi.fn().mockResolvedValue([{ ...fixtureTaskRun, status: 'RUNNING' }]) })
+    renderPage(runApi, { webSocketFactory: FakeWebSocket })
+
+    await screen.findByRole('heading', { name: 'Run run-1' })
+    const first = FakeWebSocket.instances[0]!
+    act(() => first.onclose?.({ code: 1006 } as CloseEvent))
+    act(() => vi.advanceTimersByTime(250))
+    expect(FakeWebSocket.instances).toHaveLength(2)
+
+    const restarted = FakeWebSocket.instances[1]!
+    act(() => restarted.onmessage?.({
+      data: JSON.stringify({
+        kind: 'snapshot',
+        payload: { tasks: [{ ...fixtureTaskRun, status: 'FAILED' }] },
+      }),
+    } as MessageEvent))
+    const taskSection = screen.getByRole('heading', { name: 'Tasks' }).parentElement!
+    expect(within(taskSection).getByText('FAILED')).toBeInTheDocument()
+    expect(screen.queryByText('SUCCESS')).not.toBeInTheDocument()
+    vi.useRealTimers()
+  })
 })
