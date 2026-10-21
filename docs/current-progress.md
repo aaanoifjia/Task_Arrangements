@@ -150,6 +150,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M10-HARDEN-032 — accelerated long-run soak PASS; Fake workflow soak covered 24 deterministic mixed success/tool-failure iterations with no leaked runtime tasks, no active runs, and consistent attempts/events; frontend reconnect soak covered 100 cursor-resumed reconnects with dedupe; full backend non-live 348 passed/6 deselected/2 known xfailed, full frontend 52 files/177 tests, typecheck, and ESLint passed
 - M10-HARDEN-033 — full product regression PASS; backend non-live 348 passed/6 deselected/2 known xfailed, frontend 52 files/177 tests with typecheck/lint/production build, packaging contract 3 passed, Tauri cargo check plus 26 Rust tests, and Ruff passed
 - M10-HARDEN-034 — v1 acceptance evidence matrix PASS; all 22 acceptance items map to existing automated/manual evidence, all referenced paths were verified, and manual-only/both-mode UX items remain explicitly PENDING
+- M10-GATE-035 — final automated M10 beta gate PASS; backend non-live 348 passed/6 deselected/2 known xfailed, packaging plus stress 22 passed, frontend 52 files/177 tests with typecheck/lint/build, and Tauri cargo check plus 26 tests; live Codex and manual UX remain excluded by design
 
 ## Verified Codex Runtime
 
@@ -181,7 +182,7 @@ unexpected_files = []
 
 Current active task:
 
-`M10-GATE-035` — M10 Automated Beta Gate (IN_PROGRESS)
+`M10-REPORT-036` — M10 Hardening Report & Manual Gate Handoff (next)
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 
