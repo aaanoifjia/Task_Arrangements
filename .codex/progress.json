@@ -331,6 +331,18 @@
       "intended_acceptance": "A deterministic source SVG and official Tauri-generated icon set provide icon.ico so the Tauri Rust integration suite compiles and passes.",
       "status": "COMPLETE",
       "validation": "Official Tauri CLI generated the reproducible icon set from codex-flow.svg; cargo test passed 25/25, frontend desktop tests passed 8/8, typecheck passed, and ESLint passed."
+    },
+    {
+      "id": "M10-HARDEN-002-R1",
+      "parent_task": "M10-HARDEN-002",
+      "reason": "The completed durable continuation implementation turns the M10-HARDEN-001 strict xfail into an XPASS, so the audit test and report must be updated to record the resolved known gap.",
+      "files": [
+        "backend/tests/integration/test_runtime_parity.py",
+        "docs/runtime-parity-audit.md"
+      ],
+      "failing_validation": "M10-HARDEN-002 targeted suite failed with XPASS(strict) in test_durable_runner_continuation_parity_gap after continuation behavior passed.",
+      "intended_acceptance": "The parity audit records durable continuation as PASS, removes the obsolete strict xfail, and all parent continuation/parity tests pass.",
+      "status": "IN_PROGRESS"
     }
   ],
   "task_queue_after_current": [
