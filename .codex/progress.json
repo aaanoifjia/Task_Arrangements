@@ -16,12 +16,12 @@
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
   "active_task": {
-    "id": "M9-REPORT-040",
-    "status": "COMPLETE",
+    "id": "M10-HARDEN-001",
+    "status": "IN_PROGRESS",
     "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "M9 automated packaging report PASS with exact bundle evidence; manual installer launch and visual Desktop checks remain explicitly deferred."
+    "note": "Comparing DurableRunner/RuntimeManager against frozen AsyncScheduler semantics and recording only known runtime gaps."
   },
-  "next_task": "M10-HARDEN-001",
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
