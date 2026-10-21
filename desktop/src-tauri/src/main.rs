@@ -3,6 +3,7 @@
 mod sidecar;
 mod runtime_state;
 mod paths;
+mod open_external;
 
 use std::time::Duration;
 use std::sync::Mutex;
@@ -29,7 +30,7 @@ fn main() {
             app.manage(Mutex::new(process));
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![runtime_state::runtime_state])
+        .invoke_handler(tauri::generate_handler![runtime_state::runtime_state, open_external::open_external])
         .build(tauri::generate_context!())
         .expect("error while building Codex Flow desktop application");
 

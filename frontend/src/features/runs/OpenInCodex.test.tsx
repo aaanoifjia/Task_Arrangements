@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import OpenInCodex, { buildCodexThreadUri } from './OpenInCodex'
+import OpenInCodex, { buildCodexThreadUri, isValidCodexThreadUri, openCodexThread } from './OpenInCodex'
 
 describe('OpenInCodex', () => {
   it('builds an exact encoded Codex thread URI', () => {
@@ -15,5 +15,14 @@ describe('OpenInCodex', () => {
     render(<OpenInCodex threadId={null} />)
     expect(screen.getByText('Open in Codex unavailable')).toBeInTheDocument()
     expect(screen.queryByRole('link')).not.toBeInTheDocument()
+  })
+
+  it('validates the native URI and invokes the Tauri bridge only for codex schemes', async () => {
+    const invoker = vi.fn().mockResolvedValue(undefined)
+    expect(isValidCodexThreadUri('codex://threads/thread-1')).toBe(true)
+    expect(isValidCodexThreadUri('https://example.test/thread-1')).toBe(false)
+    await expect(openCodexThread('codex://threads/thread-1', { __TAURI_INTERNALS__: {} }, invoker)).resolves.toBe(true)
+    expect(invoker).toHaveBeenCalledWith('codex://threads/thread-1')
+    await expect(openCodexThread('https://example.test/thread-1', { __TAURI_INTERNALS__: {} }, invoker)).rejects.toThrow('invalid Codex thread URI')
   })
 })
