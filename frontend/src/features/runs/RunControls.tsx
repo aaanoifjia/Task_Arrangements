@@ -1,11 +1,15 @@
 import type { RunStatus, TaskStatus } from '../../api/types'
 import './RunControls.css'
 
+export type RunControlAction = 'pause' | 'resume' | 'retry' | 'cancel' | 'skip' | 'mark-success'
+
 export type RunControlsProps = {
   runStatus: RunStatus
   paused: boolean
   taskStatus?: TaskStatus | null
   disabled?: boolean
+  pendingAction?: RunControlAction | null
+  error?: string | null
   onPause?: () => void
   onResume?: () => void
   onRetry?: () => void
@@ -25,14 +29,16 @@ function ControlButton({
   action,
   label,
   disabled,
+  pending,
   onClick,
 }: {
   action: string
   label: string
   disabled: boolean
+  pending: boolean
   onClick?: () => void
 }) {
-  return <button type="button" data-testid={`run-control-${action}`} disabled={disabled || !onClick} onClick={onClick}>{label}</button>
+  return <button type="button" data-testid={`run-control-${action}`} disabled={disabled || pending || !onClick} onClick={onClick}>{pending ? `${label}…` : label}</button>
 }
 
 function RunControls({
@@ -40,6 +46,8 @@ function RunControls({
   paused,
   taskStatus = null,
   disabled = false,
+  pendingAction = null,
+  error = null,
   onPause,
   onResume,
   onRetry,
@@ -53,13 +61,14 @@ function RunControls({
   return (
     <section className="run-controls" aria-labelledby="run-controls-heading" data-testid="run-controls">
       <h2 id="run-controls-heading">Controls</h2>
+      {error && <p role="alert" className="run-controls__error">{error}</p>}
       <div className="run-controls__actions">
-        {canControlRun && !paused && <ControlButton action="pause" label="Pause" disabled={disabled} onClick={onPause} />}
-        {canControlRun && paused && <ControlButton action="resume" label="Resume" disabled={disabled} onClick={onResume} />}
-        {hasTask && retryableTaskStatuses.has(taskStatus) && <ControlButton action="retry" label="Retry" disabled={disabled} onClick={onRetry} />}
-        {hasTask && cancellableTaskStatuses.has(taskStatus) && <ControlButton action="cancel" label="Cancel" disabled={disabled} onClick={onCancel} />}
-        {hasTask && skippableTaskStatuses.has(taskStatus) && <ControlButton action="skip" label="Skip" disabled={disabled} onClick={onSkip} />}
-        {hasTask && taskStatus === 'READY' && <ControlButton action="mark-success" label="Mark success" disabled={disabled} onClick={onMarkSuccess} />}
+        {canControlRun && !paused && <ControlButton action="pause" label="Pause" disabled={disabled} pending={pendingAction === 'pause'} onClick={onPause} />}
+        {canControlRun && paused && <ControlButton action="resume" label="Resume" disabled={disabled} pending={pendingAction === 'resume'} onClick={onResume} />}
+        {hasTask && retryableTaskStatuses.has(taskStatus) && <ControlButton action="retry" label="Retry" disabled={disabled} pending={pendingAction === 'retry'} onClick={onRetry} />}
+        {hasTask && cancellableTaskStatuses.has(taskStatus) && <ControlButton action="cancel" label="Cancel" disabled={disabled} pending={pendingAction === 'cancel'} onClick={onCancel} />}
+        {hasTask && skippableTaskStatuses.has(taskStatus) && <ControlButton action="skip" label="Skip" disabled={disabled} pending={pendingAction === 'skip'} onClick={onSkip} />}
+        {hasTask && taskStatus === 'READY' && <ControlButton action="mark-success" label="Mark success" disabled={disabled} pending={pendingAction === 'mark-success'} onClick={onMarkSuccess} />}
       </div>
     </section>
   )

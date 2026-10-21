@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import type { EventView, RunDetail, TaskRunView } from '../../api/types'
 import { createRunApi, type RunApi } from './api'
 import EventLog from './EventLog'
 import RunSummaryPanel from './RunSummaryPanel'
 import RunGraph from './RunGraph'
+import RunControls, { type RunControlAction } from './RunControls'
 import { useRunStream, type UseRunStreamOptions } from './useRunStream'
 import './RunDetailPage.css'
 
@@ -26,9 +27,14 @@ function RunDetailPage({ api, streamOptions }: RunDetailPageProps) {
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [paused, setPaused] = useState(false)
+  const [pendingControl, setPendingControl] = useState<RunControlAction | null>(null)
+  const [controlError, setControlError] = useState<string | null>(null)
 
   useEffect(() => {
     setEvents([])
+    setPaused(false)
+    setControlError(null)
   }, [runId])
 
   useEffect(() => {
@@ -36,6 +42,13 @@ function RunDetailPage({ api, streamOptions }: RunDetailPageProps) {
     if (!event) return
     setEvents((current) => current.some((item) => item.id === event.id) ? current : [...current, event])
   }, [stream.latestEvent])
+
+  const refreshRun = useCallback(async () => {
+    if (!runId) return
+    const [detail, taskSnapshot] = await Promise.all([stableApi.get(runId), stableApi.tasks(runId)])
+    setRun(detail)
+    setTasks(taskSnapshot)
+  }, [runId, stableApi])
 
   useEffect(() => {
     let mounted = true
@@ -59,6 +72,29 @@ function RunDetailPage({ api, streamOptions }: RunDetailPageProps) {
     return () => { mounted = false }
   }, [runId, stableApi])
 
+  useEffect(() => {
+    if (!stream.latestEventId) return
+    void refreshRun().catch(() => undefined)
+  }, [refreshRun, stream.latestEventId])
+
+  const applyRunControl = useCallback(async (action: 'pause' | 'resume') => {
+    if (!runId) return
+    const operation = action === 'pause' ? stableApi.pause : stableApi.resume
+    if (!operation) return
+    setPendingControl(action)
+    setControlError(null)
+    try {
+      const result = await operation(runId)
+      if (!result.accepted) throw new Error(result.message ?? `Unable to ${action} run.`)
+      setPaused(action === 'pause')
+      await refreshRun()
+    } catch (cause: unknown) {
+      setControlError(cause instanceof Error ? cause.message : `Unable to ${action} run.`)
+    } finally {
+      setPendingControl(null)
+    }
+  }, [refreshRun, runId, stableApi])
+
   if (loading) return <p role="status">Loading run…</p>
   if (notFound) return <section aria-labelledby="run-not-found-heading"><h1 id="run-not-found-heading">Run not found</h1><p>The requested run does not exist.</p></section>
   if (error) return <section aria-labelledby="run-error-heading"><h1 id="run-error-heading">Unable to load run</h1><p role="alert">{error}</p></section>
@@ -74,6 +110,15 @@ function RunDetailPage({ api, streamOptions }: RunDetailPageProps) {
         </div>
         <strong data-testid="run-status">{run.status}</strong>
       </div>
+      <RunControls
+        runStatus={run.status}
+        paused={paused}
+        disabled={pendingControl !== null}
+        pendingAction={pendingControl}
+        error={controlError}
+        onPause={stableApi.pause ? () => { void applyRunControl('pause') } : undefined}
+        onResume={stableApi.resume ? () => { void applyRunControl('resume') } : undefined}
+      />
       <nav aria-label="Run navigation">
         <Link to={`/workflows/${encodeURIComponent(run.workflow_id)}`}>Back to workflow</Link>
         <Link to={`/runs?workflow_id=${encodeURIComponent(run.workflow_id)}`}>Workflow runs</Link>

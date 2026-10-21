@@ -88,6 +88,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M8-UI-032A — typed low-level control ApiClient repair; endpoint/error tests 6/6 and `tsc -b` PASS
 - M8-UI-032 — frontend RunApi control mappings; endpoint/error tests 2/2 and `tsc -b` PASS
 - M8-UI-033 — durable-state-driven RunControls shell; visibility matrix 11/11, `tsc -b`, and ESLint PASS
+- M8-UI-034 — pause/resume controls with pending/error feedback and durable refresh; focused tests 17/17, `tsc -b`, and ESLint PASS
 
 ## Verified Codex Runtime
 
@@ -119,10 +120,10 @@ unexpected_files = []
 
 Current active task:
 
-`M8-UI-034` — Pause & Resume UI (IN_PROGRESS)
+`M8-UI-035` — Retry UI
 
 M8-UI-032 is blocked only because its typed RunApi layer depends on six low-level control methods that are missing from non-owned `frontend/src/api/client.ts`. The bounded remediation task owns only `client.ts` and its tests, adds the six typed endpoint mappings, and verifies frontend type safety.
 
-M8-UI-032A, M8-UI-032, and M8-UI-033 are COMPLETE: the typed control client, RunApi mappings, and RunControls visibility matrix pass with frontend typecheck/lint. This task wires pause/resume through durable state and stream refreshes, then the remaining M8 → M9 → M10 sequence continues.
+M8-UI-032A through M8-UI-034 are COMPLETE: the typed control client, RunApi mappings, RunControls visibility matrix, and pause/resume durable refresh flow pass with frontend typecheck/lint. Continue with Retry UI, then the remaining M8 → M9 → M10 sequence.
 
 All manual Desktop checks remain deferred until after M10 automated completion.

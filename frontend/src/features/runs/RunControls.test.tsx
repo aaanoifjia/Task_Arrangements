@@ -48,4 +48,12 @@ describe('RunControls', () => {
     expect(onPause).toHaveBeenCalledOnce()
     expect(screen.getByRole('button', { name: 'Pause' })).not.toBeDisabled()
   })
+
+  it('shows pending and error feedback for a run control', () => {
+    const actions = callbacks()
+    const { rerender } = render(<RunControls runStatus="RUNNING" paused={false} pendingAction="pause" {...actions} />)
+    expect(screen.getByRole('button', { name: 'Pause…' })).toBeDisabled()
+    rerender(<RunControls runStatus="RUNNING" paused={false} error="already paused" {...actions} />)
+    expect(screen.getByRole('alert')).toHaveTextContent('already paused')
+  })
 })

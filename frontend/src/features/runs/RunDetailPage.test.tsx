@@ -1,4 +1,5 @@
 import { act, render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { describe, expect, it, vi } from 'vitest'
 import { fixtureRunDetail, fixtureTaskRun } from '../../test/fixtures'
@@ -61,5 +62,36 @@ describe('RunDetailPage', () => {
     expect(await within(taskSection).findByText('RUNNING')).toBeInTheDocument()
     act(() => socket.onmessage?.({ data: JSON.stringify({ kind: 'snapshot', payload: { tasks: [{ ...initialTask, status: 'SUCCESS' }] } }) } as MessageEvent))
     expect(await within(taskSection).findByText('SUCCESS')).toBeInTheDocument()
+  })
+
+  it('pauses and resumes through the durable RunApi and refreshes the snapshot', async () => {
+    const user = userEvent.setup()
+    const pause = vi.fn().mockResolvedValue({ accepted: true, action: 'PAUSE' })
+    const resume = vi.fn().mockResolvedValue({ accepted: true, action: 'RESUME' })
+    const runApi = api({ pause, resume })
+    renderPage(runApi)
+
+    expect(await screen.findByRole('heading', { name: 'Run run-1' })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Pause' }))
+    expect(pause).toHaveBeenCalledWith('run-1')
+    expect(await screen.findByRole('button', { name: 'Resume' })).toBeInTheDocument()
+    expect(runApi.get).toHaveBeenCalledTimes(2)
+    expect(runApi.tasks).toHaveBeenCalledTimes(2)
+
+    await user.click(screen.getByRole('button', { name: 'Resume' }))
+    expect(resume).toHaveBeenCalledWith('run-1')
+    expect(await screen.findByRole('button', { name: 'Pause' })).toBeInTheDocument()
+  })
+
+  it('shows a stable pause error and clears pending state when the API rejects', async () => {
+    const user = userEvent.setup()
+    const pause = vi.fn().mockRejectedValue(new Error('pause conflict'))
+    const runApi = api({ pause })
+    renderPage(runApi)
+
+    await screen.findByRole('heading', { name: 'Run run-1' })
+    await user.click(screen.getByRole('button', { name: 'Pause' }))
+    expect(await screen.findByRole('alert')).toHaveTextContent('pause conflict')
+    expect(screen.getByRole('button', { name: 'Pause' })).not.toBeDisabled()
   })
 })
