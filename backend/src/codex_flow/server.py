@@ -34,6 +34,7 @@ class ServerOptions:
 def build_parser() -> argparse.ArgumentParser:
     """Build the server argument parser without starting any resources."""
     parser = argparse.ArgumentParser(prog="codex-flow-server")
+    parser.add_argument("--version", action="version", version=BACKEND_VERSION)
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8000)
     parser.add_argument(
@@ -113,3 +114,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     app = create_app(ServiceConfig.from_db_path(options.db_path))
     _run_server(app, options)
     return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

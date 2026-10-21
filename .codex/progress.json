@@ -242,7 +242,8 @@
       ],
       "failing_validation": "PyInstaller sidecar --help and --version smoke produced no output, despite exit code 0.",
       "intended_acceptance": "Rebuilt sidecar --help prints usage and --version prints 0.1.0 with exit code 0; no token is emitted.",
-      "status": "IN_PROGRESS"
+      "status": "COMPLETE",
+      "validation": "Rebuilt PyInstaller sidecar --help prints usage and --version prints 0.1.0 with exit code 0; readiness token is not printed."
     }
   ],
   "task_queue_after_current": [
