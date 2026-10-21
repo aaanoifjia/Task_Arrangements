@@ -118,6 +118,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M9-REPORT-040 — automated M9 desktop packaging report PASS; exact sidecar, bundle, runtime, path, auth-home, token-security, notification, Open-in-Codex, and regression evidence recorded; manual Desktop checks explicitly deferred
 - M10-HARDEN-001 — runtime parity audit PASS; 2 direct parity checks passed, 3 strict xfails identify only known continuation/parallelism/timeout gaps, related runtime/scheduler regression 33 passed, and the bounded gap map is recorded in `docs/runtime-parity-audit.md`
 - M10-HARDEN-002 — durable CONTINUE_THREAD PASS; successful source thread is resumed with no new source thread and a distinct new turn persisted; continuation/runtime regression 30 passed with 2 known-gap xfails, plus Ruff and strict mypy
+- M10-HARDEN-003 — continuation Attempt persistence PASS; STARTING plus one Attempt is committed before external resume, same source thread/new turn refs are recorded, transaction/ref tests 5 passed, regression 12 passed, and Ruff/strict mypy passed
 
 ## Verified Codex Runtime
 
@@ -149,7 +150,7 @@ unexpected_files = []
 
 Current active task:
 
-`M10-HARDEN-003` — Continuation Attempt Persistence (IN_PROGRESS)
+`M10-HARDEN-004` — Continuation Recovery Safety
 
 M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
 

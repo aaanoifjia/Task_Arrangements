@@ -5,7 +5,7 @@ from datetime import UTC, datetime
 from uuid import uuid4
 
 from codex_flow.codex_adapter.interface import CodexAdapter
-from codex_flow.codex_adapter.models import CodexExecutionConfig, CodexTurnRef
+from codex_flow.codex_adapter.models import CodexExecutionConfig, CodexThreadRef, CodexTurnRef
 
 
 def _now() -> str:
@@ -36,6 +36,30 @@ class AttemptStarter:
             )
 
         thread = await self._adapter.create_thread(config)
+        turn = await self._adapter.start_turn(thread, prompt)
+        self._persist_external_refs(task_run_id, attempt_id, turn)
+        return attempt_id, turn
+
+    async def start_continuation(
+        self, task_run_id: str, source_thread_id: str, prompt: str
+    ) -> tuple[str, CodexTurnRef]:
+        """Persist a continuation attempt before resuming its external thread."""
+        attempt_id = str(uuid4())
+        with self._connection:
+            cursor = self._connection.execute(
+                "UPDATE task_runs SET status = 'STARTING' WHERE id = ? AND status = 'READY'",
+                (task_run_id,),
+            )
+            if cursor.rowcount != 1:
+                raise ValueError("task run must be READY before an attempt starts")
+            self._connection.execute(
+                "INSERT INTO attempts(id, task_run_id, status, created_at) VALUES (?, ?, 'STARTING', ?)",
+                (attempt_id, task_run_id, _now()),
+            )
+
+        thread = await self._adapter.resume_thread(CodexThreadRef(thread_id=source_thread_id))
+        if thread.thread_id != source_thread_id:
+            raise ValueError("continuation adapter changed the source thread")
         turn = await self._adapter.start_turn(thread, prompt)
         self._persist_external_refs(task_run_id, attempt_id, turn)
         return attempt_id, turn

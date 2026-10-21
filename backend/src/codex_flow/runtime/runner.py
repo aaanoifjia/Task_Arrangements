@@ -7,7 +7,6 @@ from codex_flow.codex_adapter.interface import CodexAdapter
 from codex_flow.codex_adapter.models import (
     CodexEvent,
     CodexExecutionConfig,
-    CodexThreadRef,
     CodexTurnRef,
     EventType,
 )
@@ -162,24 +161,9 @@ class DurableRunner:
         if not isinstance(source_thread_id, str) or not source_thread_id:
             raise ValueError("continuation source has no thread_id")
 
-        self._repository.update_task_run_state(task_run_id, TaskStatus.STARTING.value)
-        attempt_id = self._repository.create_attempt(task_run_id)
-        thread = await self._adapter.resume_thread(CodexThreadRef(thread_id=source_thread_id))
-        if thread.thread_id != source_thread_id:
-            raise ValueError("continuation adapter changed the source thread")
-        turn = await self._adapter.start_turn(thread, task.prompt)
-        with self._repository._connection:
-            self._repository._connection.execute(
-                "UPDATE attempts SET thread_id = ?, turn_id = ? WHERE id = ?",
-                (turn.thread_id, turn.turn_id, attempt_id),
-            )
-        self._repository.update_task_run_state(
-            task_run_id,
-            TaskStatus.STARTING.value,
-            turn.thread_id,
-            turn.turn_id,
+        return await AttemptStarter(self._repository._connection, self._adapter).start_continuation(
+            task_run_id, source_thread_id, task.prompt
         )
-        return attempt_id, turn
 
     def _update_execution_state(
         self, task_run_id: str, status: str, thread_id: str, turn_id: str
