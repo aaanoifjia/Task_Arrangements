@@ -203,7 +203,7 @@ unexpected_files = []
 
 ## Current Task
 
-Current deterministic next task:
+Current task:
 
 `M12-ONBOARD-006` — Create Sample & Open Editor
 
