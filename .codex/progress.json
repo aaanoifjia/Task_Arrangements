@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-IMPORT-015",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-DIAG-016",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -305,7 +305,8 @@
     "M12-IMPORT-011",
     "M12-IMPORT-012",
     "M12-IMPORT-013",
-    "M12-IMPORT-014"
+    "M12-IMPORT-014",
+    "M12-IMPORT-015"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -809,5 +810,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-IMPORT-014 PASS: accessible workflow import dialog reads JSON exports, supports explicit replacement IDs, reports malformed files visibly, and routes successful imports to the editor; dialog/list tests 7 passed, tsc -b and ESLint passed. Next deterministic task is M12-IMPORT-015."
+  "last_validation_note": "M12-IMPORT-015 PASS: linear, fork-join, and continuation definitions round-trip through export/import with Unicode names/prompts and exact whitespace preservation; backend integration tests 3 passed, Ruff passed, frontend dialog tests 4 passed, tsc -b and ESLint passed. Next deterministic task is M12-DIAG-016."
 }

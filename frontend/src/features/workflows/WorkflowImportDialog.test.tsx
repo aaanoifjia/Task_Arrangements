@@ -48,4 +48,28 @@ describe('WorkflowImportDialog', () => {
 
     expect(onCancel).toHaveBeenCalledOnce()
   })
+
+  it('preserves Unicode and prompt whitespace across an import request', async () => {
+    const user = userEvent.setup()
+    const importer = vi.fn<(request: WorkflowImportRequest) => Promise<WorkflowDetail>>().mockResolvedValue(imported)
+    const workflow = {
+      ...imported.workflow,
+      name: '流程 🚀',
+      tasks: [{
+        id: 'A', name: '节点 A', prompt: '  第一行  \n第二行\t  ', cwd: '.', dependencies: [],
+        execution_mode: 'NEW_THREAD', continue_from_task_id: null, model: null, reasoning_effort: null,
+        sandbox: 'workspace_write', approval_mode: null, timeout_seconds: null, retry_policy: { max_attempts: 1 },
+      }],
+    }
+    render(<WorkflowImportDialog importer={importer} onImported={vi.fn()} onCancel={vi.fn()} />)
+
+    await user.upload(screen.getByLabelText('Workflow JSON file'), exportFile(JSON.stringify({
+      kind: 'codex_flow.workflow_definition', schema_version: 1, workflow,
+    })))
+    await user.click(screen.getByRole('button', { name: 'Import workflow' }))
+
+    expect(importer).toHaveBeenCalledWith({
+      kind: 'codex_flow.workflow_definition', schema_version: 1, workflow,
+    })
+  })
 })
