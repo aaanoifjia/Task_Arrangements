@@ -203,7 +203,7 @@ unexpected_files = []
 
 ## Current Task
 
-Current deterministic next task:
+Current task:
 
 `M11-GATE-035` — Release Candidate Automated Gate
 
