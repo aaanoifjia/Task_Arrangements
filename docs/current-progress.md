@@ -203,17 +203,16 @@ unexpected_files = []
 
 ## Current Task
 
-Current task:
+Current deterministic next task:
 
-`M11-BUILD-033` — Repeated Build Idempotency — BLOCKED
+`M11-BUILD-033-R1` — Installer-independent Build Idempotency Path
 
-M10 automated hardening is COMPLETE. M11–M12 are now authoritative and queued on master:
+M11-RC-001 through M11-BUILD-032 are COMPLETE.
 
-- M11: 36 release-candidate / real-world validation tasks;
-- M12: 38 product-quality / operations tasks.
+M11-BUILD-033 encountered an external host-specific MSI/WiX blocker: WiX ICE validation failed with Win32 0x643 because the Windows Installer service is unavailable. This does not invalidate the successful M9 MSI/NSIS bundle evidence and does not require changing Windows system state for the M11 idempotency goal.
 
-M11-RC-001 through M11-BUILD-032 are COMPLETE. M11-BUILD-033 is BLOCKED: the first exact desktop build reached release executable creation but WiX MSI linking failed with Win32 error 0x643 because the Windows Installer service is unavailable. Resume this task when the approved external prerequisite is available; do not skip it.
+M11-BUILD-033-R1 preserves the normal full-bundle build as the default and adds an explicit NSIS-only build mode. After it passes, resume M11-BUILD-033. If the Windows Installer service is still unavailable, run both repeated-build idempotency passes with NSIS, record that MSI was not rebuilt in M11, and continue to M11-BUILD-034 → M11-GATE-035 → M11-REPORT-036 → M12.
 
-M11/M12 are local/offline by default: no live Codex turn, external web research, new package downloads, or new system toolchains are required by the plan. Small deterministic adjacent integration failures should use bounded automatic remediation instead of stopping.
+Do not modify/start/enable the Windows Installer service, Windows optional features, security settings, or system packages for this remediation.
 
-Subjective/manual Desktop verification remains intentionally deferred until M12-REPORT-038.
+Manual Desktop/UI verification remains deferred until M12-REPORT-038.
