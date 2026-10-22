@@ -153,6 +153,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M10-GATE-035 — final automated M10 beta gate PASS; backend non-live 348 passed/6 deselected/2 known xfailed, packaging plus stress 22 passed, frontend 52 files/177 tests with typecheck/lint/build, and Tauri cargo check plus 26 tests; live Codex and manual UX remain excluded by design
 - M10-REPORT-036 — M10 automated hardening report PASS; exact automated results recorded, all 22 v1 acceptance items mapped, and final manual V1 checklist created with Desktop/UI observations explicitly pending
 - M11-RC-001 — offline release-candidate contract and local toolchain/Tauri-input preflight PASS; 2 tests and Ruff passed without installation or download
+- M11-FIXTURE-002 — deterministic app-data, workflow, Fake adapter, SQLite run, and process lifecycle fixture factory PASS; 5 tests and Ruff passed
 
 ## Verified Codex Runtime
 
@@ -184,14 +185,14 @@ unexpected_files = []
 
 Current deterministic next task:
 
-`M11-FIXTURE-002` — RC Fixture Factory
+`M11-PATH-003` — Workspace Path With Spaces
 
 M10 automated hardening is COMPLETE. M11–M12 are now authoritative and queued on master:
 
 - M11: 36 release-candidate / real-world validation tasks;
 - M12: 38 product-quality / operations tasks.
 
-M11-RC-001 is COMPLETE. Continue automatically through M12-REPORT-038.
+M11-RC-001 and M11-FIXTURE-002 are COMPLETE. Continue automatically through M12-REPORT-038.
 
 M11/M12 are local/offline by default: no live Codex turn, external web research, new package downloads, or new system toolchains are required by the plan. Small deterministic adjacent integration failures should use bounded automatic remediation instead of stopping.
 

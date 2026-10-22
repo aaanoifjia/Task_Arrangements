@@ -16,7 +16,7 @@
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
   "active_task": null,
-  "next_task": "M11-FIXTURE-002",
+  "next_task": "M11-PATH-003",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -620,6 +620,7 @@
     "M10-REPORT-036",
     "M11-RC-001",
     "M11-FIXTURE-002",
+    "M11-FIXTURE-002",
     "M11-PATH-003",
     "M11-PATH-004",
     "M11-PATH-005",
@@ -715,5 +716,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M11-RC-001 PASS. Offline RC contract and local preflight passed 2 tests with Ruff; no installation or download was performed. M11-FIXTURE-002 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
+  "last_validation_note": "M11-FIXTURE-002 PASS. Deterministic app-data, workflow, Fake adapter, SQLite run, and process probe fixtures passed 5 tests with Ruff; no global mutable state or wall-clock sleep is used. M11-PATH-003 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
 }
