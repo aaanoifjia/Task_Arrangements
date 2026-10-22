@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-UX-032",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-UX-033",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -322,7 +322,8 @@
     "M12-EVENT-028",
     "M12-EVENT-029",
     "M12-STATUS-030",
-    "M12-STATUS-031"
+    "M12-STATUS-031",
+    "M12-UX-032"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -899,5 +900,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-UX-032 IN_PROGRESS: clarifying task-control consequences and attention guidance without changing control visibility or destructive confirmation semantics."
+  "last_validation_note": "M12-UX-032 PASS: task drawer and control help text make Pause/Resume/Retry/Cancel/Skip/Mark success consequences explicit while preserving visibility and confirmations; RunControls/TaskRunDrawer tests 36 passed, frontend tsc -b and ESLint passed. Next deterministic task is M12-UX-033."
 }

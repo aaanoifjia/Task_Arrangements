@@ -16,6 +16,7 @@ describe('TaskRunDrawer', () => {
     expect(screen.getByText('thread-1')).toBeInTheDocument()
     expect(screen.getByText('turn-1')).toBeInTheDocument()
     expect(screen.getByText(fixtureTaskRun.created_at)).toBeInTheDocument()
+    expect(screen.getByText('These controls update durable workflow state. Cancel, Skip, and Mark success require confirmation.')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Close task details' }))
     expect(onClose).toHaveBeenCalledOnce()
   })

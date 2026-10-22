@@ -38,6 +38,7 @@ function TaskRunDrawer({ task, onClose, attemptApi, onRetry, onCancel, onSkip, o
       </dl>
       <p><OpenInCodex threadId={task.thread_id} /></p>
       <TaskStateNotice status={task.status} />
+      <p>These controls update durable workflow state. Cancel, Skip, and Mark success require confirmation.</p>
       <RunControls
         runStatus="SUCCESS"
         paused={false}

@@ -55,6 +55,7 @@ describe('RunControls', () => {
     expect(screen.getByRole('button', { name: 'Pause…' })).toBeDisabled()
     rerender(<RunControls runStatus="RUNNING" paused={false} error="already paused" {...actions} />)
     expect(screen.getByRole('alert')).toHaveTextContent('already paused')
+    expect(screen.getByText('Prevents new ready tasks from starting.')).toBeInTheDocument()
   })
 
   it.each(['FAILED', 'INTERRUPTED', 'NEEDS_ATTENTION'] as const)('invokes Retry explicitly for %s', async (taskStatus) => {
@@ -85,6 +86,15 @@ describe('RunControls', () => {
     rerender(<RunControls runStatus="SUCCESS" paused={false} taskStatus="RUNNING" onSkip={onSkip} onMarkSuccess={onMarkSuccess} />)
     expect(screen.queryByRole('button', { name: 'Skip' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Mark success' })).not.toBeInTheDocument()
+  })
+
+  it('explains task-control consequences while preserving confirmations', async () => {
+    const actions = callbacks()
+    render(<RunControls runStatus="SUCCESS" paused={false} taskStatus="READY" {...actions} />)
+    expect(screen.getByText('Marks this task skipped; dependent tasks remain blocked.')).toBeInTheDocument()
+    expect(screen.getByText('Records success and may release dependent tasks.')).toBeInTheDocument()
+    await userEvent.setup().click(screen.getByRole('button', { name: 'Skip' }))
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
   })
 
   it('confirms destructive actions but keeps Retry one-step', async () => {

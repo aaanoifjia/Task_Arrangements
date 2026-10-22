@@ -30,17 +30,33 @@ const skippableTaskStatuses = new Set<TaskStatus>(['BLOCKED', 'READY'])
 function ControlButton({
   action,
   label,
+  help,
   disabled,
   pending,
   onClick,
 }: {
   action: string
   label: string
+  help: string
   disabled: boolean
   pending: boolean
   onClick?: () => void
 }) {
-  return <button type="button" data-testid={`run-control-${action}`} disabled={disabled || pending || !onClick} onClick={onClick}>{pending ? `${label}…` : label}</button>
+  const helpId = `run-control-${action}-help`
+  return (
+    <div>
+      <button
+        type="button"
+        data-testid={`run-control-${action}`}
+        aria-describedby={helpId}
+        disabled={disabled || pending || !onClick}
+        onClick={onClick}
+      >
+        {pending ? `${label}…` : label}
+      </button>
+      <small id={helpId}>{help}</small>
+    </div>
+  )
 }
 
 function RunControls({
@@ -75,12 +91,12 @@ function RunControls({
         <h2 id="run-controls-heading">Controls</h2>
         {error && <p role="alert" className="run-controls__error">{error}</p>}
         <div className="run-controls__actions">
-          {canControlRun && !paused && <ControlButton action="pause" label="Pause" disabled={disabled} pending={pendingAction === 'pause'} onClick={onPause} />}
-          {canControlRun && paused && <ControlButton action="resume" label="Resume" disabled={disabled} pending={pendingAction === 'resume'} onClick={onResume} />}
-          {hasTask && retryableTaskStatuses.has(taskStatus) && <ControlButton action="retry" label="Retry" disabled={disabled} pending={pendingAction === 'retry'} onClick={onRetry} />}
-          {hasTask && cancellableTaskStatuses.has(taskStatus) && <ControlButton action="cancel" label="Cancel" disabled={disabled} pending={pendingAction === 'cancel'} onClick={requestCancel} />}
-          {hasTask && skippableTaskStatuses.has(taskStatus) && <ControlButton action="skip" label="Skip" disabled={disabled} pending={pendingAction === 'skip'} onClick={requestSkip} />}
-          {hasTask && taskStatus === 'READY' && <ControlButton action="mark-success" label="Mark success" disabled={disabled} pending={pendingAction === 'mark-success'} onClick={requestMarkSuccess} />}
+          {canControlRun && !paused && <ControlButton action="pause" label="Pause" help="Prevents new ready tasks from starting." disabled={disabled} pending={pendingAction === 'pause'} onClick={onPause} />}
+          {canControlRun && paused && <ControlButton action="resume" label="Resume" help="Allows dependency-ready tasks to start again." disabled={disabled} pending={pendingAction === 'resume'} onClick={onResume} />}
+          {hasTask && retryableTaskStatuses.has(taskStatus) && <ControlButton action="retry" label="Retry" help="Starts a new attempt for this task." disabled={disabled} pending={pendingAction === 'retry'} onClick={onRetry} />}
+          {hasTask && cancellableTaskStatuses.has(taskStatus) && <ControlButton action="cancel" label="Cancel" help="Stops this task after confirmation." disabled={disabled} pending={pendingAction === 'cancel'} onClick={requestCancel} />}
+          {hasTask && skippableTaskStatuses.has(taskStatus) && <ControlButton action="skip" label="Skip" help="Marks this task skipped; dependent tasks remain blocked." disabled={disabled} pending={pendingAction === 'skip'} onClick={requestSkip} />}
+          {hasTask && taskStatus === 'READY' && <ControlButton action="mark-success" label="Mark success" help="Records success and may release dependent tasks." disabled={disabled} pending={pendingAction === 'mark-success'} onClick={requestMarkSuccess} />}
         </div>
       </section>
       <ConfirmActionDialog
