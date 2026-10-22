@@ -15,7 +15,7 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M11-BUILD-034",
+  "active_task": "M11-BUILD-034-R1",
   "next_task": null,
   "completed_tasks": [
     "PREP-000",
@@ -429,6 +429,17 @@
       "intended_acceptance": "The existing migration regression test asserts the preserved v1/v2 upgrade behavior and the current schema version 3 without changing schema semantics.",
       "status": "COMPLETE",
       "validation": "Updated the three directly implicated migration-version assertions to schema version 3; migration/API compatibility suite 10 passed, full backend non-live 328 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed."
+    },
+    {
+      "id": "M11-BUILD-034-R1",
+      "parent_task": "M11-BUILD-034",
+      "reason": "The packaged sidecar smoke failed because repeated staging copied the new runtime into an existing _internal directory, creating nested _internal/_internal content and leaving the current migration files undiscoverable.",
+      "files": [
+        "scripts/build_desktop.ps1"
+      ],
+      "failing_validation": "backend/tests/packaging/test_packaged_sidecar_contract.py failed: the built sidecar exited before readiness because binaries/_internal/codex_flow/storage/migrations/0003_query_indexes.sql was missing; the file existed under nested binaries/_internal/_internal.",
+      "intended_acceptance": "The build script replaces the generated staged _internal tree before copying the current PyInstaller runtime, so packaged sidecar readiness, health, authenticated status, and clean termination pass after repeated builds.",
+      "status": "IN_PROGRESS"
     }
   ],
   "task_queue_after_current": [
