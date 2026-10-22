@@ -16,7 +16,7 @@
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
   "active_task": null,
-  "next_task": "M11-BUILD-033",
+  "next_task": "M11-BUILD-033-R1",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -288,14 +288,7 @@
     "M11-LOG-031",
     "M11-BUILD-032"
   ],
-  "blocked_tasks": {
-    "M11-BUILD-033": {
-      "status": "BLOCKED",
-      "reason": "The authoritative desktop build pipeline completed frontend, PyInstaller sidecar staging, and the release executable, but the WiX MSI linker failed with Win32 error 0x643 because the Windows Installer service is unavailable. Completing the required installer build needs an external system-level prerequisite outside the repository task scope.",
-      "last_successful_validation": "First exact scripts/build_desktop.ps1 run reached Tauri release executable creation; MSI bundling failed in WixTools314/light.exe during ICE01-ICE09 with Windows Installer service unavailable.",
-      "next_action": "Provide a functioning approved Windows Installer/WiX environment, then resume M11-BUILD-033 without discarding the current generated artifacts or changing the frozen build pipeline."
-    }
-  },
+  "blocked_tasks": {},
   "blocker_history": [
     {
       "task": "M5-RESTART-005",
@@ -434,6 +427,17 @@
       "intended_acceptance": "The existing migration regression test asserts the preserved v1/v2 upgrade behavior and the current schema version 3 without changing schema semantics.",
       "status": "COMPLETE",
       "validation": "Updated the three directly implicated migration-version assertions to schema version 3; migration/API compatibility suite 10 passed, full backend non-live 328 passed/6 deselected/2 known xfailed, Ruff and strict mypy passed."
+    },
+    {
+      "id": "M11-BUILD-033-R1",
+      "parent_task": "M11-BUILD-033",
+      "reason": "The repeated full Windows build reaches release executable creation but cannot complete MSI bundling because the Windows Installer service is unavailable. The parent task needs a deterministic NSIS-only mode for idempotency validation without changing the default full bundle pipeline.",
+      "files": [
+        "scripts/build_desktop.ps1"
+      ],
+      "failing_validation": "The exact scripts/build_desktop.ps1 run fails in WixTools314/light.exe with Win32 error 0x643 during MSI validation after frontend, sidecar, and release executable steps pass.",
+      "intended_acceptance": "The existing default full bundle command remains unchanged, while an explicit installed-Tauri-CLI NSIS-only mode is available for the parent task's two repeated-build runs without network, dependency, or Windows Installer changes.",
+      "status": "IN_PROGRESS"
     }
   ],
   "task_queue_after_current": [

@@ -205,14 +205,14 @@ unexpected_files = []
 
 Current task:
 
-`M11-BUILD-033` — Repeated Build Idempotency — BLOCKED
+`M11-BUILD-033-R1` — Bounded NSIS-only build mode remediation — IN_PROGRESS
 
 M10 automated hardening is COMPLETE. M11–M12 are now authoritative and queued on master:
 
 - M11: 36 release-candidate / real-world validation tasks;
 - M12: 38 product-quality / operations tasks.
 
-M11-RC-001 through M11-BUILD-032 are COMPLETE. M11-BUILD-033 is BLOCKED: the first exact desktop build reached release executable creation but WiX MSI linking failed with Win32 error 0x643 because the Windows Installer service is unavailable. Resume this task when the approved external prerequisite is available; do not skip it.
+M11-RC-001 through M11-BUILD-032 are COMPLETE. M11-BUILD-033 reached release executable creation, but WiX MSI linking failed with Win32 error 0x643 because the Windows Installer service is unavailable. Bounded remediation M11-BUILD-033-R1 is adding an explicit NSIS-only mode while preserving the default full bundle pipeline; the parent task will resume automatically after remediation validation.
 
 M11/M12 are local/offline by default: no live Codex turn, external web research, new package downloads, or new system toolchains are required by the plan. Small deterministic adjacent integration failures should use bounded automatic remediation instead of stopping.
 
