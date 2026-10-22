@@ -205,13 +205,13 @@ unexpected_files = []
 
 Current task:
 
-`M12-DIAG-018` — Diagnostics API
+`M12-DIAG-019` — Diagnostic Bundle Export
 
 M11-RC-001 through M11-BUILD-032 are COMPLETE.
 
 M11-BUILD-033 encountered an external host-specific MSI/WiX blocker: WiX ICE validation failed with Win32 0x643 because the Windows Installer service is unavailable. This does not invalidate the successful M9 MSI/NSIS bundle evidence and does not require changing Windows system state for the M11 idempotency goal.
 
-M11 is COMPLETE through M11-REPORT-036. M12-UX-001 through M12-DIAG-017 are COMPLETE. DiagnosticService gathers bounded active-run/runtime counts, schema/path/log categories, and filtered recent error labels from explicit sources while excluding prompt/token/path content; service/invariant tests 5 passed, Ruff and strict mypy passed. M12-DIAG-018 is in progress; bounded remediation M12-DIAG-018-R1 is COMPLETE after aligning the service with RuntimeManager's active_count property.
+M11 is COMPLETE through M11-REPORT-036. M12-UX-001 through M12-DIAG-018 are COMPLETE. Authenticated GET /api/system/diagnostics returns the redacted diagnostic schema and unauthorized desktop requests fail closed; API/system/service/model regression 8 passed, Ruff and strict mypy passed. The next deterministic task is M12-DIAG-019.
 
 Do not modify/start/enable the Windows Installer service, Windows optional features, security settings, or system packages for this remediation.
 

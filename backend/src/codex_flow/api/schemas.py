@@ -43,6 +43,20 @@ class WorkflowImportRequest(BaseModel):
     replacement_id: str | None = None
 
 
+class DiagnosticResponse(BaseModel):
+    app_version: str
+    backend_version: str
+    os_name: str
+    os_release: str
+    python_version: str
+    db_schema_version: int | None
+    db_path_category: str
+    active_run_count: int
+    active_task_count: int
+    recent_error_event_types: list[str] = Field(default_factory=list)
+    log_directory_category: str
+
+
 class RunStartResponse(BaseModel):
     run_id: str
 
