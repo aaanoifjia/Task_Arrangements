@@ -534,6 +534,17 @@
       "intended_acceptance": "The directly implicated workflow API fake includes listRunsPage without changing production behavior; the focused run-history tests and frontend typecheck pass.",
       "status": "COMPLETE",
       "validation": "RunListPage and workflow API tests passed 7/7; frontend tsc -b and ESLint passed."
+    },
+    {
+      "id": "M12-STATUS-030-R1",
+      "parent_task": "M12-STATUS-030",
+      "reason": "The status contract now includes four required safe about/runtime fields, so the existing system-route regression assertion must preserve its legacy fields while asserting the new redacted fields.",
+      "files": [
+        "backend/tests/api/test_system_routes.py"
+      ],
+      "failing_validation": "Existing test_health_and_system_status_are_local_and_secret_free failed because it asserted exact equality against the pre-M12 four-field response.",
+      "intended_acceptance": "The directly implicated regression test preserves legacy status assertions and verifies the new version, desktop-mode, and runtime-availability fields without weakening redaction checks.",
+      "status": "IN_PROGRESS"
     }
   ],
   "task_queue_after_current": [
