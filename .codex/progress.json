@@ -473,6 +473,18 @@
       "intended_acceptance": "The directly implicated workflow API fake includes exportWorkflow without changing production behavior; the focused export/list tests and frontend typecheck pass.",
       "status": "COMPLETE",
       "validation": "Workflow export/list/API tests passed 7/7; frontend tsc -b and ESLint passed."
+    },
+    {
+      "id": "M12-DIAG-018-R1",
+      "parent_task": "M12-DIAG-018",
+      "reason": "The real RuntimeManager exposes active_count as a property, while the diagnostic service protocol treated it as a callable method; the authorized diagnostics API therefore failed before response serialization.",
+      "files": [
+        "backend/src/codex_flow/application/diagnostics.py",
+        "backend/tests/integration/test_diagnostics_service.py"
+      ],
+      "failing_validation": "Authorized GET /api/system/diagnostics raised TypeError: int object is not callable when DiagnosticService collected runtime.active_count.",
+      "intended_acceptance": "DiagnosticService matches the existing RuntimeManager active_count property and its integration fixture; diagnostics API authorization/redaction tests pass without changing runtime architecture.",
+      "status": "IN_PROGRESS"
     }
   ],
   "task_queue_after_current": [
