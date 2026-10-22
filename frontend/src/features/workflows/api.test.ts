@@ -15,6 +15,7 @@ function fakeClient(): ApiClient {
     saveWorkflow: vi.fn().mockResolvedValue(fixtureWorkflowDetail),
     updateWorkflow: vi.fn().mockResolvedValue(fixtureWorkflowDetail),
     listRuns: vi.fn(), getRun: vi.fn(), startRun: vi.fn(), listTasks: vi.fn(), listAttempts: vi.fn(),
+    listRunsPage: vi.fn(),
   }
 }
 
