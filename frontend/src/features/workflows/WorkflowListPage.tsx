@@ -9,6 +9,7 @@ import type { WorkflowApi } from './api'
 import NewWorkflowForm from './NewWorkflowForm'
 import SampleWorkflowPicker from './SampleWorkflowPicker'
 import WorkflowExportButton from './WorkflowExportButton'
+import WorkflowImportDialog from './WorkflowImportDialog'
 import './WorkflowListPage.css'
 import './workflows.css'
 
@@ -19,6 +20,7 @@ function WorkflowListPage({ api, onTrySample }: WorkflowListPageProps) {
   const navigate = useNavigate()
   const [showCreate, setShowCreate] = useState(false)
   const [showSamplePicker, setShowSamplePicker] = useState(false)
+  const [showImport, setShowImport] = useState(false)
   const [workflows, setWorkflows] = useState<WorkflowSummary[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -48,6 +50,8 @@ function WorkflowListPage({ api, onTrySample }: WorkflowListPageProps) {
     }
   }
 
+  const importWorkflow = useMemo(() => stableApi.import ?? createWorkflowApi().import!, [stableApi])
+
   return (
     <section aria-labelledby="workflow-list-heading" className="workflow-list">
       <div className="workflow-list__header">
@@ -57,6 +61,7 @@ function WorkflowListPage({ api, onTrySample }: WorkflowListPageProps) {
         </div>
         <div>
           <button type="button" onClick={() => setShowCreate((visible) => !visible)}>New workflow</button>
+          <button type="button" onClick={() => setShowImport(true)}>Import workflow</button>
           <button type="button" onClick={() => void refresh()} disabled={loading}>Refresh</button>
         </div>
       </div>
@@ -67,6 +72,16 @@ function WorkflowListPage({ api, onTrySample }: WorkflowListPageProps) {
           onCancel={() => setShowSamplePicker(false)}
         />
       )}
+      {showImport && (
+        <WorkflowImportDialog
+          importer={importWorkflow}
+          onCancel={() => setShowImport(false)}
+          onImported={(detail) => {
+            setShowImport(false)
+            navigate(`/workflows/${encodeURIComponent(detail.workflow.id)}`)
+          }}
+        />
+      )}
       {loading && <p role="status">Loading workflows…</p>}
       {error && <p role="alert">{error}</p>}
       {!loading && !error && workflows.length === 0 && (
@@ -75,6 +90,7 @@ function WorkflowListPage({ api, onTrySample }: WorkflowListPageProps) {
           <p>No workflows yet. Create one from scratch or try a safe sample.</p>
           <div className="workflow-list__empty-actions">
             <button type="button" onClick={() => setShowCreate(true)}>Create workflow</button>
+            <button type="button" onClick={() => setShowImport(true)}>Import workflow</button>
             <button type="button" onClick={() => { onTrySample?.(); setShowSamplePicker(true) }}>Try a sample</button>
           </div>
         </div>

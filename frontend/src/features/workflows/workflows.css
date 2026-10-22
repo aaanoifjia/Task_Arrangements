@@ -51,6 +51,29 @@
   gap: 0.25rem;
 }
 
+.workflow-import {
+  border: 1px solid #d7dce5;
+  border-radius: 12px;
+  display: grid;
+  gap: 1rem;
+  margin: 1rem 0;
+  max-width: 36rem;
+  padding: 1.25rem;
+}
+
+.workflow-import label {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.workflow-import__header,
+.workflow-import__footer {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
 .sr-only {
   height: 1px;
   margin: -1px;
