@@ -825,7 +825,7 @@ Verifier succeeds for current artifacts and fails visibly on tampered hash/size 
 
 ---
 
-## M11-BUILD-033 — Repeated Build Idempotency
+## M11-BUILD-033-R1 — Installer-independent Build Idempotency Path
 
 ### Dependencies
 
@@ -840,11 +840,60 @@ desktop/tests/build_idempotency.md
 
 ### Implementation
 
-Run the existing desktop build pipeline twice using already-present toolchains/caches and verify staging cleanup/order does not accumulate stale sidecars or change authoritative artifact discovery. Do not require byte-identical installer outputs.
+Add an explicit bundle-target selector to the existing desktop build script without changing its default release behavior.
+
+Requirements:
+
+- default invocation remains the existing full Windows bundle pipeline (`all`);
+- support an explicit `nsis` mode that passes the authoritative Tauri CLI bundle selector instead of building MSI;
+- optionally support explicit `msi` for symmetry, but do not add new tools or configuration;
+- frontend build, PyInstaller sidecar staging, Tauri executable build, artifact paths, fail-fast behavior, and cleanup/order semantics remain unchanged;
+- do not suppress WiX validation, modify Windows Installer service state, enable Windows optional features, or weaken MSI configuration;
+- no network, package download, system installation, elevation, or reboot;
+- dry-run output must show the selected bundle target clearly.
+
+This remediation exists because the host Windows Installer service is unavailable during WiX ICE validation. M9 already contains successful MSI and NSIS build evidence. M11 idempotency must test repository-controlled staging/build repeatability without making the external MSI service a prerequisite.
 
 ### Acceptance
 
-Second build succeeds from the same repo state and manifest discovery points only to current artifacts.
+- default dry-run preserves full-bundle behavior;
+- explicit NSIS dry-run emits a Tauri build using the NSIS bundle target;
+- invalid bundle-target values fail visibly;
+- no MSI/WiX or system-service behavior is changed;
+- focused PowerShell parser/dry-run checks pass.
+
+---
+
+## M11-BUILD-033 — Repeated Build Idempotency
+
+### Dependencies
+
+`M11-BUILD-033-R1`
+
+### Owned Files
+
+```text
+scripts/build_desktop.ps1
+desktop/tests/build_idempotency.md
+```
+
+### Implementation
+
+Run the desktop build pipeline twice from the same repository state and verify staging cleanup/order does not accumulate stale sidecars or change authoritative artifact discovery.
+
+Use the default full bundle mode when the host MSI/WiX environment is available.
+
+If the already-observed Windows Installer service failure persists, use the explicit NSIS bundle mode introduced by M11-BUILD-033-R1 for both idempotency runs. This is not an MSI PASS claim: preserve the existing M9 MSI evidence separately and record that MSI was not rebuilt in M11 because of the external host service.
+
+Do not require byte-identical installer outputs. Do not modify Windows services, optional Windows features, firewall/security settings, or system installers.
+
+### Acceptance
+
+- two consecutive builds from the same repository state succeed using one consistent approved bundle mode;
+- frontend/sidecar/Tauri staging remains clean between runs;
+- current release executable and selected installer artifact are rediscovered from the second run only, with no stale sidecar/bundle ambiguity;
+- `desktop/tests/build_idempotency.md` records the exact mode, commands, artifact evidence, and whether MSI was externally unavailable;
+- prior M9 MSI evidence remains intact and is not represented as a fresh M11 MSI build.
 
 ---
 
