@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M11-REPORT-036",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-UX-001",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -290,7 +290,8 @@
     "M11-BUILD-033-R1",
     "M11-BUILD-033",
     "M11-BUILD-034",
-    "M11-GATE-035"
+    "M11-GATE-035",
+    "M11-REPORT-036"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -782,5 +783,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M11-GATE-035 PASS: backend non-live 390 passed/6 deselected/2 xfailed, frontend 52 files/177 tests with typecheck/lint/build, Tauri cargo check plus 31 Rust tests, packaging/stress 23 passed, packaged sidecar smoke 2 passed, Ruff and strict mypy passed. Live Codex and manual UI remain excluded."
+  "last_validation_note": "M11-REPORT-036 PASS: release-candidate report records exact M11 commands/results, NSIS-only two-run evidence, MSI external-service limitation, bounded remediations, no new dependencies, and deferred manual checks. Next deterministic task is M12-UX-001."
 }

@@ -203,15 +203,15 @@ unexpected_files = []
 
 ## Current Task
 
-Current task:
+Current deterministic next task:
 
-`M11-REPORT-036` — Release Candidate Report
+`M12-UX-001` — Starter Workflow UX
 
 M11-RC-001 through M11-BUILD-032 are COMPLETE.
 
 M11-BUILD-033 encountered an external host-specific MSI/WiX blocker: WiX ICE validation failed with Win32 0x643 because the Windows Installer service is unavailable. This does not invalidate the successful M9 MSI/NSIS bundle evidence and does not require changing Windows system state for the M11 idempotency goal.
 
-M11-BUILD-033-R1, M11-BUILD-033, M11-BUILD-034-R1, M11-BUILD-034, and M11-GATE-035 are COMPLETE. The automated gate passed backend non-live 390/6 deselected/2 xfailed, frontend 52 files/177 tests with typecheck/lint/build, Tauri check plus 31 Rust tests, packaging/stress 23, packaged sidecar smoke 2, Ruff, and strict mypy. M11-REPORT-036 is next, followed by M12; live Codex and manual UI remain excluded.
+M11-BUILD-033-R1, M11-BUILD-033, M11-BUILD-034-R1, M11-BUILD-034, M11-GATE-035, and M11-REPORT-036 are COMPLETE. The report records exact offline M11 evidence, the MSI/WiX external-service limitation without a fresh MSI claim, resolved bounded remediations, and deferred manual Desktop checks. M12-UX-001 is next.
 
 Do not modify/start/enable the Windows Installer service, Windows optional features, security settings, or system packages for this remediation.
 
