@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M11-WORKFLOW-019",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Running independent workspace-write tasks under concurrency two with event-based synchronization to prove real overlap and deterministic final DAG state."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M11-WORKFLOW-020",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -277,7 +272,8 @@
     "M11-RECOVERY-015",
     "M11-WORKFLOW-016",
     "M11-WORKFLOW-017",
-    "M11-WORKFLOW-018"
+    "M11-WORKFLOW-018",
+    "M11-WORKFLOW-019"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -749,5 +745,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M11-WORKFLOW-018 PASS. Interleaved continuation chain and NEW_THREAD branches reached SUCCESS with exact A→B→D and H→I source-thread reuse, isolated unrelated thread identities, and one Attempt per task; RC tests 3 and continuation/recovery/thread-lock regression 7 passed with Ruff. M11-WORKFLOW-019 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
+  "last_validation_note": "M11-WORKFLOW-019 PASS. Two independent workspace-write tasks overlapped at configured capacity 2 using event synchronization, with deterministic SUCCESS states and one Attempt each; RC test 1 and parallel/workspace/capacity regression 8 passed with Ruff. M11-WORKFLOW-020 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
 }

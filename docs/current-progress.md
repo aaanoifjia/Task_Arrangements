@@ -170,6 +170,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M11-WORKFLOW-016 — deterministic 20-node mixed DAG PASS; all tasks succeeded once with dependency-ordered starts, no premature joins, and exact continuation thread reuse; 7 related tests and Ruff passed
 - M11-WORKFLOW-017 — mixed failure/recovery DAG PASS; pause/resume, skip blocking, retry release, Attempt history, audit, and deterministic FAILED outcome verified; 21 related tests and Ruff passed
 - M11-WORKFLOW-018 — continuation chain PASS; exact source-thread reuse and isolated NEW_THREAD branches verified across 10 successful tasks; 10 related tests and Ruff passed
+- M11-WORKFLOW-019 — independent workspace parallelism PASS; event-synchronized overlap at capacity 2 and deterministic final state verified; 9 related tests and Ruff passed
 
 ## Verified Codex Runtime
 
@@ -201,14 +202,14 @@ unexpected_files = []
 
 Current task:
 
-`M11-WORKFLOW-019` — Parallel Independent Workspaces (IN_PROGRESS)
+`M11-WORKFLOW-020` — Same-workspace Serialization RC
 
 M10 automated hardening is COMPLETE. M11–M12 are now authoritative and queued on master:
 
 - M11: 36 release-candidate / real-world validation tasks;
 - M12: 38 product-quality / operations tasks.
 
-M11-RC-001 through M11-WORKFLOW-018 are COMPLETE. The M11-WORKFLOW-019 start checkpoint is committed; continue automatically through M12-REPORT-038.
+M11-RC-001 through M11-WORKFLOW-019 are COMPLETE. Continue automatically through M12-REPORT-038.
 
 M11/M12 are local/offline by default: no live Codex turn, external web research, new package downloads, or new system toolchains are required by the plan. Small deterministic adjacent integration failures should use bounded automatic remediation instead of stopping.
 
