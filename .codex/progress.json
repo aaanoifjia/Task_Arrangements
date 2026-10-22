@@ -547,6 +547,17 @@
       "intended_acceptance": "The directly implicated regression test preserves legacy status assertions and verifies the new version, desktop-mode, and runtime-availability fields without weakening redaction checks.",
       "status": "COMPLETE",
       "validation": "About/status, legacy system-route, and diagnostics API tests passed 5/5; Ruff and strict mypy passed."
+    },
+    {
+      "id": "M12-STATUS-031-R1",
+      "parent_task": "M12-STATUS-031",
+      "reason": "Adding getSystemStatus to the shared ApiClient contract makes the existing workflow API unit-test fake incomplete, so frontend strict typecheck cannot pass until that direct fake is updated.",
+      "files": [
+        "frontend/src/features/workflows/api.test.ts"
+      ],
+      "failing_validation": "frontend npm run typecheck failed with TS2741 because fakeClient() did not implement ApiClientCore.getSystemStatus.",
+      "intended_acceptance": "The directly implicated workflow API fake includes getSystemStatus without changing production behavior; About/Runtime tests and frontend typecheck pass.",
+      "status": "IN_PROGRESS"
     }
   ],
   "task_queue_after_current": [
