@@ -15,7 +15,7 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M11-BUILD-033-R1",
+  "active_task": "M11-BUILD-033",
   "next_task": null,
   "completed_tasks": [
     "PREP-000",
