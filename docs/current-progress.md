@@ -203,15 +203,15 @@ unexpected_files = []
 
 ## Current Task
 
-Current task:
+Current deterministic next task:
 
-`M12-UX-001` — Starter Workflow UX
+`M12-SAMPLE-002` — Canonical Sample Workflows
 
 M11-RC-001 through M11-BUILD-032 are COMPLETE.
 
 M11-BUILD-033 encountered an external host-specific MSI/WiX blocker: WiX ICE validation failed with Win32 0x643 because the Windows Installer service is unavailable. This does not invalidate the successful M9 MSI/NSIS bundle evidence and does not require changing Windows system state for the M11 idempotency goal.
 
-M11-BUILD-033-R1, M11-BUILD-033, M11-BUILD-034-R1, M11-BUILD-034, M11-GATE-035, and M11-REPORT-036 are COMPLETE. The report records exact offline M11 evidence, the MSI/WiX external-service limitation without a fresh MSI claim, resolved bounded remediations, and deferred manual Desktop checks. M12-UX-001 is next.
+M11 is COMPLETE through M11-REPORT-036. M12-UX-001 is COMPLETE with the productization contract freezing scheduler, local/offline, import/export, diagnostics, backup, history, onboarding, accessibility, and performance boundaries. M12-SAMPLE-002 is next.
 
 Do not modify/start/enable the Windows Installer service, Windows optional features, security settings, or system packages for this remediation.
 

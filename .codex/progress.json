@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-UX-001",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-SAMPLE-002",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -291,7 +291,8 @@
     "M11-BUILD-033",
     "M11-BUILD-034",
     "M11-GATE-035",
-    "M11-REPORT-036"
+    "M11-REPORT-036",
+    "M12-UX-001"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -783,5 +784,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M11-REPORT-036 PASS: release-candidate report records exact M11 commands/results, NSIS-only two-run evidence, MSI external-service limitation, bounded remediations, no new dependencies, and deferred manual checks. Next deterministic task is M12-UX-001."
+  "last_validation_note": "M12-UX-001 PASS: docs/productization-contract.md freezes local/offline productization boundaries for scheduler semantics, import/export, diagnostics, backup, history, onboarding, accessibility, and performance. Next deterministic task is M12-SAMPLE-002."
 }
