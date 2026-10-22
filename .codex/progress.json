@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-DIAG-019",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-DIAG-020",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -309,7 +309,8 @@
     "M12-IMPORT-015",
     "M12-DIAG-016",
     "M12-DIAG-017",
-    "M12-DIAG-018"
+    "M12-DIAG-018",
+    "M12-DIAG-019"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -826,5 +827,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-DIAG-018 PASS: authenticated GET /api/system/diagnostics returns the redacted diagnostic schema and unauthorized desktop requests fail closed; API/system/service/model regression 8 passed, Ruff and strict mypy passed. Next deterministic task is M12-DIAG-019."
+  "last_validation_note": "M12-DIAG-019 PASS: user-triggered diagnostic ZIP contains deterministic allowlisted summary/metadata, bounded redacted logs, and sanitized artifact manifest without SQLite, environment dump, prompts, tokens, or raw path content; bundle integration tests 2 passed, Ruff and strict mypy passed. Next deterministic task is M12-DIAG-020."
 }
