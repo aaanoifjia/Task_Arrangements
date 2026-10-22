@@ -30,6 +30,7 @@ type ApiClientCore = {
   importWorkflow: (request: WorkflowImportRequest) => Promise<WorkflowDetail>
   getDiagnostics: () => Promise<DiagnosticSummary>
   downloadDiagnosticBundle: () => Promise<Blob>
+  downloadDatabaseBackup: () => Promise<Blob>
   saveWorkflow: (workflow: WorkflowDefinition) => Promise<WorkflowDetail>
   updateWorkflow: (id: string, workflow: WorkflowDefinition) => Promise<WorkflowDetail>
   listRuns: () => Promise<RunSummary[]>
@@ -71,6 +72,16 @@ export function createApiClient(fetcher: typeof fetch = fetch, runtime: HttpRunt
       const url = runtime.baseUrl
         ? new URL('/api/system/diagnostics/bundle', runtime.baseUrl.replace(/\/+$/, '') + '/').toString()
         : '/api/system/diagnostics/bundle'
+      const response = await fetcher(url, { headers })
+      if (!response.ok) throw new ApiError(response.status, 'HTTP_ERROR', `request failed with status ${response.status}`)
+      return response.blob()
+    },
+    downloadDatabaseBackup: async () => {
+      const headers: Record<string, string> = { Accept: 'application/octet-stream' }
+      if (runtime.token) headers.Authorization = 'Bearer ' + runtime.token
+      const url = runtime.baseUrl
+        ? new URL('/api/system/database/backup', runtime.baseUrl.replace(/\/+$/, '') + '/').toString()
+        : '/api/system/database/backup'
       const response = await fetcher(url, { headers })
       if (!response.ok) throw new ApiError(response.status, 'HTTP_ERROR', `request failed with status ${response.status}`)
       return response.blob()

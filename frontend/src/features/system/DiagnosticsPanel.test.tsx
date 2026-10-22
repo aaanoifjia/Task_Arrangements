@@ -18,12 +18,13 @@ describe('DiagnosticsPanel', () => {
     const user = userEvent.setup()
     const getDiagnostics = vi.fn().mockResolvedValue(summary)
     const downloadDiagnosticBundle = vi.fn().mockResolvedValue(new Blob(['zip']))
+    const downloadDatabaseBackup = vi.fn().mockResolvedValue(new Blob(['sqlite']))
     const createObjectURL = vi.fn(() => 'blob:diagnostics')
     const revokeObjectURL = vi.fn()
     Object.defineProperty(URL, 'createObjectURL', { configurable: true, value: createObjectURL })
     Object.defineProperty(URL, 'revokeObjectURL', { configurable: true, value: revokeObjectURL })
     const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {})
-    render(<DiagnosticsPanel api={{ getDiagnostics, downloadDiagnosticBundle }} />)
+    render(<DiagnosticsPanel api={{ getDiagnostics, downloadDiagnosticBundle, downloadDatabaseBackup }} />)
 
     expect(await screen.findByRole('heading', { name: 'Diagnostics' })).toBeInTheDocument()
     expect(screen.getByText('configured')).toBeInTheDocument()
@@ -33,25 +34,33 @@ describe('DiagnosticsPanel', () => {
     expect(downloadDiagnosticBundle).toHaveBeenCalledOnce()
     expect(createObjectURL).toHaveBeenCalledWith(expect.any(Blob))
     expect(click).toHaveBeenCalled()
+    expect(downloadDatabaseBackup).not.toHaveBeenCalled()
+    expect(screen.getByText(/workflow and run data/i)).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Download database backup' }))
+    expect(downloadDatabaseBackup).toHaveBeenCalledOnce()
   })
 
   it('shows load and download errors without inventing metadata', async () => {
     const user = userEvent.setup()
     const getDiagnostics = vi.fn().mockResolvedValue(summary)
     const downloadDiagnosticBundle = vi.fn().mockRejectedValue(new Error('bundle unavailable'))
-    render(<DiagnosticsPanel api={{ getDiagnostics, downloadDiagnosticBundle }} />)
+    const downloadDatabaseBackup = vi.fn().mockRejectedValue(new Error('backup unavailable'))
+    render(<DiagnosticsPanel api={{ getDiagnostics, downloadDiagnosticBundle, downloadDatabaseBackup }} />)
 
     await screen.findByRole('heading', { name: 'Diagnostics' })
     await user.click(screen.getByRole('button', { name: 'Download diagnostic bundle' }))
 
     await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('bundle unavailable'))
     expect(screen.getByText('configured')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Download database backup' }))
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('backup unavailable'))
   })
 
   it('shows a visible load error', async () => {
     render(<DiagnosticsPanel api={{
       getDiagnostics: vi.fn().mockRejectedValue(new Error('offline')),
       downloadDiagnosticBundle: vi.fn(),
+      downloadDatabaseBackup: vi.fn(),
     }} />)
 
     expect(await screen.findByRole('alert')).toHaveTextContent('offline')

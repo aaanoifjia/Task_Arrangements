@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { createApiClient, type ApiClient, type DiagnosticSummary } from '../../api/client'
 
-type DiagnosticsApi = Pick<ApiClient, 'getDiagnostics' | 'downloadDiagnosticBundle'>
+type DiagnosticsApi = Pick<ApiClient, 'getDiagnostics' | 'downloadDiagnosticBundle' | 'downloadDatabaseBackup'>
 type DiagnosticsPanelProps = { api?: DiagnosticsApi }
 
 function DiagnosticsPanel({ api }: DiagnosticsPanelProps) {
@@ -9,6 +9,7 @@ function DiagnosticsPanel({ api }: DiagnosticsPanelProps) {
   const [summary, setSummary] = useState<DiagnosticSummary | null>(null)
   const [loading, setLoading] = useState(true)
   const [downloading, setDownloading] = useState(false)
+  const [backupDownloading, setBackupDownloading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -41,6 +42,24 @@ function DiagnosticsPanel({ api }: DiagnosticsPanelProps) {
     }
   }
 
+  const downloadDatabaseBackup = async () => {
+    setBackupDownloading(true)
+    setError(null)
+    try {
+      const blob = await stableApi.downloadDatabaseBackup()
+      const url = URL.createObjectURL(blob)
+      const anchor = document.createElement('a')
+      anchor.href = url
+      anchor.download = 'codex-flow-backup.sqlite3'
+      anchor.click()
+      URL.revokeObjectURL(url)
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Unable to download database backup')
+    } finally {
+      setBackupDownloading(false)
+    }
+  }
+
   if (loading) return <p role="status">Loading diagnostics…</p>
   if (error && !summary) return <section aria-labelledby="diagnostics-heading"><h1 id="diagnostics-heading">Diagnostics</h1><p role="alert">{error}</p></section>
   if (!summary) return <p role="alert">Diagnostics are unavailable.</p>
@@ -64,6 +83,10 @@ function DiagnosticsPanel({ api }: DiagnosticsPanelProps) {
       {error && <p role="alert">{error}</p>}
       <button type="button" onClick={() => void downloadBundle()} disabled={downloading}>
         {downloading ? 'Preparing bundle…' : 'Download diagnostic bundle'}
+      </button>
+      <p>Database backups contain workflow and run data. Store the downloaded file securely.</p>
+      <button type="button" onClick={() => void downloadDatabaseBackup()} disabled={backupDownloading}>
+        {backupDownloading ? 'Preparing database backup…' : 'Download database backup'}
       </button>
     </section>
   )

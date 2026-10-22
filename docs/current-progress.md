@@ -205,13 +205,13 @@ unexpected_files = []
 
 Current task:
 
-`M12-BACKUP-024` — Backup UI (IN_PROGRESS)
+`M12-HISTORY-025` — Run History Pagination Backend
 
 M11-RC-001 through M11-BUILD-032 are COMPLETE.
 
 M11-BUILD-033 encountered an external host-specific MSI/WiX blocker: WiX ICE validation failed with Win32 0x643 because the Windows Installer service is unavailable. This does not invalidate the successful M9 MSI/NSIS bundle evidence and does not require changing Windows system state for the M11 idempotency goal.
 
-M11 is COMPLETE through M11-REPORT-036. M12-UX-001 through M12-DIAG-021 and M12-BACKUP-022 through M12-BACKUP-023 are COMPLETE. The bounded M12-BACKUP-024-R1 remediation is COMPLETE: the directly implicated typed workflow API fake now includes the database backup method, and the focused tests, frontend typecheck, and ESLint pass. The explicit backup UI action and secure-storage warning remain in progress.
+M11 is COMPLETE through M11-REPORT-036. M12-UX-001 through M12-DIAG-021 and M12-BACKUP-022 through M12-BACKUP-024 are COMPLETE. M12-BACKUP-024 added an explicit database backup download action with a workflow/run data security warning; downloads are user-triggered only and backup/error tests pass. The bounded M12-BACKUP-024-R1 remediation is also COMPLETE. The next deterministic task is M12-HISTORY-025.
 
 Do not modify/start/enable the Windows Installer service, Windows optional features, security settings, or system packages for this remediation.
 
