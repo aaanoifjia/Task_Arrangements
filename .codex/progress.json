@@ -16,7 +16,7 @@
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
   "active_task": null,
-  "next_task": "M11-BUILD-033",
+  "next_task": "M11-BUILD-033-R1",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -293,7 +293,7 @@
       "status": "BLOCKED",
       "reason": "The authoritative desktop build pipeline completed frontend, PyInstaller sidecar staging, and the release executable, but the WiX MSI linker failed with Win32 error 0x643 because the Windows Installer service is unavailable. Completing the required installer build needs an external system-level prerequisite outside the repository task scope.",
       "last_successful_validation": "First exact scripts/build_desktop.ps1 run reached Tauri release executable creation; MSI bundling failed in WixTools314/light.exe during ICE01-ICE09 with Windows Installer service unavailable.",
-      "next_action": "Provide a functioning approved Windows Installer/WiX environment, then resume M11-BUILD-033 without discarding the current generated artifacts or changing the frozen build pipeline."
+      "next_action": "Execute M11-BUILD-033-R1 to add an explicit NSIS-only idempotency path while preserving full-bundle default behavior, then resume M11-BUILD-033. If Windows Installer remains unavailable, run both idempotency builds in NSIS mode and record MSI as externally unavailable rather than claiming a fresh MSI build."
     }
   },
   "blocker_history": [
@@ -350,7 +350,7 @@
       "task": "M11-BUILD-033",
       "reason": "The authoritative desktop build pipeline completed frontend, PyInstaller sidecar staging, and the release executable, but the WiX MSI linker failed with Win32 error 0x643 because the Windows Installer service is unavailable. Completing the required installer build needs an external system-level prerequisite outside the repository task scope.",
       "last_successful_validation": "First exact scripts/build_desktop.ps1 run reached Tauri release executable creation; MSI bundling failed in WixTools314/light.exe during ICE01-ICE09 with Windows Installer service unavailable.",
-      "next_action": "Provide a functioning approved Windows Installer/WiX environment, then resume M11-BUILD-033 without discarding the current generated artifacts or changing the frozen build pipeline.",
+      "next_action": "Execute M11-BUILD-033-R1, then resume M11-BUILD-033 using full bundles if MSI is available or explicit NSIS mode if the Windows Installer service remains unavailable.",
       "resolved_by": null
     }
   ],
@@ -707,6 +707,7 @@
     "M11-LOG-030",
     "M11-LOG-031",
     "M11-BUILD-032",
+    "M11-BUILD-033-R1",
     "M11-BUILD-033",
     "M11-BUILD-034",
     "M11-GATE-035",
@@ -772,5 +773,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M11-BUILD-032 PASS. Read-only PowerShell verifier matched current release executable/MSI/NSIS paths, byte sizes, and SHA256 values; a tampered hash fixture failed visibly as required. M11-BUILD-033 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
+  "last_validation_note": "M11-BUILD-033 is blocked only by the host Windows Installer service during WiX MSI validation. M11-BUILD-033-R1 is now the deterministic next task: preserve the default full release pipeline, add an explicit NSIS-only build mode for idempotency, then resume M11-BUILD-033 without changing system services or falsely claiming a fresh MSI build."
 }
