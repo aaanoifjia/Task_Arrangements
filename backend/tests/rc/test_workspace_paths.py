@@ -49,6 +49,19 @@ class WorkspaceTrackingAdapter(FakeCodexAdapter):
                 self.active_streams -= 1
 
 
+class FixtureWritingAdapter(WorkspaceTrackingAdapter):
+    def __init__(self, workspace: Path) -> None:
+        super().__init__()
+        self.workspace = workspace
+
+    async def stream_turn(self, turn: CodexTurnRef) -> AsyncIterator[CodexEvent]:
+        output = self.workspace / "generated" / "probe-output.txt"
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text("deep-path-ok", encoding="utf-8")
+        async for event in super().stream_turn(turn):
+            yield event
+
+
 @pytest.mark.asyncio
 async def test_durable_workflow_preserves_spaced_workspace_and_serializes_writes(
     tmp_path: Path,
@@ -88,6 +101,36 @@ async def test_durable_workflow_preserves_spaced_workspace_and_serializes_writes
         assert adapter.calls.count("create_thread") == 2
         assert adapter.calls.count("start_turn") == 2
         assert all(len(repository.load_attempts(str(row["id"]))) == 1 for row in rows)
+    finally:
+        connection.close()
+
+
+@pytest.mark.asyncio
+async def test_deep_workspace_keeps_generated_files_under_intended_root(tmp_path: Path) -> None:
+    workspace = tmp_path / "release fixture root"
+    for segment in ("一级", "level two with spaces", "第三层", "level-four", "final 工作区"):
+        workspace /= segment
+    workspace.mkdir(parents=True)
+    database_path = tmp_path / "app data" / "flow.sqlite3"
+    database_path.parent.mkdir()
+    workflow = WorkflowDefinition(
+        id="deep-path-workflow",
+        name="Deep Path Workflow",
+        tasks=[TaskDefinition(id="A", name="A", prompt="A", cwd=str(workspace))],
+        edges=[],
+    )
+    connection = open_database(database_path)
+    try:
+        repository = StorageRepositories(connection)
+        adapter = FixtureWritingAdapter(workspace)
+        run_id = await DurableRunner(repository, adapter).run(workflow)
+
+        generated = workspace / "generated" / "probe-output.txt"
+        assert len(str(generated)) < 260
+        assert generated.is_file()
+        assert generated.read_text(encoding="utf-8") == "deep-path-ok"
+        assert generated.resolve().is_relative_to(workspace.resolve())
+        assert repository.load_task_runs(run_id)[0]["status"] == TaskStatus.SUCCESS.value
     finally:
         connection.close()
 
