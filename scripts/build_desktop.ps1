@@ -1,6 +1,8 @@
 [CmdletBinding()]
 param(
-    [switch]$DryRun
+    [switch]$DryRun,
+    [ValidateSet('all', 'nsis', 'msi')]
+    [string]$BundleTarget = 'all'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -57,7 +59,12 @@ try {
         Copy-Item -LiteralPath $SidecarInternal -Destination (Join-Path $TauriBinaryRoot '_internal') -Recurse -Force
         Write-Output "ARTIFACT: sidecar runtime = $(Join-Path $TauriBinaryRoot '_internal')"
     }
-    Invoke-Step 'Tauri production build' 'npm' @('--prefix', 'frontend', 'exec', 'tauri', 'build', '--', '--config', 'desktop/src-tauri/tauri.conf.json')
+    $TauriBuildArguments = @('--prefix', 'frontend', 'exec', 'tauri', 'build', '--', '--config', 'desktop/src-tauri/tauri.conf.json')
+    if ($BundleTarget -ne 'all') {
+        $TauriBuildArguments += @('--bundles', $BundleTarget)
+    }
+    Write-Output "BUNDLE_TARGET: $BundleTarget"
+    Invoke-Step 'Tauri production build' 'npm' $TauriBuildArguments
 
     Write-Output "ARTIFACT: frontend dist = $(Join-Path $RepositoryRoot 'frontend\dist')"
     Write-Output "ARTIFACT: staged sidecar = $TauriBinary"
