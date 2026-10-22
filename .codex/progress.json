@@ -452,6 +452,17 @@
       "intended_acceptance": "The build script replaces the generated staged _internal tree before copying the current PyInstaller runtime, so packaged sidecar readiness, health, authenticated status, and clean termination pass after repeated builds.",
       "status": "COMPLETE",
       "validation": "Rebuilt with NSIS mode after replacing the generated _internal destination; the packaged sidecar test passed 2/2, Ruff passed, migration 0003 was present at the canonical staging path, and no nested _internal tree remained."
+    },
+    {
+      "id": "M12-EXPORT-009-R1",
+      "parent_task": "M12-EXPORT-009",
+      "reason": "The typed ApiClient contract gained exportWorkflow, so the existing workflow API unit-test fake must include that required method for the authoritative frontend typecheck to pass.",
+      "files": [
+        "frontend/src/features/workflows/api.test.ts"
+      ],
+      "failing_validation": "frontend npm run typecheck failed with TS2741 because fakeClient() did not implement ApiClientCore.exportWorkflow.",
+      "intended_acceptance": "The directly implicated workflow API fake includes exportWorkflow without changing production behavior; the focused export/list tests and frontend typecheck pass.",
+      "status": "IN_PROGRESS"
     }
   ],
   "task_queue_after_current": [
