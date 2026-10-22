@@ -157,6 +157,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M11-PATH-003 — durable Fake workflow in a nested space-containing workspace PASS; exact cwd persistence, canonical lock serialization, and no duplicate execution verified; 5 related tests and Ruff passed
 - M11-PATH-004 — durable Fake workflow under a Windows-safe Unicode workspace PASS; exact snapshot, canonical key, event persistence, terminal state, and cleanup verified; 6 related tests and Ruff passed
 - M11-PATH-005 — deep workflow path with spaces and Unicode PASS; generated fixture files stayed under the intended root and below the Windows path limit; 7 related tests and Ruff passed
+- M11-PATH-006 — missing cwd fail-visible behavior PASS; no fallback or downstream release, parent remained STARTING and child BLOCKED; 6 related tests and Ruff passed
 
 ## Verified Codex Runtime
 
@@ -186,16 +187,16 @@ unexpected_files = []
 
 ## Current Task
 
-Current task:
+Current deterministic next task:
 
-`M11-PATH-006` — Missing Workspace Fail-visible Behavior (IN_PROGRESS)
+`M11-DATA-007` — App-data Relocation
 
 M10 automated hardening is COMPLETE. M11–M12 are now authoritative and queued on master:
 
 - M11: 36 release-candidate / real-world validation tasks;
 - M12: 38 product-quality / operations tasks.
 
-M11-RC-001 through M11-PATH-005 are COMPLETE. The M11-PATH-006 start checkpoint is committed; continue automatically through M12-REPORT-038.
+M11-RC-001 through M11-PATH-006 are COMPLETE. Continue automatically through M12-REPORT-038.
 
 M11/M12 are local/offline by default: no live Codex turn, external web research, new package downloads, or new system toolchains are required by the plan. Small deterministic adjacent integration failures should use bounded automatic remediation instead of stopping.
 
