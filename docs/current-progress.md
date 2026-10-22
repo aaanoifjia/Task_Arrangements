@@ -203,7 +203,7 @@ unexpected_files = []
 
 ## Current Task
 
-Current deterministic next task:
+Current task:
 
 `M11-BUILD-033-R1` — Installer-independent Build Idempotency Path
 
