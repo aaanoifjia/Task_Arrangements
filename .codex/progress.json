@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-ONBOARD-005",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-ONBOARD-006",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -295,7 +295,8 @@
     "M12-UX-001",
     "M12-SAMPLE-002",
     "M12-SAMPLE-003",
-    "M12-ONBOARD-004"
+    "M12-ONBOARD-004",
+    "M12-ONBOARD-005"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -787,5 +788,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-ONBOARD-004 PASS: first-run empty state provides accessible Create workflow and Try a sample actions; non-empty list behavior remains intact; focused tests 3/3, typecheck, and lint passed. Next deterministic task is M12-ONBOARD-005."
+  "last_validation_note": "M12-ONBOARD-005 PASS: accessible sample picker describes linear/fork-join/continuation topology and purpose, supports keyboard selection/confirm/cancel, and passed 3 focused tests plus typecheck/lint. Next deterministic task is M12-ONBOARD-006."
 }

@@ -203,15 +203,15 @@ unexpected_files = []
 
 ## Current Task
 
-Current task:
+Current deterministic next task:
 
-`M12-ONBOARD-005` — Sample Picker
+`M12-ONBOARD-006` — Create Sample & Open Editor
 
 M11-RC-001 through M11-BUILD-032 are COMPLETE.
 
 M11-BUILD-033 encountered an external host-specific MSI/WiX blocker: WiX ICE validation failed with Win32 0x643 because the Windows Installer service is unavailable. This does not invalidate the successful M9 MSI/NSIS bundle evidence and does not require changing Windows system state for the M11 idempotency goal.
 
-M11 is COMPLETE through M11-REPORT-036. M12-UX-001 through M12-ONBOARD-004 are COMPLETE. The first-run empty state now exposes accessible Create workflow and Try a sample actions while preserving non-empty list behavior; focused tests, typecheck, and lint passed. M12-ONBOARD-005 is next.
+M11 is COMPLETE through M11-REPORT-036. M12-UX-001 through M12-ONBOARD-005 are COMPLETE. The first-run empty state and accessible sample picker now support topology/purpose preview, keyboard selection, confirmation, and cancel; focused tests, typecheck, and lint passed. M12-ONBOARD-006 is next.
 
 Do not modify/start/enable the Windows Installer service, Windows optional features, security settings, or system packages for this remediation.
 
