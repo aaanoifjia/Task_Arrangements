@@ -205,14 +205,14 @@ unexpected_files = []
 
 Current task:
 
-`M11-DESKTOP-028` — Session Token Renewal Across Relaunch
+`M11-DESKTOP-028` — Session Token Renewal Across Relaunch — IN_PROGRESS
 
 M10 automated hardening is COMPLETE. M11–M12 are now authoritative and queued on master:
 
 - M11: 36 release-candidate / real-world validation tasks;
 - M12: 38 product-quality / operations tasks.
 
-M11-RC-001 through M11-DESKTOP-027 are COMPLETE. Continue automatically through M12-REPORT-038.
+M11-RC-001 through M11-DESKTOP-027 are COMPLETE. M11-DESKTOP-028 is now in progress; continue automatically through M12-REPORT-038.
 
 M11/M12 are local/offline by default: no live Codex turn, external web research, new package downloads, or new system toolchains are required by the plan. Small deterministic adjacent integration failures should use bounded automatic remediation instead of stopping.
 
