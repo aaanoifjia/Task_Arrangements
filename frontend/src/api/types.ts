@@ -52,6 +52,8 @@ export type WorkflowImportRequest = WorkflowExportResponse & { replacement_id?: 
 export type RunStartResponse = { run_id: string }
 export type RunStatus = TaskStatus | 'PENDING'
 export type RunSummary = { id: string; workflow_id: string; status: RunStatus; created_at: string }
+export type RunHistoryQuery = { cursor?: string; limit?: number; workflowId?: string }
+export type RunHistoryPage = { items: RunSummary[]; next_cursor: string | null }
 export type RunDetail = RunSummary & { snapshot: Record<string, unknown> }
 
 export type TaskRunView = {

@@ -205,13 +205,13 @@ unexpected_files = []
 
 Current task:
 
-`M12-HISTORY-026` — Run History Pagination Frontend (IN_PROGRESS)
+`M12-HISTORY-027` — Run History Filters & Search
 
 M11-RC-001 through M11-BUILD-032 are COMPLETE.
 
 M11-BUILD-033 encountered an external host-specific MSI/WiX blocker: WiX ICE validation failed with Win32 0x643 because the Windows Installer service is unavailable. This does not invalidate the successful M9 MSI/NSIS bundle evidence and does not require changing Windows system state for the M11 idempotency goal.
 
-M11 is COMPLETE through M11-REPORT-036. M12-UX-001 through M12-DIAG-021 and M12-BACKUP-022 through M12-BACKUP-024 are COMPLETE. M12-BACKUP-024 added an explicit database backup download action with a workflow/run data security warning; downloads are user-triggered only and backup/error tests pass. M12-HISTORY-025 is COMPLETE: stable created_at/id cursor pagination has no duplicates or gaps while preserving the default list response. M12-HISTORY-026 is in progress; bounded remediation M12-HISTORY-026-R1 is COMPLETE after the directly implicated typed workflow API fake was updated and frontend regression checks passed.
+M11 is COMPLETE through M11-REPORT-036. M12-UX-001 through M12-DIAG-021 and M12-BACKUP-022 through M12-BACKUP-024 are COMPLETE. M12-BACKUP-024 added an explicit database backup download action with a workflow/run data security warning; downloads are user-triggered only and backup/error tests pass. M12-HISTORY-025 and M12-HISTORY-026 are COMPLETE: stable cursor pagination has no gaps/duplicates, and the frontend appends pages with explicit Load more, end, and error handling. The bounded M12-HISTORY-026-R1 remediation is also COMPLETE. The next deterministic task is M12-HISTORY-027.
 
 Do not modify/start/enable the Windows Installer service, Windows optional features, security settings, or system packages for this remediation.
 

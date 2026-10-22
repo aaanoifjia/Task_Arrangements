@@ -2,6 +2,7 @@ import type {
   AttemptView, RunDetail, RunStartResponse, RunSummary, TaskRunView,
   ManualActionResponse, WorkflowDefinition, WorkflowDetail, WorkflowSummary,
   WorkflowImportRequest, WorkflowExportResponse as WorkflowExportResponseType,
+  RunHistoryPage, RunHistoryQuery,
 } from './types'
 import { ApiError, requestJson as requestJsonWithRuntime, type HttpRuntime } from './http'
 
@@ -34,6 +35,7 @@ type ApiClientCore = {
   saveWorkflow: (workflow: WorkflowDefinition) => Promise<WorkflowDetail>
   updateWorkflow: (id: string, workflow: WorkflowDefinition) => Promise<WorkflowDetail>
   listRuns: () => Promise<RunSummary[]>
+  listRunsPage: (query?: RunHistoryQuery) => Promise<RunHistoryPage>
   getRun: (id: string) => Promise<RunDetail>
   startRun: (workflowId: string) => Promise<RunStartResponse>
   listTasks: (runId: string) => Promise<TaskRunView[]>
@@ -94,6 +96,13 @@ export function createApiClient(fetcher: typeof fetch = fetch, runtime: HttpRunt
       { method: 'PUT', headers: jsonHeaders, body: JSON.stringify(workflow) }, fetcher,
     ),
     listRuns: () => requestJson<RunSummary[]>('/api/runs', {}, fetcher),
+    listRunsPage: (query = {}) => {
+      const params = new URLSearchParams()
+      params.set('limit', String(query.limit ?? 25))
+      if (query.cursor) params.set('cursor', query.cursor)
+      if (query.workflowId) params.set('workflow_id', query.workflowId)
+      return requestJson<RunHistoryPage>(`/api/runs?${params.toString()}`, {}, fetcher)
+    },
     getRun: (id: string) => requestJson<RunDetail>(`/api/runs/${encodeURIComponent(id)}`, {}, fetcher),
     startRun: (workflowId: string) => requestJson<RunStartResponse>(
       `/api/workflows/${encodeURIComponent(workflowId)}/runs`, { method: 'POST' }, fetcher,

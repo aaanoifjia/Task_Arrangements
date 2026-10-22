@@ -12,13 +12,22 @@ function RunListPage({ api }: RunListPageProps) {
   const workflowFilter = searchParams.get('workflow_id')?.trim() ?? ''
   const [runs, setRuns] = useState<RunSummary[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [nextCursor, setNextCursor] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   const refresh = useCallback(async () => {
     setLoading(true)
     setError(null)
+    setNextCursor(null)
     try {
-      setRuns(await stableApi.list())
+      if (stableApi.listPage) {
+        const page = await stableApi.listPage({ workflowId: workflowFilter || undefined, limit: 25 })
+        setRuns(page.items)
+        setNextCursor(page.next_cursor)
+      } else {
+        setRuns(await stableApi.list())
+      }
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Unable to load runs.')
     } finally {
@@ -27,6 +36,28 @@ function RunListPage({ api }: RunListPageProps) {
   }, [stableApi])
 
   useEffect(() => { void refresh() }, [refresh])
+
+  const loadMore = useCallback(async () => {
+    if (!nextCursor || !stableApi.listPage || loadingMore) return
+    setLoadingMore(true)
+    setError(null)
+    try {
+      const page = await stableApi.listPage({
+        workflowId: workflowFilter || undefined,
+        cursor: nextCursor,
+        limit: 25,
+      })
+      setRuns((current) => {
+        const existing = new Set(current.map((run) => run.id))
+        return [...current, ...page.items.filter((run) => !existing.has(run.id))]
+      })
+      setNextCursor(page.next_cursor)
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Unable to load more runs.')
+    } finally {
+      setLoadingMore(false)
+    }
+  }, [loadingMore, nextCursor, stableApi, workflowFilter])
 
   const visibleRuns = workflowFilter
     ? runs.filter((run) => run.workflow_id === workflowFilter)
@@ -46,7 +77,7 @@ function RunListPage({ api }: RunListPageProps) {
       {!loading && !error && visibleRuns.length === 0 && (
         <p>{workflowFilter ? 'No runs found for this workflow.' : 'No runs yet.'}</p>
       )}
-      {!loading && !error && visibleRuns.length > 0 && (
+      {!loading && visibleRuns.length > 0 && (
         <ul className="run-list__items">
           {visibleRuns.map((run) => (
             <li key={run.id}>
@@ -60,6 +91,11 @@ function RunListPage({ api }: RunListPageProps) {
             </li>
           ))}
         </ul>
+      )}
+      {!loading && nextCursor && (
+        <button type="button" onClick={() => void loadMore()} disabled={loadingMore}>
+          {loadingMore ? 'Loading more…' : 'Load more'}
+        </button>
       )}
     </section>
   )
