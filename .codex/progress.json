@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M12-BACKUP-024",
+  "active_task": "M12-BACKUP-024",
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -843,5 +843,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-BACKUP-023 PASS: authenticated database backup download returns a valid SQLite copy with deterministic filename/content type and preserves the source database; authorized/unauthorized backup and bundle tests 4 passed, Ruff and strict mypy passed. Next deterministic task is M12-BACKUP-024."
+  "last_validation_note": "M12-BACKUP-024 IN_PROGRESS: implementing the explicit database backup download action and secure-storage warning in the diagnostics UI."
 }
