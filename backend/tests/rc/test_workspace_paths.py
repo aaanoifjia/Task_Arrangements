@@ -90,3 +90,41 @@ async def test_durable_workflow_preserves_spaced_workspace_and_serializes_writes
         assert all(len(repository.load_attempts(str(row["id"]))) == 1 for row in rows)
     finally:
         connection.close()
+
+
+@pytest.mark.asyncio
+async def test_durable_workflow_preserves_unicode_workspace_and_events(tmp_path: Path) -> None:
+    workspace = tmp_path / "数据目录" / "工作 区"
+    workspace.mkdir(parents=True)
+    database_path = tmp_path / "应用数据" / "flow.sqlite3"
+    database_path.parent.mkdir()
+    workflow = WorkflowDefinition(
+        id="unicode-path-workflow",
+        name="Unicode Path Workflow",
+        tasks=[TaskDefinition(id="A", name="A", prompt="A", cwd=str(workspace))],
+        edges=[],
+    )
+    connection = open_database(database_path)
+    try:
+        repository = StorageRepositories(connection)
+        adapter = WorkspaceTrackingAdapter()
+        run_id = await DurableRunner(repository, adapter).run(workflow)
+
+        run = repository.get_workflow_run(run_id)
+        assert run is not None
+        snapshot = json.loads(str(run["snapshot_json"]))
+        assert snapshot["tasks"][0]["cwd"] == str(workspace)
+        assert canonical_workspace_key(str(workspace)) == canonical_workspace_key(
+            str(workspace / ".")
+        )
+        task_run_id = str(repository.load_task_runs(run_id)[0]["id"])
+        events = connection.execute(
+            "SELECT event_type, task_run_id FROM events WHERE task_run_id = ? ORDER BY rowid",
+            (task_run_id,),
+        ).fetchall()
+        assert [event["event_type"] for event in events] == ["TURN_STARTED", "TURN_COMPLETED"]
+        assert all(event["task_run_id"] is not None for event in events)
+        assert repository.get_task_run(task_run_id)["status"] == TaskStatus.SUCCESS.value
+        assert workspace.is_dir()
+    finally:
+        connection.close()

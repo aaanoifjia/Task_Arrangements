@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M11-PATH-004",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Exercising the durable Fake workflow under a Windows-safe Unicode workspace and verifying exact snapshot, lock, event, and cleanup path preservation."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M11-PATH-005",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -626,6 +621,7 @@
     "M11-RC-001",
     "M11-FIXTURE-002",
     "M11-PATH-003",
+    "M11-PATH-004",
     "M11-FIXTURE-002",
     "M11-PATH-003",
     "M11-PATH-004",
@@ -722,5 +718,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M11-PATH-003 PASS. Durable Fake workflow in a nested space-containing workspace passed; exact cwd snapshot, canonical workspace key, serialized writes, and one Attempt per task were verified. RC path/workspace regression 5 passed with Ruff. M11-PATH-004 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
+  "last_validation_note": "M11-PATH-004 PASS. Durable Fake workflow under Windows-safe Unicode workspace passed 2 RC tests; exact SQLite snapshot, canonical lock key, event persistence, terminal state, and cleanup were verified. Related path/workspace regression 4 passed with Ruff. M11-PATH-005 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
 }
