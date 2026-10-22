@@ -15,8 +15,13 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M11-DATA-010",
+  "active_task": {
+    "id": "M11-DATA-010",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-10-22T00:00:00.0000000Z",
+    "note": "Creating immutable retry Attempt history with distinct external references, restarting storage/runtime objects, and verifying ordered history remains queryable without overwrite."
+  },
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
