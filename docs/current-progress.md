@@ -211,7 +211,7 @@ M11-RC-001 through M11-BUILD-032 are COMPLETE.
 
 M11-BUILD-033 encountered an external host-specific MSI/WiX blocker: WiX ICE validation failed with Win32 0x643 because the Windows Installer service is unavailable. This does not invalidate the successful M9 MSI/NSIS bundle evidence and does not require changing Windows system state for the M11 idempotency goal.
 
-M11 is COMPLETE through M11-REPORT-036. M12-UX-001 through M12-IMPORT-015 are COMPLETE. Linear, fork-join, and continuation definitions round-trip through export/import with Unicode names/prompts and exact whitespace preservation; backend integration tests 3 passed, Ruff passed, frontend dialog tests 4 passed, tsc -b and ESLint passed. The next deterministic task is M12-DIAG-016.
+M11 is COMPLETE through M11-REPORT-036. M12-UX-001 through M12-IMPORT-015 are COMPLETE. Linear, fork-join, and continuation definitions round-trip through export/import with Unicode names/prompts and exact whitespace preservation; backend integration tests 3 passed, Ruff passed, frontend dialog tests 4 passed, tsc -b and ESLint passed. M12-DIAG-016 is in progress.
 
 Do not modify/start/enable the Windows Installer service, Windows optional features, security settings, or system packages for this remediation.
 
