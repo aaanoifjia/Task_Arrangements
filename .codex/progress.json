@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M12-HISTORY-025",
+  "active_task": "M12-HISTORY-025",
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -856,5 +856,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-BACKUP-024 PASS: explicit database backup action shows the workflow/run data security warning, downloads only after user action, and surfaces errors; diagnostics/client/workflow tests 13 passed, frontend tsc -b and ESLint passed. Next deterministic task is M12-HISTORY-025."
+  "last_validation_note": "M12-HISTORY-025 IN_PROGRESS: adding stable cursor/limit pagination for run history while preserving the existing default list behavior."
 }
