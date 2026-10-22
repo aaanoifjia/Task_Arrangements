@@ -1,10 +1,13 @@
 """Workflow REST endpoints."""
 
+import json
+
 from fastapi import APIRouter, Request, status
 
 from codex_flow.api.errors import invalid_request, not_found
 from codex_flow.api.lifespan import get_repositories
-from codex_flow.api.schemas import WorkflowDetail, WorkflowSummary
+from codex_flow.api.schemas import WorkflowDetail, WorkflowExportResponse, WorkflowSummary
+from codex_flow.application.workflow_transfer import serialize_workflow_definition
 from codex_flow.application.workflows import (
     WorkflowApplicationService,
     WorkflowIdMismatchError,
@@ -37,6 +40,15 @@ async def update_workflow(request: Request, workflow_id: str, workflow: Workflow
 @router.get("", response_model=list[WorkflowSummary])
 async def list_workflows(request: Request) -> list[WorkflowSummary]:
     return [WorkflowSummary(id=item.id, name=item.name) for item in service(request).list()]
+
+
+@router.get("/{workflow_id}/export", response_model=WorkflowExportResponse)
+async def export_workflow(request: Request, workflow_id: str) -> WorkflowExportResponse:
+    try:
+        workflow = service(request).get(workflow_id)
+    except WorkflowNotFoundError as error:
+        raise not_found("WORKFLOW_NOT_FOUND", str(error)) from error
+    return WorkflowExportResponse.model_validate(json.loads(serialize_workflow_definition(workflow)))
 
 
 @router.get("/{workflow_id}", response_model=WorkflowDetail)

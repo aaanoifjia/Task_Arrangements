@@ -1,6 +1,6 @@
 """Public SDK-independent API data-transfer models."""
 
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -25,6 +25,12 @@ class WorkflowSummary(BaseModel):
 
 class WorkflowDetail(BaseModel):
     model_config = ConfigDict(from_attributes=True)
+    workflow: WorkflowDefinition
+
+
+class WorkflowExportResponse(BaseModel):
+    kind: Literal["codex_flow.workflow_definition"]
+    schema_version: Literal[1]
     workflow: WorkflowDefinition
 
 

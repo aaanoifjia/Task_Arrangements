@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-EXPORT-008",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-EXPORT-009",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -298,7 +298,8 @@
     "M12-ONBOARD-004",
     "M12-ONBOARD-005",
     "M12-ONBOARD-006",
-    "M12-EXPORT-007"
+    "M12-EXPORT-007",
+    "M12-EXPORT-008"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -790,5 +791,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-EXPORT-007 PASS: versioned definition-only workflow envelope is deterministic and round-trips exactly; focused export tests 2/2, Ruff, and strict mypy passed. Next deterministic task is M12-EXPORT-008."
+  "last_validation_note": "M12-EXPORT-008 PASS: GET /api/workflows/{id}/export returns the stable versioned definition-only envelope and stable not-found error; API regression 4 passed, Ruff, and strict mypy passed. Next deterministic task is M12-EXPORT-009."
 }
