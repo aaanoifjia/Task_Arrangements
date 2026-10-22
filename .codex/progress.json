@@ -544,7 +544,8 @@
       ],
       "failing_validation": "Existing test_health_and_system_status_are_local_and_secret_free failed because it asserted exact equality against the pre-M12 four-field response.",
       "intended_acceptance": "The directly implicated regression test preserves legacy status assertions and verifies the new version, desktop-mode, and runtime-availability fields without weakening redaction checks.",
-      "status": "IN_PROGRESS"
+      "status": "COMPLETE",
+      "validation": "About/status, legacy system-route, and diagnostics API tests passed 5/5; Ruff and strict mypy passed."
     }
   ],
   "task_queue_after_current": [
