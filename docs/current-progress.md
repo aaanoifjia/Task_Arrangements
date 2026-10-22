@@ -205,13 +205,13 @@ unexpected_files = []
 
 Current task:
 
-`M12-BACKUP-022` — SQLite Online Backup Service
+`M12-BACKUP-023` — Database Backup API
 
 M11-RC-001 through M11-BUILD-032 are COMPLETE.
 
 M11-BUILD-033 encountered an external host-specific MSI/WiX blocker: WiX ICE validation failed with Win32 0x643 because the Windows Installer service is unavailable. This does not invalidate the successful M9 MSI/NSIS bundle evidence and does not require changing Windows system state for the M11 idempotency goal.
 
-M11 is COMPLETE through M11-REPORT-036. M12-UX-001 through M12-DIAG-021 are COMPLETE. The Diagnostics view displays only safe summary metadata and downloads the authenticated bundle with deterministic filename; load/download error states are visible. DiagnosticsPanel tests 3 passed, frontend tsc -b and ESLint passed. M12-BACKUP-022 is in progress.
+M11 is COMPLETE through M11-REPORT-036. M12-UX-001 through M12-DIAG-021 are COMPLETE. SQLite online backup now creates a consistent schema/workflow/run/task snapshot in an explicit output path without mutating the source DB; integration test passed, Ruff and strict mypy passed. The next deterministic task is M12-BACKUP-023.
 
 Do not modify/start/enable the Windows Installer service, Windows optional features, security settings, or system packages for this remediation.
 
