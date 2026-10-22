@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-IMPORT-011",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-IMPORT-012",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -301,7 +301,8 @@
     "M12-EXPORT-007",
     "M12-EXPORT-008",
     "M12-EXPORT-009",
-    "M12-IMPORT-010"
+    "M12-IMPORT-010",
+    "M12-IMPORT-011"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -805,5 +806,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-IMPORT-010 PASS: versioned workflow exports parse with strict envelope/version/domain/graph validation; malformed, unsupported, and cyclic inputs fail visibly, valid exports round-trip exactly; unit tests 5 passed, Ruff and strict mypy passed. Next deterministic task is M12-IMPORT-011."
+  "last_validation_note": "M12-IMPORT-011 PASS: unused import IDs are preserved, conflicts fail closed without an explicit replacement ID, and explicit same-ID replacement or unused new IDs are deterministic; conflict matrix unit tests 9 passed, Ruff and strict mypy passed. Next deterministic task is M12-IMPORT-012."
 }

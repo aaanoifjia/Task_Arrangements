@@ -1,7 +1,7 @@
 """Deterministic import/export primitives for workflow definitions."""
 
 import json
-from collections.abc import Mapping
+from collections.abc import Collection, Mapping
 from typing import Any
 
 from codex_flow.domain.models import WorkflowDefinition
@@ -13,6 +13,10 @@ WORKFLOW_EXPORT_SCHEMA_VERSION = 1
 
 class WorkflowImportError(ValueError):
     """Raised when a workflow export is not a supported valid envelope."""
+
+
+class WorkflowImportConflictError(WorkflowImportError):
+    """Raised when an import would overwrite an existing workflow silently."""
 
 
 def serialize_workflow_definition(workflow: WorkflowDefinition) -> str:
@@ -53,3 +57,24 @@ def parse_workflow_definition_export(payload: str | Mapping[str, Any]) -> Workfl
     except (TypeError, ValueError) as exc:
         raise WorkflowImportError("malformed workflow definition") from exc
     return workflow
+
+
+def resolve_import_identity(
+    workflow: WorkflowDefinition,
+    existing_ids: Collection[str],
+    *,
+    replacement_id: str | None = None,
+) -> WorkflowDefinition:
+    """Apply explicit import identity policy without mutating the source definition."""
+
+    existing = set(existing_ids)
+    conflict = workflow.id in existing
+    if replacement_id is None:
+        if conflict:
+            raise WorkflowImportConflictError(f"workflow ID already exists: {workflow.id}")
+        return workflow
+    if not replacement_id.strip():
+        raise WorkflowImportConflictError("replacement workflow ID must not be empty")
+    if replacement_id != workflow.id and replacement_id in existing:
+        raise WorkflowImportConflictError(f"replacement workflow ID already exists: {replacement_id}")
+    return WorkflowDefinition.model_validate(workflow.model_copy(update={"id": replacement_id}).model_dump())

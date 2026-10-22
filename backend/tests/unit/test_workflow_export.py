@@ -5,8 +5,10 @@ import json
 from codex_flow.application.workflow_transfer import (
     WORKFLOW_EXPORT_KIND,
     WORKFLOW_EXPORT_SCHEMA_VERSION,
+    WorkflowImportConflictError,
     WorkflowImportError,
     parse_workflow_definition_export,
+    resolve_import_identity,
     serialize_workflow_definition,
 )
 from codex_flow.domain.models import Edge, TaskDefinition, WorkflowDefinition
@@ -84,3 +86,46 @@ def test_import_rejects_cyclic_graphs() -> None:
         assert str(exc) == "malformed workflow definition"
     else:
         raise AssertionError("expected WorkflowImportError")
+
+
+def test_import_identity_preserves_unused_id() -> None:
+    source = workflow()
+
+    resolved = resolve_import_identity(source, {"other-workflow"})
+
+    assert resolved == source
+    assert resolved is source
+
+
+def test_import_identity_requires_explicit_strategy_for_conflict() -> None:
+    source = workflow()
+
+    try:
+        resolve_import_identity(source, {source.id})
+    except WorkflowImportConflictError as exc:
+        assert str(exc) == "workflow ID already exists: workflow-export"
+    else:
+        raise AssertionError("expected WorkflowImportConflictError")
+
+
+def test_import_identity_accepts_explicit_replace_or_new_id() -> None:
+    source = workflow()
+
+    replaced = resolve_import_identity(source, {source.id}, replacement_id=source.id)
+    copied = resolve_import_identity(source, {source.id}, replacement_id="workflow-copy")
+
+    assert replaced == source
+    assert replaced is not source
+    assert copied.id == "workflow-copy"
+    assert copied.tasks == source.tasks
+
+
+def test_import_identity_rejects_existing_new_id() -> None:
+    source = workflow()
+
+    try:
+        resolve_import_identity(source, {source.id, "workflow-copy"}, replacement_id="workflow-copy")
+    except WorkflowImportConflictError as exc:
+        assert str(exc) == "replacement workflow ID already exists: workflow-copy"
+    else:
+        raise AssertionError("expected WorkflowImportConflictError")
