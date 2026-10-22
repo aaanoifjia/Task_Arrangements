@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { describe, expect, it, vi } from 'vitest'
@@ -92,7 +92,9 @@ describe('M7 mocked user flow', () => {
     const socket = FakeWebSocket.instances[FakeWebSocket.instances.length - 1]!
     act(() => socket.onmessage?.({ data: JSON.stringify({ kind: 'snapshot', payload: { tasks: [liveTask] } }) } as MessageEvent))
     act(() => socket.onmessage?.({ data: JSON.stringify({ kind: 'event', payload: event }) } as MessageEvent))
-    expect(await screen.findByText('TURN_COMPLETED')).toBeInTheDocument()
+    const eventLog = await screen.findByRole('region', { name: 'Event log' })
+    const eventItem = within(eventLog).getByRole('listitem')
+    expect(within(eventItem).getByText('TURN_COMPLETED')).toBeInTheDocument()
     expect(screen.getByTestId('run-status')).toHaveTextContent('SUCCESS')
 
     fireEvent.click(screen.getByTestId('rf__node-A'))
