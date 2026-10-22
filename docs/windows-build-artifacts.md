@@ -16,10 +16,11 @@ build script, sidecar builder, and temporary engineering icon source.
 
 | Artifact | Size (bytes) | SHA256 |
 | --- | ---: | --- |
-| `desktop/src-tauri/target/release/bundle/msi/Codex Flow_0.1.0_x64_en-US.msi` | 8585216 | `DE244EEBFCC22E5550F7DEED77727495F594C715F122EB6420F070A2A5565D23` |
-| `desktop/src-tauri/target/release/bundle/nsis/Codex Flow_0.1.0_x64-setup.exe` | 7603613 | `BA8B315FBFF0302274CDDC1FB2B96B0B038C0413724D33332EA4EEC32141A46C` |
+| `desktop/src-tauri/target/release/codex-flow-desktop.exe` | 9129984 | `24ABCCBA13E21857275965A829D0C19F7C90946AC651DB6857EAFC29EA6190AA` |
+| `desktop/src-tauri/target/release/bundle/msi/Codex Flow_0.1.0_x64_en-US.msi` | 8585216 | `F6B1406510F98394E8AC2ED6E373DFB4B579F4C221ECA7911439C1F2C80E51AE` |
+| `desktop/src-tauri/target/release/bundle/nsis/Codex Flow_0.1.0_x64-setup.exe` | 7604381 | `69E57CE1DE444D617F5D59A8214DD82C3377DED244DEFB46224F53F982CFB324` |
 
-The release executable was also produced at
-`desktop/src-tauri/target/release/codex-flow-desktop.exe`. This task records
-automated build evidence only; installer launch, visual UX, and other manual
-Desktop checks are intentionally deferred.
+This task records automated build evidence only; installer launch, visual UX,
+and other manual Desktop checks are intentionally deferred. The read-only
+manifest verifier checks every table row's repository-relative path, byte size,
+and SHA256 without rebuilding or downloading artifacts.

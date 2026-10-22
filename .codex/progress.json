@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M11-BUILD-032",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M11-BUILD-033",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -285,7 +285,8 @@
     "M11-DESKTOP-028",
     "M11-DESKTOP-029",
     "M11-LOG-030",
-    "M11-LOG-031"
+    "M11-LOG-031",
+    "M11-BUILD-032"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -757,5 +758,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M11-LOG-031 PASS. Existing standard-library RotatingFileHandler retention kept backend.log plus at most three bounded backups, preserved the current log location, and left an unrelated file untouched; RC/logging regression 3 passed with Ruff. M11-BUILD-032 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
+  "last_validation_note": "M11-BUILD-032 PASS. Read-only PowerShell verifier matched current release executable/MSI/NSIS paths, byte sizes, and SHA256 values; a tampered hash fixture failed visibly as required. M11-BUILD-033 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
 }
