@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-UX-033",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-A11Y-034",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -323,7 +323,8 @@
     "M12-EVENT-029",
     "M12-STATUS-030",
     "M12-STATUS-031",
-    "M12-UX-032"
+    "M12-UX-032",
+    "M12-UX-033"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -900,5 +901,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-UX-033 IN_PROGRESS: distinguishing retryable local-backend startup from persistent failure, adding safe Diagnostics/log-category guidance, and bounding manual retries."
+  "last_validation_note": "M12-UX-033 PASS: startup gate distinguishes retryable versus persistent local-backend failure, provides safe Diagnostics/log-category guidance without paths/tokens, and stops after bounded manual retries; DesktopStartupGate tests 5 passed, frontend tsc -b and ESLint passed. Next deterministic task is M12-A11Y-034."
 }

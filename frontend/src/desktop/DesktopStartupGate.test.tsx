@@ -24,6 +24,8 @@ describe('DesktopStartupGate', () => {
 
     expect(await screen.findByRole('heading', { name: 'Codex Flow is unavailable' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Retry connection' })).toBeInTheDocument()
+    expect(screen.getByRole('alert')).toHaveTextContent('may still be starting')
+    expect(screen.getByText(/safe log directory category/i)).toBeInTheDocument()
     expect(screen.queryByText(/secret token|stack trace/i)).not.toBeInTheDocument()
     expect(screen.queryByText('normal route')).not.toBeInTheDocument()
   })
@@ -39,5 +41,20 @@ describe('DesktopStartupGate', () => {
     await user.click(screen.getByRole('button', { name: 'Retry connection' }))
     expect(await screen.findByText('normal route')).toBeInTheDocument()
     expect(loadState).toHaveBeenCalledTimes(2)
+  })
+
+  it('stops after bounded retries and explains persistent startup failure', async () => {
+    const loadState = vi.fn().mockRejectedValue(new Error('backend unavailable'))
+    const user = userEvent.setup()
+    render(<DesktopStartupGate loadState={loadState}><p>normal route</p></DesktopStartupGate>)
+
+    expect(await screen.findByRole('heading', { name: 'Codex Flow is unavailable' })).toBeInTheDocument()
+    for (let retry = 0; retry < 3; retry += 1) {
+      await user.click(screen.getByRole('button', { name: 'Retry connection' }))
+      await screen.findByRole('button', { name: retry === 2 ? 'Retry limit reached' : 'Retry connection' })
+    }
+    expect(screen.getByRole('alert')).toHaveTextContent('after bounded retries')
+    expect(screen.getByRole('button', { name: 'Retry limit reached' })).toBeDisabled()
+    expect(loadState).toHaveBeenCalledTimes(4)
   })
 })
