@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M11-RECOVERY-013",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Persisting NEEDS_ATTENTION across application recreation and verifying the state remains user-visible/actionable without success conversion or prompt rerun."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M11-RECOVERY-014",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -635,6 +630,7 @@
     "M11-DATA-010",
     "M11-RECOVERY-011",
     "M11-RECOVERY-012",
+    "M11-RECOVERY-013",
     "M11-FIXTURE-002",
     "M11-PATH-003",
     "M11-PATH-004",
@@ -731,5 +727,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M11-RECOVERY-012 PASS. Paused queued restart made no external start before explicit Resume, then executed once; paused active restart only read the existing thread and remained NEEDS_ATTENTION. RC matrix 3 and recovery/resume regression 7 passed with Ruff. M11-RECOVERY-013 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
+  "last_validation_note": "M11-RECOVERY-013 PASS. NEEDS_ATTENTION remained durable and actionable after restart, with one read-thread reconciliation event, no success conversion, and no prompt rerun; RC matrix 4 and recovery/resume regression 7 passed with Ruff. M11-RECOVERY-014 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
 }

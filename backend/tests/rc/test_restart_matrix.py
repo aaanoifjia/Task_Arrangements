@@ -138,3 +138,44 @@ async def test_paused_active_run_reconciles_without_new_thread_start(tmp_path: P
         assert "create_thread" not in adapter.calls
     finally:
         restarted_connection.close()
+
+
+@pytest.mark.asyncio
+async def test_needs_attention_restart_remains_actionable_without_rerun(tmp_path: Path) -> None:
+    database_path = tmp_path / "attention-restart.sqlite3"
+    workflow = WorkflowDefinition(
+        id="attention-restart-workflow",
+        name="Attention Restart Workflow",
+        tasks=[TaskDefinition(id="A", name="A", prompt="attention", cwd=".")],
+        edges=[],
+    )
+    connection = open_database(database_path)
+    repository = StorageRepositories(connection)
+    repository.save_workflow_definition(workflow)
+    run_id = repository.create_workflow_run(workflow.id, workflow.model_dump(mode="json"))
+    task_run_id = repository.create_task_runs(run_id, ["A"])[0]
+    repository.update_workflow_run_state(run_id, TaskStatus.RUNNING.value)
+    repository.update_task_run_state(
+        task_run_id, TaskStatus.NEEDS_ATTENTION.value, "attention-thread", "attention-turn"
+    )
+    connection.close()
+
+    restarted_connection = open_database(database_path)
+    try:
+        restarted_repository = StorageRepositories(restarted_connection)
+        adapter = RecordingAdapter()
+        reconciled = await StartupReconciler(restarted_connection, adapter).reconcile()
+
+        assert reconciled == [task_run_id]
+        assert adapter.calls == ["read_thread"]
+        assert adapter.prompts == []
+        assert restarted_repository.get_task_run(task_run_id)["status"] == TaskStatus.NEEDS_ATTENTION.value
+        recovery_events = restarted_connection.execute(
+            "SELECT event_type FROM events WHERE task_run_id = ? ORDER BY rowid",
+            (task_run_id,),
+        ).fetchall()
+        assert [event["event_type"] for event in recovery_events] == [
+            "RECOVERY_THREAD_REQUIRES_RECONCILIATION"
+        ]
+    finally:
+        restarted_connection.close()
