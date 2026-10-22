@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M11-RECOVERY-014",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Running pause, resume, queued/running cancel, skip, mark-success, and retry across application recreation while checking canonical states, audit events, and downstream readiness."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M11-RECOVERY-015",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -260,7 +255,20 @@
     "M10-HARDEN-034",
     "M10-GATE-035",
     "M10-REPORT-036",
-    "M11-RC-001"
+    "M11-RC-001",
+    "M11-FIXTURE-002",
+    "M11-PATH-003",
+    "M11-PATH-004",
+    "M11-PATH-005",
+    "M11-PATH-006",
+    "M11-DATA-007",
+    "M11-DATA-008",
+    "M11-DATA-009",
+    "M11-DATA-010",
+    "M11-RECOVERY-011",
+    "M11-RECOVERY-012",
+    "M11-RECOVERY-013",
+    "M11-RECOVERY-014"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -732,5 +740,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M11-RECOVERY-013 PASS. NEEDS_ATTENTION remained durable and actionable after restart, with one read-thread reconciliation event, no success conversion, and no prompt rerun; RC matrix 4 and recovery/resume regression 7 passed with Ruff. M11-RECOVERY-014 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
+  "last_validation_note": "M11-RECOVERY-014 PASS. Control/restart matrix covered pause/resume, queued/running cancel, skip, mark-success, retry, audit, and downstream readiness; RC matrix 6 and control regression 12 passed with Ruff. M11-RECOVERY-015 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
 }
