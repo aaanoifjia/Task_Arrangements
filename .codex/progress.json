@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-EVENT-028",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-EVENT-029",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -318,7 +318,8 @@
     "M12-BACKUP-024",
     "M12-HISTORY-025",
     "M12-HISTORY-026",
-    "M12-HISTORY-027"
+    "M12-HISTORY-027",
+    "M12-EVENT-028"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -871,5 +872,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-EVENT-028 IN_PROGRESS: adding local event-type and task-text filters with a clear/reset affordance while preserving chronological arrival order."
+  "last_validation_note": "M12-EVENT-028 PASS: event-type and task/attempt text filters preserve chronological arrival order, clear/reset restores the full log, and empty/filter states are covered; EventLog tests 3 passed, frontend tsc -b and ESLint passed. Next deterministic task is M12-EVENT-029."
 }
