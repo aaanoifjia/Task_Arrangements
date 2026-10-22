@@ -205,13 +205,13 @@ unexpected_files = []
 
 Current task:
 
-`M12-EVENT-029` — Safe Copy Event Details (IN_PROGRESS)
+`M12-STATUS-030` — Runtime/About Public Model
 
 M11-RC-001 through M11-BUILD-032 are COMPLETE.
 
 M11-BUILD-033 encountered an external host-specific MSI/WiX blocker: WiX ICE validation failed with Win32 0x643 because the Windows Installer service is unavailable. This does not invalidate the successful M9 MSI/NSIS bundle evidence and does not require changing Windows system state for the M11 idempotency goal.
 
-M11 is COMPLETE through M11-REPORT-036. M12-UX-001 through M12-DIAG-021 and M12-BACKUP-022 through M12-BACKUP-024 are COMPLETE. M12-BACKUP-024 added an explicit database backup download action with a workflow/run data security warning; downloads are user-triggered only and backup/error tests pass. M12-HISTORY-025 and M12-HISTORY-026 are COMPLETE: stable cursor pagination has no gaps/duplicates, and the frontend appends pages with explicit Load more, end, and error handling. The bounded M12-HISTORY-026-R1 remediation is also COMPLETE. M12-HISTORY-027 is COMPLETE: local status and workflow/name/id filters support clear behavior without backend refetch or scheduler/storage changes. M12-EVENT-028 is COMPLETE: event-type and task/attempt text filters preserve order and provide clear/reset behavior. M12-EVENT-029 is now in progress.
+M11 is COMPLETE through M11-REPORT-036. M12-UX-001 through M12-DIAG-021 and M12-BACKUP-022 through M12-BACKUP-024 are COMPLETE. M12-BACKUP-024 added an explicit database backup download action with a workflow/run data security warning; downloads are user-triggered only and backup/error tests pass. M12-HISTORY-025 and M12-HISTORY-026 are COMPLETE: stable cursor pagination has no gaps/duplicates, and the frontend appends pages with explicit Load more, end, and error handling. The bounded M12-HISTORY-026-R1 remediation is also COMPLETE. M12-HISTORY-027 is COMPLETE: local status and workflow/name/id filters support clear behavior without backend refetch or scheduler/storage changes. M12-EVENT-028 is COMPLETE: event-type and task/attempt text filters preserve order and provide clear/reset behavior. M12-EVENT-029 is COMPLETE: copy actions expose only safe event metadata and visibly fall back when clipboard access is unavailable. The next deterministic task is M12-STATUS-030.
 
 Do not modify/start/enable the Windows Installer service, Windows optional features, security settings, or system packages for this remediation.
 

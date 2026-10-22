@@ -5,9 +5,20 @@ import './runs.css'
 
 export type EventLogProps = { events: EventView[] }
 
+function safeEventDetails(event: EventView): string {
+  return [
+    `Event ID: ${event.id}`,
+    `Event type: ${event.event_type}`,
+    `Created at: ${event.created_at}`,
+    event.task_run_id ? `Task: ${event.task_run_id}` : null,
+    event.attempt_id ? `Attempt: ${event.attempt_id}` : null,
+  ].filter((line): line is string => line !== null).join('\n')
+}
+
 function EventLog({ events }: EventLogProps) {
   const [eventTypeFilter, setEventTypeFilter] = useState('')
   const [taskFilter, setTaskFilter] = useState('')
+  const [copyMessage, setCopyMessage] = useState<{ eventId: string; text: string } | null>(null)
   const eventTypes = useMemo(() => Array.from(new Set(events.map((event) => event.event_type))), [events])
   const normalizedTaskFilter = taskFilter.trim().toLowerCase()
   const visibleEvents = events.filter((event) => {
@@ -20,6 +31,17 @@ function EventLog({ events }: EventLogProps) {
   const clearFilters = () => {
     setEventTypeFilter('')
     setTaskFilter('')
+  }
+
+  const copyDetails = async (event: EventView) => {
+    const details = safeEventDetails(event)
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error('Clipboard API unavailable')
+      await navigator.clipboard.writeText(details)
+      setCopyMessage({ eventId: event.id, text: 'Copied safe event details.' })
+    } catch {
+      setCopyMessage({ eventId: event.id, text: `Clipboard unavailable. Safe details:\n${details}` })
+    }
   }
 
   return (
@@ -53,7 +75,9 @@ function EventLog({ events }: EventLogProps) {
                 <strong>{event.event_type}</strong>
                 {event.task_run_id && <span>Task: {event.task_run_id}</span>}
                 {event.attempt_id && <span>Attempt: {event.attempt_id}</span>}
+                <button type="button" onClick={() => void copyDetails(event)}>Copy details</button>
               </div>
+              {copyMessage?.eventId === event.id && <p role="status" className="event-log__copy-message">{copyMessage.text}</p>}
               <details>
                 <summary>Payload</summary>
                 <pre>{JSON.stringify(event.payload, null, 2)}</pre>

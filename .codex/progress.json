@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-EVENT-029",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-STATUS-030",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -319,7 +319,8 @@
     "M12-HISTORY-025",
     "M12-HISTORY-026",
     "M12-HISTORY-027",
-    "M12-EVENT-028"
+    "M12-EVENT-028",
+    "M12-EVENT-029"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -872,5 +873,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-EVENT-029 IN_PROGRESS: adding explicit safe metadata copy actions with visible clipboard success/fallback feedback and no token/prompt exposure."
+  "last_validation_note": "M12-EVENT-029 PASS: explicit copy actions include only safe event metadata, clipboard success is reported, and unavailable clipboard fallback visibly exposes only safe details; EventLog tests 5 passed, frontend tsc -b and ESLint passed. Next deterministic task is M12-STATUS-030."
 }

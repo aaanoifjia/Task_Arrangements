@@ -1,5 +1,5 @@
 import { render, screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
 import type { EventView } from '../../api/types'
 import EventLog from './EventLog'
@@ -20,6 +20,11 @@ const events: EventView[] = [
 ]
 
 describe('EventLog', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: undefined })
+  })
+
   it('preserves arrival order and renders references and JSON payloads', () => {
     render(<EventLog events={events} />)
     const items = screen.getAllByRole('listitem')
@@ -53,5 +58,33 @@ describe('EventLog', () => {
     expect(within(filtered[1]!).getByText('TURN_COMPLETED')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Clear filters' }))
     expect(screen.getAllByRole('listitem')).toHaveLength(3)
+  })
+
+  it('copies only safe event metadata and reports clipboard success', async () => {
+    const user = userEvent.setup()
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } })
+    render(<EventLog events={events} />)
+
+    await user.click(within(screen.getAllByRole('listitem')[0]!).getByRole('button', { name: 'Copy details' }))
+
+    expect(writeText).toHaveBeenCalledWith(expect.stringContaining('Event ID: event-1'))
+    const copied = writeText.mock.calls[0]?.[0] as string
+    expect(copied).toContain('Event type: TURN_STARTED')
+    expect(copied).toContain('Task: task-a')
+    expect(copied).not.toMatch(/token|prompt|payload/i)
+    expect(screen.getByRole('status')).toHaveTextContent('Copied safe event details.')
+  })
+
+  it('shows safe details when the clipboard API is unavailable', async () => {
+    const user = userEvent.setup()
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: undefined })
+    render(<EventLog events={events} />)
+
+    await user.click(within(screen.getAllByRole('listitem')[1]!).getByRole('button', { name: 'Copy details' }))
+
+    expect(screen.getByRole('status')).toHaveTextContent('Clipboard unavailable.')
+    expect(screen.getByRole('status')).toHaveTextContent('Event ID: event-2')
+    expect(screen.getByRole('status')).not.toHaveTextContent('payload')
   })
 })

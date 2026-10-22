@@ -72,6 +72,22 @@
   opacity: 0.6;
 }
 
+.event-log__summary button {
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--surface-panel);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.event-log__copy-message {
+  margin: var(--space-2) 0 0;
+  white-space: pre-wrap;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
 @media (max-width: 48rem) {
   .run-list__filters {
     align-items: stretch;
