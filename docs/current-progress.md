@@ -205,13 +205,13 @@ unexpected_files = []
 
 Current task:
 
-`M12-IMPORT-012` — Workflow Import API
+`M12-IMPORT-013` — Frontend Import Client
 
 M11-RC-001 through M11-BUILD-032 are COMPLETE.
 
 M11-BUILD-033 encountered an external host-specific MSI/WiX blocker: WiX ICE validation failed with Win32 0x643 because the Windows Installer service is unavailable. This does not invalidate the successful M9 MSI/NSIS bundle evidence and does not require changing Windows system state for the M11 idempotency goal.
 
-M11 is COMPLETE through M11-REPORT-036. M12-UX-001 through M12-IMPORT-011 are COMPLETE. Import identity is deterministic: unused IDs are preserved, conflicts fail closed without an explicit replacement, and explicit replacements/new IDs are validated. The conflict matrix and parser tests 9 passed, Ruff and strict mypy passed. M12-IMPORT-012 is in progress.
+M11 is COMPLETE through M11-REPORT-036. M12-UX-001 through M12-IMPORT-012 are COMPLETE. Workflow import now persists valid versioned definitions through the application service and returns stable 400/409 errors for malformed or conflicting imports; API/import regression 5 passed, Ruff and strict mypy passed. The next deterministic task is M12-IMPORT-013.
 
 Do not modify/start/enable the Windows Installer service, Windows optional features, security settings, or system packages for this remediation.
 

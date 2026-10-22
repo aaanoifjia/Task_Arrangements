@@ -34,6 +34,15 @@ class WorkflowExportResponse(BaseModel):
     workflow: WorkflowDefinition
 
 
+class WorkflowImportRequest(BaseModel):
+    """Raw versioned export fields plus an explicit optional identity replacement."""
+
+    kind: Any = None
+    schema_version: Any = None
+    workflow: Any = None
+    replacement_id: str | None = None
+
+
 class RunStartResponse(BaseModel):
     run_id: str
 
