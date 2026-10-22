@@ -499,7 +499,8 @@
       ],
       "failing_validation": "frontend npm run typecheck failed with TS2739 because fakeClient() lacked getDiagnostics and downloadDiagnosticBundle.",
       "intended_acceptance": "The directly implicated ApiClient fake includes the new diagnostic methods without changing production behavior; focused diagnostics UI tests and frontend typecheck pass.",
-      "status": "IN_PROGRESS"
+      "status": "COMPLETE",
+      "validation": "DiagnosticsPanel tests passed 3/3; frontend tsc -b and ESLint passed."
     }
   ],
   "task_queue_after_current": [
