@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M11-BUILD-033",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M11-BUILD-033",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -288,7 +288,14 @@
     "M11-LOG-031",
     "M11-BUILD-032"
   ],
-  "blocked_tasks": {},
+  "blocked_tasks": {
+    "M11-BUILD-033": {
+      "status": "BLOCKED",
+      "reason": "The authoritative desktop build pipeline completed frontend, PyInstaller sidecar staging, and the release executable, but the WiX MSI linker failed with Win32 error 0x643 because the Windows Installer service is unavailable. Completing the required installer build needs an external system-level prerequisite outside the repository task scope.",
+      "last_successful_validation": "First exact scripts/build_desktop.ps1 run reached Tauri release executable creation; MSI bundling failed in WixTools314/light.exe during ICE01-ICE09 with Windows Installer service unavailable.",
+      "next_action": "Provide a functioning approved Windows Installer/WiX environment, then resume M11-BUILD-033 without discarding the current generated artifacts or changing the frozen build pipeline."
+    }
+  },
   "blocker_history": [
     {
       "task": "M5-RESTART-005",
@@ -338,6 +345,13 @@
       "last_successful_validation": "Frontend production build and PyInstaller sidecar staging passed; Tauri release executable built at desktop/src-tauri/target/release/codex-flow-desktop.exe, size 9128448 bytes, SHA256 C0BFE551670AC25C5716596E199B43D277AF9E3C6EABBB13DDCB716A1F3A4C30. MSI and NSIS bundle attempts both failed while downloading their missing official toolchain.",
       "next_action": "Provide an approved local WiX/NSIS toolchain or authorize its official installation/network access, then resume M9-DESKTOP-038 without discarding the existing build-script and Tauri-config fixes.",
       "resolved_by": "M9-DESKTOP-038"
+    },
+    {
+      "task": "M11-BUILD-033",
+      "reason": "The authoritative desktop build pipeline completed frontend, PyInstaller sidecar staging, and the release executable, but the WiX MSI linker failed with Win32 error 0x643 because the Windows Installer service is unavailable. Completing the required installer build needs an external system-level prerequisite outside the repository task scope.",
+      "last_successful_validation": "First exact scripts/build_desktop.ps1 run reached Tauri release executable creation; MSI bundling failed in WixTools314/light.exe during ICE01-ICE09 with Windows Installer service unavailable.",
+      "next_action": "Provide a functioning approved Windows Installer/WiX environment, then resume M11-BUILD-033 without discarding the current generated artifacts or changing the frozen build pipeline.",
+      "resolved_by": null
     }
   ],
   "remediation_history": [
