@@ -203,15 +203,15 @@ unexpected_files = []
 
 ## Current Task
 
-Current task:
+Current deterministic next task:
 
-`M11-GATE-035` — Release Candidate Automated Gate
+`M11-REPORT-036` — Release Candidate Report
 
 M11-RC-001 through M11-BUILD-032 are COMPLETE.
 
 M11-BUILD-033 encountered an external host-specific MSI/WiX blocker: WiX ICE validation failed with Win32 0x643 because the Windows Installer service is unavailable. This does not invalidate the successful M9 MSI/NSIS bundle evidence and does not require changing Windows system state for the M11 idempotency goal.
 
-M11-BUILD-033-R1, M11-BUILD-033, M11-BUILD-034-R1, and M11-BUILD-034 are COMPLETE. Two consecutive NSIS idempotency builds passed; the release executable PE check and packaged sidecar readiness/health/authenticated-status/clean-termination smoke passed 2/2 with Ruff. M11-GATE-035 is next, followed by M11-REPORT-036 → M12.
+M11-BUILD-033-R1, M11-BUILD-033, M11-BUILD-034-R1, M11-BUILD-034, and M11-GATE-035 are COMPLETE. The automated gate passed backend non-live 390/6 deselected/2 xfailed, frontend 52 files/177 tests with typecheck/lint/build, Tauri check plus 31 Rust tests, packaging/stress 23, packaged sidecar smoke 2, Ruff, and strict mypy. M11-REPORT-036 is next, followed by M12; live Codex and manual UI remain excluded.
 
 Do not modify/start/enable the Windows Installer service, Windows optional features, security settings, or system packages for this remediation.
 

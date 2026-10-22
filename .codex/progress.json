@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M11-GATE-035",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M11-REPORT-036",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -289,7 +289,8 @@
     "M11-BUILD-032",
     "M11-BUILD-033-R1",
     "M11-BUILD-033",
-    "M11-BUILD-034"
+    "M11-BUILD-034",
+    "M11-GATE-035"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -781,5 +782,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M11-BUILD-034 PASS: release executable PE validation and packaged sidecar handshake/health/authenticated-status/clean-termination smoke passed 2/2; Ruff passed. Bounded R1 replaced generated _internal staging and removed nested-runtime ambiguity."
+  "last_validation_note": "M11-GATE-035 PASS: backend non-live 390 passed/6 deselected/2 xfailed, frontend 52 files/177 tests with typecheck/lint/build, Tauri cargo check plus 31 Rust tests, packaging/stress 23 passed, packaged sidecar smoke 2 passed, Ruff and strict mypy passed. Live Codex and manual UI remain excluded."
 }

@@ -34,3 +34,49 @@ M11 does not require live Codex execution, network access, new package
 downloads, new third-party runtime dependencies, new system toolchains, or
 manual GUI/Desktop verification. These exclusions are part of the release
 candidate contract and keep the validation deterministic and offline.
+
+## M11-GATE-035 automated evidence
+
+Recorded on 2026-10-22. All checks used the existing local environment and
+completed without network access, live Codex execution, credentials, or GUI
+interaction:
+
+| Area | Result |
+| --- | --- |
+| Backend non-live regression | `390 passed, 6 deselected, 2 xfailed` |
+| Frontend Vitest | `52` files, `177` tests passed |
+| Frontend typecheck/lint/build | PASS |
+| Tauri cargo check | PASS |
+| Tauri Rust tests | `31 passed, 0 failed` |
+| Packaging and stress suite | `23 passed` |
+| Packaged sidecar smoke | `2 passed`; readiness, healthz, authenticated system status, clean termination |
+| Targeted regression after gate repairs | `10 passed` |
+| Ruff | PASS for backend, desktop tests, and scripts |
+| Strict mypy | PASS for `backend/src/codex_flow` (52 files) |
+| Windows release build | Two NSIS-only idempotency runs passed; MSI/WiX was not rebuilt because the Windows Installer service remained unavailable |
+
+The gate claims automated evidence only. Manual Desktop/UI checks remain
+deferred to M12-REPORT-038.
+
+## M11-GATE-035 automated evidence
+
+Recorded on 2026-10-22. All checks used the existing local environment and
+completed without network access, live Codex execution, credentials, or GUI
+interaction:
+
+| Area | Result |
+| --- | --- |
+| Backend non-live regression | `390 passed, 6 deselected, 2 xfailed` |
+| Frontend Vitest | `52` files, `177` tests passed |
+| Frontend typecheck/lint/build | PASS |
+| Tauri cargo check | PASS |
+| Tauri Rust tests | `31 passed, 0 failed` |
+| Packaging and stress suite | `23 passed` |
+| Packaged sidecar smoke | `2 passed`; readiness, healthz, authenticated system status, clean termination |
+| Targeted regression after gate repairs | `10 passed` |
+| Ruff | PASS for backend, desktop tests, and scripts |
+| Strict mypy | PASS for `backend/src/codex_flow` (52 files) |
+| Windows release build | Two NSIS-only idempotency runs passed; MSI/WiX was not rebuilt because the Windows Installer service remained unavailable |
+
+The gate claims automated evidence only. Manual Desktop/UI checks remain
+deferred to M12-REPORT-038.

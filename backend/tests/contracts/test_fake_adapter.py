@@ -13,7 +13,7 @@ async def test_fake_stream_is_deterministic(scenario: FakeScenario) -> None:
     events = [event async for event in adapter.stream_turn(turn)]
     assert thread.thread_id == "fake-thread-1"
     assert turn.turn_id == "fake-turn-1"
-    assert [event.event_type for event in events][0] is EventType.TURN_STARTED
+    assert next(event.event_type for event in events) is EventType.TURN_STARTED
     assert adapter.calls == ["create_thread", "start_turn", "stream_turn"]
 
 
