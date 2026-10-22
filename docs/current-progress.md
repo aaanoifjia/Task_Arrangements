@@ -203,7 +203,7 @@ unexpected_files = []
 
 ## Current Task
 
-Current deterministic next task:
+Current task:
 
 `M11-BUILD-034` — Release Executable Local Smoke
 
