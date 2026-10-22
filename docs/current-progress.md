@@ -154,6 +154,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M10-REPORT-036 — M10 automated hardening report PASS; exact automated results recorded, all 22 v1 acceptance items mapped, and final manual V1 checklist created with Desktop/UI observations explicitly pending
 - M11-RC-001 — offline release-candidate contract and local toolchain/Tauri-input preflight PASS; 2 tests and Ruff passed without installation or download
 - M11-FIXTURE-002 — deterministic app-data, workflow, Fake adapter, SQLite run, and process lifecycle fixture factory PASS; 5 tests and Ruff passed
+- M11-PATH-003 — durable Fake workflow in a nested space-containing workspace PASS; exact cwd persistence, canonical lock serialization, and no duplicate execution verified; 5 related tests and Ruff passed
 
 ## Verified Codex Runtime
 
@@ -183,16 +184,16 @@ unexpected_files = []
 
 ## Current Task
 
-Current task:
+Current deterministic next task:
 
-`M11-PATH-003` — Workspace Path With Spaces (IN_PROGRESS)
+`M11-PATH-004` — Unicode Workspace Path
 
 M10 automated hardening is COMPLETE. M11–M12 are now authoritative and queued on master:
 
 - M11: 36 release-candidate / real-world validation tasks;
 - M12: 38 product-quality / operations tasks.
 
-M11-RC-001 and M11-FIXTURE-002 are COMPLETE. The M11-PATH-003 start checkpoint is committed; continue automatically through M12-REPORT-038.
+M11-RC-001, M11-FIXTURE-002, and M11-PATH-003 are COMPLETE. Continue automatically through M12-REPORT-038.
 
 M11/M12 are local/offline by default: no live Codex turn, external web research, new package downloads, or new system toolchains are required by the plan. Small deterministic adjacent integration failures should use bounded automatic remediation instead of stopping.
 
