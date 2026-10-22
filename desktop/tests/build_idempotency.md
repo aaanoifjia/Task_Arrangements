@@ -50,6 +50,34 @@ set. The invalid target was rejected before any build step. The default command
 still selects the full configured Windows bundle pipeline; MSI/WiX support and
 Windows Installer behavior were not changed.
 
+## M11-BUILD-033 repeated-build evidence
+
+Both idempotency runs used the same tracked repository state and the same
+command:
+
+```powershell
+$env:Path = "C:\Users\Administrator\.cargo\bin;$env:Path"
+.\scripts\build_desktop.ps1 -BundleTarget nsis
+```
+
+The tracked commit was `044284780ed5aa0aac66db308530ef0a9f260d94` for both
+runs. Each run passed the frontend production build, PyInstaller sidecar
+staging, Tauri release executable build, and NSIS bundling. The second-run
+artifact discovery was:
+
+| Artifact | Size (bytes) | SHA256 |
+| --- | ---: | --- |
+| `desktop/src-tauri/target/release/codex-flow-desktop.exe` | 9092096 | `252E70D3B0E511024AA51F20B4C4E3D642025025091121566D875F3C17D1AB47` |
+| `desktop/src-tauri/target/release/bundle/nsis/Codex Flow_0.1.0_x64-setup.exe` | 7606028 | `BEEC88473C01738D8A94663532ED9B45293A4EC835AFB31D2E57D7D98695EE5A` |
+| `desktop/src-tauri/binaries/codex-flow-server-x86_64-pc-windows-msvc.exe` | 5717136 | `FB71DA7602A7DECA0608D60C48EFCCDF889E48DBD6A6A77A6AADA2EA35F00F38` |
+
+The second run rediscovered one current NSIS installer and one target-named
+sidecar executable with one `_internal` runtime tree (369 files); no duplicate
+staged sidecar was accumulated. The pre-existing MSI directory remains as
+historical M9 evidence only and was not rebuilt or claimed as an M11 result.
+The successful M9 MSI/NSIS evidence remains in
+`docs/windows-build-artifacts.md`.
+
 ## Recorded R1 validation
 
 Run on 2026-10-22 with the existing user-level toolchain PATH temporarily

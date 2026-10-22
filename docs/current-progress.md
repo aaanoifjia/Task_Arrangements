@@ -203,15 +203,15 @@ unexpected_files = []
 
 ## Current Task
 
-Current task:
+Current deterministic next task:
 
-`M11-BUILD-033` — Repeated Build Idempotency
+`M11-BUILD-034` — Release Executable Local Smoke
 
 M11-RC-001 through M11-BUILD-032 are COMPLETE.
 
 M11-BUILD-033 encountered an external host-specific MSI/WiX blocker: WiX ICE validation failed with Win32 0x643 because the Windows Installer service is unavailable. This does not invalidate the successful M9 MSI/NSIS bundle evidence and does not require changing Windows system state for the M11 idempotency goal.
 
-M11-BUILD-033-R1 is COMPLETE: the normal full-bundle build remains the default, explicit NSIS/MSI selectors are available, invalid selectors fail visibly, and focused offline dry-run checks passed. M11-BUILD-033 is next. If the Windows Installer service is still unavailable, run both repeated-build idempotency passes with NSIS, record that MSI was not rebuilt in M11, and continue to M11-BUILD-034 → M11-GATE-035 → M11-REPORT-036 → M12.
+M11-BUILD-033-R1 and M11-BUILD-033 are COMPLETE. Two consecutive builds from the same tracked state passed using explicit NSIS mode; frontend, PyInstaller sidecar staging, release executable, and NSIS installer passed twice. MSI was not rebuilt in M11 because the Windows Installer service remained unavailable, and prior M9 MSI evidence remains separate. M11-BUILD-034 is next, followed by M11-GATE-035 → M11-REPORT-036 → M12.
 
 Do not modify/start/enable the Windows Installer service, Windows optional features, security settings, or system packages for this remediation.
 
