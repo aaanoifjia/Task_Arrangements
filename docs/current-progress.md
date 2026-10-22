@@ -183,16 +183,16 @@ unexpected_files = []
 
 ## Current Task
 
-Current deterministic next task:
+Current task:
 
-`M11-PATH-003` — Workspace Path With Spaces
+`M11-PATH-003` — Workspace Path With Spaces (IN_PROGRESS)
 
 M10 automated hardening is COMPLETE. M11–M12 are now authoritative and queued on master:
 
 - M11: 36 release-candidate / real-world validation tasks;
 - M12: 38 product-quality / operations tasks.
 
-M11-RC-001 and M11-FIXTURE-002 are COMPLETE. Continue automatically through M12-REPORT-038.
+M11-RC-001 and M11-FIXTURE-002 are COMPLETE. The M11-PATH-003 start checkpoint is committed; continue automatically through M12-REPORT-038.
 
 M11/M12 are local/offline by default: no live Codex turn, external web research, new package downloads, or new system toolchains are required by the plan. Small deterministic adjacent integration failures should use bounded automatic remediation instead of stopping.
 
