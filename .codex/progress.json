@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-A11Y-034",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-PERF-035",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -324,7 +324,8 @@
     "M12-STATUS-030",
     "M12-STATUS-031",
     "M12-UX-032",
-    "M12-UX-033"
+    "M12-UX-033",
+    "M12-A11Y-034"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -913,5 +914,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-A11Y-034 IN_PROGRESS: running the existing accessibility regression stack and repairing bounded focus restoration/dialog semantics without adding a package."
+  "last_validation_note": "M12-A11Y-034 COMPLETE: focused accessibility checks, full frontend regression (59 files/210 tests), typecheck, and lint passed; bounded M12-A11Y-034-R1 resolved the existing M7 EventLog assertion collision. Next task: M12-PERF-035."
 }

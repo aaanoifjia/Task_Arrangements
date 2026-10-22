@@ -18,11 +18,21 @@ const labels: Record<DestructiveAction, string> = {
 
 function ConfirmActionDialog({ action, open, onConfirm, onCancel }: ConfirmActionDialogProps) {
   const confirmRef = useRef<HTMLButtonElement>(null)
+  const triggerRef = useRef<HTMLElement | null>(null)
+  const wasOpenRef = useRef(false)
   const label = labels[action]
 
   useEffect(() => {
+    if (open && !wasOpenRef.current) {
+      triggerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
+      confirmRef.current?.focus()
+    }
+    if (!open && wasOpenRef.current) {
+      triggerRef.current?.focus()
+      triggerRef.current = null
+    }
+    wasOpenRef.current = open
     if (!open) return
-    confirmRef.current?.focus()
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onCancel()
     }
@@ -38,9 +48,10 @@ function ConfirmActionDialog({ action, open, onConfirm, onCancel }: ConfirmActio
         role="dialog"
         aria-modal="true"
         aria-labelledby="confirm-action-dialog-heading"
+        aria-describedby="confirm-action-dialog-description"
       >
         <h2 id="confirm-action-dialog-heading">Confirm {label}</h2>
-        <p>This action changes the durable task state. Continue?</p>
+        <p id="confirm-action-dialog-description">This action changes the durable task state. Continue?</p>
         <div className="confirm-action-dialog__actions">
           <button type="button" onClick={onCancel}>Keep task</button>
           <button type="button" ref={confirmRef} onClick={onConfirm}>Confirm {label}</button>

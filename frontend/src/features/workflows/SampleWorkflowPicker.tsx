@@ -19,7 +19,7 @@ function SampleWorkflowPicker({ samples = STARTER_WORKFLOWS, onSelect, onCancel 
   const selected = samples.find((sample) => sample.id === selectedId)
 
   return (
-    <section className="workflow-picker" role="dialog" aria-labelledby="sample-picker-heading">
+    <section className="workflow-picker" role="dialog" aria-modal="true" aria-labelledby="sample-picker-heading">
       <div className="workflow-picker__header">
         <div>
           <h2 id="sample-picker-heading">Try a sample workflow</h2>
