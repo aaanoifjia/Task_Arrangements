@@ -1,8 +1,9 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { describe, expect, it, vi } from 'vitest'
 import { fixtureWorkflowSummary } from '../../test/fixtures'
+import { STARTER_WORKFLOWS } from '../../samples/workflows'
 import type { WorkflowApi } from './api'
 import WorkflowListPage from './WorkflowListPage'
 
@@ -37,5 +38,29 @@ describe('WorkflowListPage', () => {
     await screen.findByRole('heading', { name: 'Start your first workflow' })
     await user.click(screen.getByRole('button', { name: 'Try a sample' }))
     expect(onTrySample).toHaveBeenCalledOnce()
+  })
+
+  it('creates a materialized sample through the API and opens the returned editor route', async () => {
+    const create = vi.fn().mockImplementation(async (workflow) => ({ workflow }))
+    const user = userEvent.setup()
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <Routes>
+          <Route path="/" element={<WorkflowListPage api={api({ list: vi.fn().mockResolvedValue([]), create })} />} />
+          <Route path="/workflows/:workflowId" element={<p>editor route</p>} />
+        </Routes>
+      </MemoryRouter>,
+    )
+
+    await screen.findByRole('heading', { name: 'Start your first workflow' })
+    await user.click(screen.getByRole('button', { name: 'Try a sample' }))
+    await user.click(screen.getByRole('radio', { name: /Linear starter/ }))
+    await user.click(screen.getByRole('button', { name: 'Use selected sample' }))
+
+    await screen.findByText('editor route')
+    expect(create).toHaveBeenCalledWith(expect.objectContaining({
+      id: 'sample-linear-copy',
+      tasks: STARTER_WORKFLOWS[0].tasks,
+    }))
   })
 })
