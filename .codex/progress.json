@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M11-DESKTOP-027",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M11-DESKTOP-028",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -752,5 +752,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M11-DESKTOP-026 PASS. The packaged sidecar was crashed after readiness and durable database creation, relaunched once with the same database path and a fresh token, reached readiness again, and shut down cleanly; full Tauri Rust suite passed 28/28. M11-DESKTOP-027 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
+  "last_validation_note": "M11-DESKTOP-027 PASS. The existing single-instance focus operation was exercised for a 64-callback burst with no secondary window/state creation; full Tauri Rust suite passed 29/29. M11-DESKTOP-028 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
 }
