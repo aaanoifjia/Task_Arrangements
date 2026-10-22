@@ -50,6 +50,27 @@ describe('RunListPage', () => {
     await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('offline'))
   })
 
+  it('filters by status and workflow/id text, then clears local filters without refetching', async () => {
+    const user = userEvent.setup()
+    const secondRun = { ...fixtureRunSummary, id: 'run-2', status: 'SUCCESS' as const, workflow_id: 'other-workflow' }
+    const thirdRun = { ...fixtureRunSummary, id: 'run-3', status: 'FAILED' as const }
+    const listPage = vi.fn().mockResolvedValue({ items: [fixtureRunSummary, secondRun, thirdRun], next_cursor: null })
+    render(<MemoryRouter><RunListPage api={api({ listPage })} /></MemoryRouter>)
+
+    expect(await screen.findByText('run-3')).toBeInTheDocument()
+    await user.selectOptions(screen.getByLabelText('Status'), 'FAILED')
+    expect(screen.getByText('run-3')).toBeInTheDocument()
+    expect(screen.queryByText('run-1')).not.toBeInTheDocument()
+    await user.clear(screen.getByLabelText('Search workflow, name, or run ID'))
+    await user.type(screen.getByLabelText('Search workflow, name, or run ID'), 'other-workflow')
+    expect(screen.getByText('No runs match the current filters.')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Clear filters' }))
+    expect(screen.getByText('run-1')).toBeInTheDocument()
+    expect(screen.getByText('run-2')).toBeInTheDocument()
+    expect(screen.getByText('run-3')).toBeInTheDocument()
+    expect(listPage).toHaveBeenCalledOnce()
+  })
+
   it('appends a page without duplicate runs and hides Load more at the end', async () => {
     const user = userEvent.setup()
     const secondRun = { ...fixtureRunSummary, id: 'run-2' }

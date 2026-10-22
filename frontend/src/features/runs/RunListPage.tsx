@@ -1,10 +1,16 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import type { RunSummary } from '../../api/types'
+import type { RunStatus, RunSummary } from '../../api/types'
 import { createRunApi, type RunApi } from './api'
 import './RunListPage.css'
+import './runs.css'
 
 export type RunListPageProps = { api?: RunApi }
+
+const runStatuses: RunStatus[] = [
+  'PENDING', 'READY', 'STARTING', 'RUNNING', 'SUCCESS', 'FAILED', 'BLOCKED',
+  'CANCELLED', 'INTERRUPTED', 'NEEDS_ATTENTION', 'SKIPPED',
+]
 
 function RunListPage({ api }: RunListPageProps) {
   const stableApi = useMemo(() => api ?? createRunApi(), [api])
@@ -15,6 +21,8 @@ function RunListPage({ api }: RunListPageProps) {
   const [loadingMore, setLoadingMore] = useState(false)
   const [nextCursor, setNextCursor] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [statusFilter, setStatusFilter] = useState<RunStatus | ''>('')
+  const [textFilter, setTextFilter] = useState('')
 
   const refresh = useCallback(async () => {
     setLoading(true)
@@ -59,9 +67,18 @@ function RunListPage({ api }: RunListPageProps) {
     }
   }, [loadingMore, nextCursor, stableApi, workflowFilter])
 
-  const visibleRuns = workflowFilter
-    ? runs.filter((run) => run.workflow_id === workflowFilter)
-    : runs
+  const normalizedTextFilter = textFilter.trim().toLowerCase()
+  const visibleRuns = runs.filter((run) => {
+    if (workflowFilter && run.workflow_id !== workflowFilter) return false
+    if (statusFilter && run.status !== statusFilter) return false
+    if (!normalizedTextFilter) return true
+    return [run.id, run.workflow_id].some((value) => value.toLowerCase().includes(normalizedTextFilter))
+  })
+
+  const clearFilters = () => {
+    setStatusFilter('')
+    setTextFilter('')
+  }
 
   return (
     <section aria-labelledby="run-list-heading" className="run-list">
@@ -72,10 +89,26 @@ function RunListPage({ api }: RunListPageProps) {
         </div>
         <button type="button" onClick={() => void refresh()} disabled={loading}>Refresh</button>
       </div>
+      <div className="run-list__filters" aria-label="Run history filters">
+        <label htmlFor="run-status-filter">Status</label>
+        <select id="run-status-filter" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as RunStatus | '')}>
+          <option value="">All statuses</option>
+          {runStatuses.map((status) => <option key={status} value={status}>{status}</option>)}
+        </select>
+        <label htmlFor="run-text-filter">Search workflow, name, or run ID</label>
+        <input
+          id="run-text-filter"
+          type="search"
+          value={textFilter}
+          onChange={(event) => setTextFilter(event.target.value)}
+          placeholder="Search workflow, name, or run ID"
+        />
+        <button type="button" onClick={clearFilters} disabled={!statusFilter && !textFilter}>Clear filters</button>
+      </div>
       {loading && <p role="status">Loading runs…</p>}
       {error && <p role="alert">{error}</p>}
       {!loading && !error && visibleRuns.length === 0 && (
-        <p>{workflowFilter ? 'No runs found for this workflow.' : 'No runs yet.'}</p>
+        <p>{runs.length > 0 ? 'No runs match the current filters.' : (workflowFilter ? 'No runs found for this workflow.' : 'No runs yet.')}</p>
       )}
       {!loading && visibleRuns.length > 0 && (
         <ul className="run-list__items">

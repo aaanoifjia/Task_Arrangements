@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-HISTORY-027",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-EVENT-028",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -317,7 +317,8 @@
     "M12-BACKUP-023",
     "M12-BACKUP-024",
     "M12-HISTORY-025",
-    "M12-HISTORY-026"
+    "M12-HISTORY-026",
+    "M12-HISTORY-027"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -870,5 +871,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-HISTORY-027 IN_PROGRESS: adding local status and workflow/name/id text filters with clear behavior over loaded run history."
+  "last_validation_note": "M12-HISTORY-027 PASS: local status and workflow/name/id text filters support clear behavior without backend refetch or scheduler/storage changes; RunListPage filter suite 6 passed, frontend tsc -b and ESLint passed. Next deterministic task is M12-EVENT-028."
 }
