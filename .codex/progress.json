@@ -489,6 +489,17 @@
       "intended_acceptance": "DiagnosticService matches the existing RuntimeManager active_count property and its integration fixture; diagnostics API authorization/redaction tests pass without changing runtime architecture.",
       "status": "COMPLETE",
       "validation": "Authorized/unauthorized diagnostics API, system regression, service, and model tests passed 8; Ruff and strict mypy passed."
+    },
+    {
+      "id": "M12-DIAG-021-R1",
+      "parent_task": "M12-DIAG-021",
+      "reason": "Adding required diagnostic methods to the shared ApiClient contract makes the existing workflow API unit-test fake incomplete, so frontend strict typecheck cannot pass until that direct fake is updated.",
+      "files": [
+        "frontend/src/features/workflows/api.test.ts"
+      ],
+      "failing_validation": "frontend npm run typecheck failed with TS2739 because fakeClient() lacked getDiagnostics and downloadDiagnosticBundle.",
+      "intended_acceptance": "The directly implicated ApiClient fake includes the new diagnostic methods without changing production behavior; focused diagnostics UI tests and frontend typecheck pass.",
+      "status": "IN_PROGRESS"
     }
   ],
   "task_queue_after_current": [
