@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M12-GATE-037",
+  "active_task": "M12-GATE-037",
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -914,5 +914,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-PERF-036 COMPLETE: 250-run pagination and 2,000-event filtering guards passed; related run/event tests passed 20/20, typecheck and lint passed. Next task: M12-GATE-037."
+  "last_validation_note": "M12-GATE-037 IN_PROGRESS: running the complete offline M10/M11/M12 backend, frontend, packaging, and Tauri regression gate without live Codex, network, or GUI interaction."
 }
