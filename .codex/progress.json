@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-SAMPLE-002",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-SAMPLE-003",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -292,7 +292,8 @@
     "M11-BUILD-034",
     "M11-GATE-035",
     "M11-REPORT-036",
-    "M12-UX-001"
+    "M12-UX-001",
+    "M12-SAMPLE-002"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -784,5 +785,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-UX-001 PASS: docs/productization-contract.md freezes local/offline productization boundaries for scheduler semantics, import/export, diagnostics, backup, history, onboarding, accessibility, and performance. Next deterministic task is M12-SAMPLE-002."
+  "last_validation_note": "M12-SAMPLE-002 PASS: linear, fork/join, and continuation starter workflows validate against frontend schema/graph assertions; all cwd values are '.', prompts are safe illustrative placeholders, and focused tests/typecheck/lint passed. Next deterministic task is M12-SAMPLE-003."
 }
