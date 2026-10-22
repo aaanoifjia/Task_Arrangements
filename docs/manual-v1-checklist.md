@@ -1,11 +1,15 @@
 # Codex Flow v1 Manual Verification Checklist
 
-Status: PENDING user verification after the automated M10 beta gate.
+Status: PENDING user verification after the automated M12 productization gate.
 
 Use the packaged Windows artifacts recorded in
 [`windows-build-artifacts.md`](windows-build-artifacts.md). Record the date,
 artifact filename, and observation for every item. Do not mark an item PASS
 from automated test output alone.
+
+The automated M12 gate passed. The items below intentionally remain manual:
+installer launch, native notification appearance, Open-in-Codex interoperability,
+real Codex execution, and subjective UI review.
 
 ## Installer and runtime
 
@@ -35,6 +39,15 @@ from automated test output alone.
 - [ ] Confirm the thread is searchable and associated with the expected project.
 - [ ] Observe a multi-task workflow and confirm no manual Enter is required
       between tasks.
+
+## Subjective UI review
+
+- [ ] Confirm the primary workflow/editor/run surfaces are understandable without
+      consulting implementation details.
+- [ ] Confirm loading, empty, error, attention, and recovery states are visually
+      clear and actionable.
+- [ ] Confirm the packaged application remains usable at the intended desktop
+      window size and with keyboard navigation.
 
 ## Evidence handoff
 

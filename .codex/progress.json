@@ -15,7 +15,7 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-REPORT-038",
+  "active_task": null,
   "next_task": null,
   "completed_tasks": [
     "PREP-000",
@@ -328,7 +328,8 @@
     "M12-A11Y-034",
     "M12-PERF-035",
     "M12-PERF-036",
-    "M12-GATE-037"
+    "M12-GATE-037",
+    "M12-REPORT-038"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -929,5 +930,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-REPORT-038 IN_PROGRESS: recording final M12 automated evidence, refreshing release-candidate README wording, and preserving the manual V1/Desktop handoff checklist."
+  "last_validation_note": "M12-REPORT-038 COMPLETE: final M12 automated evidence report, release-candidate README, and manual V1/Desktop handoff checklist recorded; automated gate PASS and manual observations remain explicitly separated."
 }
