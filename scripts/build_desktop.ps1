@@ -56,8 +56,12 @@ try {
     if (-not $DryRun) {
         Require-File $TauriBinary 'staged target-named sidecar executable'
         Require-File (Join-Path $SidecarInternal 'python311.dll') 'PyInstaller sidecar runtime'
-        Copy-Item -LiteralPath $SidecarInternal -Destination (Join-Path $TauriBinaryRoot '_internal') -Recurse -Force
-        Write-Output "ARTIFACT: sidecar runtime = $(Join-Path $TauriBinaryRoot '_internal')"
+        $StagedSidecarInternal = Join-Path $TauriBinaryRoot '_internal'
+        if (Test-Path -LiteralPath $StagedSidecarInternal) {
+            Remove-Item -LiteralPath $StagedSidecarInternal -Recurse -Force
+        }
+        Copy-Item -LiteralPath $SidecarInternal -Destination $StagedSidecarInternal -Recurse -Force
+        Write-Output "ARTIFACT: sidecar runtime = $StagedSidecarInternal"
     }
     $TauriBuildArguments = @('--prefix', 'frontend', 'exec', 'tauri', 'build', '--', '--config', 'desktop/src-tauri/tauri.conf.json')
     if ($BundleTarget -ne 'all') {

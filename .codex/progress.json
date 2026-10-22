@@ -15,7 +15,7 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M11-BUILD-034-R1",
+  "active_task": "M11-BUILD-034",
   "next_task": null,
   "completed_tasks": [
     "PREP-000",
@@ -439,7 +439,8 @@
       ],
       "failing_validation": "backend/tests/packaging/test_packaged_sidecar_contract.py failed: the built sidecar exited before readiness because binaries/_internal/codex_flow/storage/migrations/0003_query_indexes.sql was missing; the file existed under nested binaries/_internal/_internal.",
       "intended_acceptance": "The build script replaces the generated staged _internal tree before copying the current PyInstaller runtime, so packaged sidecar readiness, health, authenticated status, and clean termination pass after repeated builds.",
-      "status": "IN_PROGRESS"
+      "status": "COMPLETE",
+      "validation": "Rebuilt with NSIS mode after replacing the generated _internal destination; the packaged sidecar test passed 2/2, Ruff passed, migration 0003 was present at the canonical staging path, and no nested _internal tree remained."
     }
   ],
   "task_queue_after_current": [
