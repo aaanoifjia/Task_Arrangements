@@ -3258,11 +3258,11 @@ docs/manual-v1-checklist.md
 
 ### Implementation
 
-Record exact automated results and create final concise manual checklist for installer launch, native notification appearance, Open-in-Codex actual Desktop behavior, sidebar/search visibility and no-manual-Enter observation. Set next_task null after PASS.
+Record exact automated M10 results and seed/update the manual checklist for installer launch, native notification appearance, Open-in-Codex actual Desktop behavior, sidebar/search visibility and no-manual-Enter observation. Manual checks remain deferred. On PASS set next_task to M11-RC-001 from docs/reference/Codex_Flow_RC_Productization_Task_Plan.md.
 
 ### Acceptance
 
-M10 automated report PASS; manual checklist exists; project waits for user manual V1 verification.
+M10 automated report PASS; manual checklist exists; M11-RC-001 becomes the next deterministic task without requiring manual verification first.
 
 ---
 
