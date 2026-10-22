@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M11-DATA-008",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Rehearsing fresh, v1, v2, and current migration fixtures through schema version 3, then reopening each database to verify idempotence."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M11-DATA-009",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -630,6 +625,7 @@
     "M11-PATH-005",
     "M11-PATH-006",
     "M11-DATA-007",
+    "M11-DATA-008",
     "M11-FIXTURE-002",
     "M11-PATH-003",
     "M11-PATH-004",
@@ -726,5 +722,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M11-DATA-007 PASS. SQLite reopen matrix preserved workflow/run/task/attempt identifiers, snapshots, statuses, pause metadata, thread/turn refs, and ordered events; RC test 1 and repository/control/event regression 5 passed with Ruff. M11-DATA-008 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
+  "last_validation_note": "M11-DATA-008 PASS. Fresh/v1/v2/v3 migration rehearsal and repeated reopen/migrate idempotence passed 4 tests; latest schema/indexes and historical data remained intact, and existing migration regression passed 5 tests with Ruff. M11-DATA-009 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
 }
