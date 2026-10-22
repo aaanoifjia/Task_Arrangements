@@ -47,6 +47,7 @@ mod paths_test;
 #[cfg(test)]
 mod tests {
     use super::{child_paths, prepare_paths};
+    use std::fs;
     use std::path::Path;
 
     #[test]
@@ -76,5 +77,32 @@ mod tests {
         assert!(paths.root.ends_with("Codex Flow"));
         assert!(paths.db_path.ends_with(r"Codex Flow\codex-flow.sqlite3"));
         assert!(paths.log_dir.ends_with(r"Codex Flow\logs"));
+    }
+
+    #[test]
+    fn lifecycle_keeps_all_writable_paths_inside_unicode_app_data_root() {
+        let base = std::env::temp_dir().join(format!(
+            "Codex Flow RC 用户 data {}",
+            std::process::id()
+        ));
+        let first = prepare_paths(&base).expect("unicode app-data paths");
+        let second = prepare_paths(&base).expect("repeat unicode app-data paths");
+        let canonical_base = fs::canonicalize(&base).expect("canonical app-data base");
+        let window_state = second.root.join("window-state.json");
+        let log_file = second.log_dir.join("startup.log");
+
+        fs::write(&window_state, "{}") .expect("window state path");
+        fs::write(&log_file, "ready\n").expect("log path");
+
+        assert_eq!(first.root, second.root);
+        assert!(second.root.starts_with(&canonical_base));
+        assert!(second.db_path.starts_with(&second.root));
+        assert!(second.log_dir.starts_with(&second.root));
+        assert!(window_state.starts_with(&second.root));
+        assert!(log_file.starts_with(&second.root));
+        assert!(window_state.is_file());
+        assert!(log_file.is_file());
+
+        let _ = fs::remove_dir_all(base);
     }
 }
