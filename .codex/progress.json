@@ -514,7 +514,8 @@
       ],
       "failing_validation": "frontend npm run typecheck failed with TS2741 because fakeClient() did not implement ApiClientCore.downloadDatabaseBackup.",
       "intended_acceptance": "The directly implicated workflow API fake includes downloadDatabaseBackup without changing production behavior; focused backup UI tests and frontend typecheck pass.",
-      "status": "IN_PROGRESS"
+      "status": "COMPLETE",
+      "validation": "DiagnosticsPanel and workflow API tests passed 5/5; frontend tsc -b and ESLint passed."
     }
   ],
   "task_queue_after_current": [
