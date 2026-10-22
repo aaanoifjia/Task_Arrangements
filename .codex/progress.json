@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M12-REPORT-038",
+  "active_task": "M12-PERF-036-R1",
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -578,6 +578,17 @@
       "intended_acceptance": "The directly implicated integration assertion remains deterministic with the EventLog filter present; the full frontend regression suite, typecheck, and ESLint pass.",
       "status": "COMPLETE",
       "validation": "EventLog tests passed 5/5 and the M7 integration flow passed 1/1 after scoping the event lookup to the EventLog region."
+    },
+    {
+      "id": "M12-PERF-036-R1",
+      "parent_task": "M12-PERF-036",
+      "reason": "The initial large-history/event regression passed in isolation but its user-event and global role-query harness exceeded the default full-suite pressure; the directly implicated test needs deterministic scoped DOM collection and bounded fixture timeouts to remain runnable in the complete gate.",
+      "files": [
+        "frontend/src/features/runs/LargeHistoryEventPerformance.test.tsx"
+      ],
+      "failing_validation": "Complete frontend suite timed out both large-history/event cases under suite pressure while the isolated assertions passed.",
+      "intended_acceptance": "The same 250-run and 2,000-event assertions pass in isolation and in the complete frontend suite without changing production behavior or weakening fixture coverage.",
+      "status": "IN_PROGRESS"
     }
   ],
   "task_queue_after_current": [
@@ -917,5 +928,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-GATE-037 COMPLETE: backend non-live 417 passed/6 deselected/2 xfailed; packaging/stress 23 passed; Ruff and strict mypy passed; frontend 61 files/214 tests with typecheck/lint/build passed; Tauri cargo check and 31 Rust tests passed. Next task: M12-REPORT-038."
+  "last_validation_note": "M12-PERF-036-R1 IN_PROGRESS: making the existing large-history/event regression deterministic under the complete frontend suite using scoped DOM collection and fixture-only timeouts."
 }
