@@ -163,6 +163,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M11-DATA-009 — event cursor restart PASS; resumed EventStream returned only later events in stable order with no loss or duplication; 5 related tests and Ruff passed
 - M11-DATA-010 — Attempt history restart PASS; immutable IDs, statuses, thread/turn references, and ordering survived restart without overwrite; 5 related tests and Ruff passed
 - M11-RECOVERY-011 — queued run restart PASS; pre-turn recreation stayed fail-closed with no external call/child release, replacement runner executed each task once; 8 related tests and Ruff passed
+- M11-RECOVERY-012 — paused run restart PASS; no start before explicit Resume, one resumed execution, and active work reconciled to NEEDS_ATTENTION; 10 related tests and Ruff passed
 
 ## Verified Codex Runtime
 
@@ -192,16 +193,16 @@ unexpected_files = []
 
 ## Current Task
 
-Current task:
+Current deterministic next task:
 
-`M11-RECOVERY-012` — Paused Run Restart RC (IN_PROGRESS)
+`M11-RECOVERY-013` — Needs-Attention Restart RC
 
 M10 automated hardening is COMPLETE. M11–M12 are now authoritative and queued on master:
 
 - M11: 36 release-candidate / real-world validation tasks;
 - M12: 38 product-quality / operations tasks.
 
-M11-RC-001 through M11-RECOVERY-011 are COMPLETE. The M11-RECOVERY-012 start checkpoint is committed; continue automatically through M12-REPORT-038.
+M11-RC-001 through M11-RECOVERY-012 are COMPLETE. Continue automatically through M12-REPORT-038.
 
 M11/M12 are local/offline by default: no live Codex turn, external web research, new package downloads, or new system toolchains are required by the plan. Small deterministic adjacent integration failures should use bounded automatic remediation instead of stopping.
 

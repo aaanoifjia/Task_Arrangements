@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M11-RECOVERY-012",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Recreating a paused run, verifying active work reconciles without new starts, and confirming explicit Resume is the only operation that releases unfinished work."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M11-RECOVERY-013",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -634,6 +629,7 @@
     "M11-DATA-009",
     "M11-DATA-010",
     "M11-RECOVERY-011",
+    "M11-RECOVERY-012",
     "M11-FIXTURE-002",
     "M11-PATH-003",
     "M11-PATH-004",
@@ -730,5 +726,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M11-RECOVERY-011 PASS. Queued restart remained fail-closed before replacement execution, with no reconciliation/external call or child release; replacement runner executed parent and child once in order. RC test 1 and recovery regression 7 passed with Ruff. M11-RECOVERY-012 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
+  "last_validation_note": "M11-RECOVERY-012 PASS. Paused queued restart made no external start before explicit Resume, then executed once; paused active restart only read the existing thread and remained NEEDS_ATTENTION. RC matrix 3 and recovery/resume regression 7 passed with Ruff. M11-RECOVERY-013 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
 }

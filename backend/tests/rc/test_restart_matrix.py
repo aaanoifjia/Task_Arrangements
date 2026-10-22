@@ -9,6 +9,8 @@ import pytest
 from codex_flow.codex_adapter.fake import FakeCodexAdapter
 from codex_flow.codex_adapter.models import CodexThreadRef, CodexTurnRef
 from codex_flow.domain.models import Edge, TaskDefinition, WorkflowDefinition
+from codex_flow.domain.status import TaskStatus
+from codex_flow.runtime.manager import RuntimeManager
 from codex_flow.runtime.runner import DurableRunner
 from codex_flow.storage.db import open_database
 from codex_flow.storage.recovery import StartupReconciler
@@ -63,5 +65,76 @@ async def test_queued_run_restart_is_fail_closed_and_executes_once(tmp_path: Pat
         assert restarted_adapter.calls.count("create_thread") == 2
         assert restarted_adapter.calls.count("start_turn") == 2
         assert restarted_repository.get_workflow_run(run_id)["status"] == "SUCCESS"
+    finally:
+        restarted_connection.close()
+
+
+@pytest.mark.asyncio
+async def test_paused_run_restart_releases_work_only_after_explicit_resume(tmp_path: Path) -> None:
+    database_path = tmp_path / "paused-restart.sqlite3"
+    workflow = WorkflowDefinition(
+        id="paused-restart-workflow",
+        name="Paused Restart Workflow",
+        tasks=[TaskDefinition(id="A", name="A", prompt="paused", cwd=".")],
+        edges=[],
+    )
+    connection = open_database(database_path)
+    repository = StorageRepositories(connection)
+    repository.save_workflow_definition(workflow)
+    run_id = repository.create_workflow_run(workflow.id, workflow.model_dump(mode="json"))
+    task_run_id = repository.create_task_runs(run_id, ["A"])[0]
+    repository.update_workflow_run_state(run_id, TaskStatus.RUNNING.value)
+    repository.set_workflow_run_paused(run_id, True)
+    connection.close()
+
+    restarted_connection = open_database(database_path)
+    try:
+        restarted_repository = StorageRepositories(restarted_connection)
+        adapter = RecordingAdapter()
+        assert await StartupReconciler(restarted_connection, adapter).reconcile() == []
+        assert adapter.calls == []
+        assert restarted_repository.get_workflow_run_paused(run_id)
+
+        manager = RuntimeManager(restarted_repository, adapter)
+        manager.restore_workflow(run_id, workflow)
+        result = await manager.resume(run_id)
+        await manager.wait(run_id)
+
+        assert result.accepted
+        assert adapter.prompts == ["paused"]
+        assert restarted_repository.get_workflow_run_paused(run_id) is False
+        assert restarted_repository.get_task_run(task_run_id)["status"] == TaskStatus.SUCCESS.value
+    finally:
+        restarted_connection.close()
+
+
+@pytest.mark.asyncio
+async def test_paused_active_run_reconciles_without_new_thread_start(tmp_path: Path) -> None:
+    database_path = tmp_path / "paused-active-restart.sqlite3"
+    workflow = WorkflowDefinition(
+        id="paused-active-workflow",
+        name="Paused Active Workflow",
+        tasks=[TaskDefinition(id="A", name="A", prompt="active", cwd=".")],
+        edges=[],
+    )
+    connection = open_database(database_path)
+    repository = StorageRepositories(connection)
+    repository.save_workflow_definition(workflow)
+    run_id = repository.create_workflow_run(workflow.id, workflow.model_dump(mode="json"))
+    task_run_id = repository.create_task_runs(run_id, ["A"])[0]
+    repository.update_workflow_run_state(run_id, TaskStatus.RUNNING.value)
+    repository.set_workflow_run_paused(run_id, True)
+    repository.update_task_run_state(task_run_id, TaskStatus.RUNNING.value, "existing-thread", "existing-turn")
+    connection.close()
+
+    restarted_connection = open_database(database_path)
+    try:
+        restarted_repository = StorageRepositories(restarted_connection)
+        adapter = RecordingAdapter()
+        assert await StartupReconciler(restarted_connection, adapter).reconcile() == [task_run_id]
+        assert adapter.calls == ["read_thread"]
+        assert restarted_repository.get_workflow_run_paused(run_id)
+        assert restarted_repository.get_task_run(task_run_id)["status"] == TaskStatus.NEEDS_ATTENTION.value
+        assert "create_thread" not in adapter.calls
     finally:
         restarted_connection.close()
