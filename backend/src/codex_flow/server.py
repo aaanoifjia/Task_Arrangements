@@ -7,6 +7,7 @@ import ipaddress
 import json
 import logging
 import os
+import re
 import socket
 import sys
 from collections.abc import Sequence
@@ -24,6 +25,13 @@ LOG_FILE_NAME = "backend.log"
 LOG_MAX_BYTES = 1_048_576
 LOG_BACKUP_COUNT = 3
 SERVER_LOGGER_NAME = "codex_flow.server"
+_REDACTION_PATTERNS = (
+    re.compile(r"(?i)(\b(?:authorization\s*:\s*bearer|bearer)\s+)[^\s,;]+"),
+    re.compile(
+        r"(?i)(\b(?:token|password|secret|api[_-]?key|access[_-]?token)\s*[=:]\s*)[^\s,;&]+"
+    ),
+    re.compile(r"(?i)(\bprompt\s*[=:]\s*).*$"),
+)
 
 
 @dataclass(frozen=True)
@@ -96,6 +104,21 @@ def emit_readiness(port: int, *, pid: int | None = None) -> None:
     sys.stdout.flush()
 
 
+def redact_log_message(message: str) -> str:
+    """Remove bearer/query credentials and prompt contents from diagnostics."""
+    redacted = message
+    for pattern in _REDACTION_PATTERNS:
+        redacted = pattern.sub(r"\1[REDACTED]", redacted)
+    return redacted
+
+
+class RedactingFormatter(logging.Formatter):
+    """Format records only after applying the local secret-redaction policy."""
+
+    def format(self, record: logging.LogRecord) -> str:
+        return redact_log_message(super().format(record))
+
+
 def configure_logging(log_dir: Path | None) -> logging.Logger:
     """Configure bounded file-only logging without exposing process credentials."""
     logger = logging.getLogger(SERVER_LOGGER_NAME)
@@ -115,7 +138,7 @@ def configure_logging(log_dir: Path | None) -> logging.Logger:
         encoding="utf-8",
     )
     handler.name = SERVER_LOGGER_NAME
-    handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
+    handler.setFormatter(RedactingFormatter("%(asctime)s %(levelname)s %(message)s"))
     logger.addHandler(handler)
     return logger
 
