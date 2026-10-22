@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M12-REPORT-038",
+  "active_task": "M12-REPORT-038",
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -929,5 +929,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-PERF-036-R1 COMPLETE: optimized 250-run/2,000-event guard passed in isolation and in the complete frontend suite (61 files/214 tests); frontend typecheck and lint passed. Next task: M12-REPORT-038."
+  "last_validation_note": "M12-REPORT-038 IN_PROGRESS: recording final M12 automated evidence, refreshing release-candidate README wording, and preserving the manual V1/Desktop handoff checklist."
 }
