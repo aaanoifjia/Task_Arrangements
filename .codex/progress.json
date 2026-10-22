@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-STATUS-030",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-STATUS-031",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -320,7 +320,8 @@
     "M12-HISTORY-026",
     "M12-HISTORY-027",
     "M12-EVENT-028",
-    "M12-EVENT-029"
+    "M12-EVENT-029",
+    "M12-STATUS-030"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -885,5 +886,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-STATUS-030 IN_PROGRESS: extending authenticated local system status with stable version, desktop-mode, schema, and runtime-availability fields without secrets or private SDK data."
+  "last_validation_note": "M12-STATUS-030 PASS: authenticated desktop-mode status exposes redacted app/backend versions, schema version, desktop mode, runtime availability, and active count while preserving legacy local fields; status/diagnostics regressions 5 passed, bounded R1 complete, Ruff and strict mypy passed. Next deterministic task is M12-STATUS-031."
 }

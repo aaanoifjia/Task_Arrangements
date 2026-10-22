@@ -57,6 +57,17 @@ class DiagnosticResponse(BaseModel):
     log_directory_category: str
 
 
+class SystemStatusResponse(BaseModel):
+    service: str
+    database: str
+    schema_version: int
+    active_runtime_count: int
+    app_version: str
+    backend_version: str
+    desktop_mode: bool
+    runtime_available: bool
+
+
 class RunStartResponse(BaseModel):
     run_id: str
 

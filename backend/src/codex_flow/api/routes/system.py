@@ -2,13 +2,13 @@
 
 import tempfile
 from pathlib import Path
-from typing import Any
 
 from fastapi import APIRouter, Request
 from fastapi.responses import Response
 
+from codex_flow import __version__
 from codex_flow.api.lifespan import get_connection, get_repositories
-from codex_flow.api.schemas import DiagnosticResponse
+from codex_flow.api.schemas import DiagnosticResponse, SystemStatusResponse
 from codex_flow.application.backup import create_database_backup
 from codex_flow.application.diagnostic_bundle import create_diagnostic_bundle
 from codex_flow.application.diagnostics import DiagnosticService
@@ -22,17 +22,22 @@ async def health(request: Request) -> dict[str, str]:
     return {"status": "ok"}
 
 
-@router.get("/api/system/status")
-async def system_status(request: Request) -> dict[str, Any]:
+@router.get("/api/system/status", response_model=SystemStatusResponse)
+async def system_status(request: Request) -> SystemStatusResponse:
     connection = get_connection(request.app)
     connection.execute("SELECT 1").fetchone()
     schema_version = int(connection.execute("PRAGMA user_version").fetchone()[0])
-    return {
-        "service": "ok",
-        "database": "reachable",
-        "schema_version": schema_version,
-        "active_runtime_count": request.app.state.runtime.active_count,
-    }
+    runtime = getattr(request.app.state, "runtime", None)
+    return SystemStatusResponse(
+        service="ok",
+        database="reachable",
+        schema_version=schema_version,
+        active_runtime_count=getattr(runtime, "active_count", 0),
+        app_version=__version__,
+        backend_version=__version__,
+        desktop_mode=request.app.state.service_config.desktop_mode,
+        runtime_available=runtime is not None,
+    )
 
 
 @router.get("/api/system/diagnostics", response_model=DiagnosticResponse)
