@@ -203,7 +203,7 @@ unexpected_files = []
 
 ## Current Task
 
-Current deterministic next task:
+Current task:
 
 `M12-EXPORT-009` — Workflow Export UI
 
