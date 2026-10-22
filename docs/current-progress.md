@@ -204,14 +204,14 @@ unexpected_files = []
 
 Current task:
 
-`M11-WORKFLOW-022` — 50-run History Durability
+`M11-WORKFLOW-022` — 50-run History Durability (IN_PROGRESS)
 
 M10 automated hardening is COMPLETE. M11–M12 are now authoritative and queued on master:
 
 - M11: 36 release-candidate / real-world validation tasks;
 - M12: 38 product-quality / operations tasks.
 
-M11-RC-001 through M11-WORKFLOW-021 are COMPLETE. Continue automatically through M12-REPORT-038.
+M11-RC-001 through M11-WORKFLOW-021 are COMPLETE. The M11-WORKFLOW-022 start checkpoint is committed; continue automatically through M12-REPORT-038.
 
 M11/M12 are local/offline by default: no live Codex turn, external web research, new package downloads, or new system toolchains are required by the plan. Small deterministic adjacent integration failures should use bounded automatic remediation instead of stopping.
 
