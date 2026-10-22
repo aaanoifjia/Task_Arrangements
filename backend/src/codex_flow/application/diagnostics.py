@@ -47,7 +47,7 @@ class DiagnosticRepository(Protocol):
 
 
 class DiagnosticRuntime(Protocol):
-    def active_count(self) -> int: ...
+    active_count: int
 
 
 class DiagnosticConfig(Protocol):
@@ -132,7 +132,7 @@ class DiagnosticService:
             db_schema_version=self._schema_version,
             db_path=self._config.db_path,
             active_run_count=len(active_runs),
-            active_task_count=self._runtime.active_count(),
+            active_task_count=self._runtime.active_count,
             event_types=event_types[-100:],
             log_directory=self._log_directory,
         )

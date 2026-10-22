@@ -484,7 +484,8 @@
       ],
       "failing_validation": "Authorized GET /api/system/diagnostics raised TypeError: int object is not callable when DiagnosticService collected runtime.active_count.",
       "intended_acceptance": "DiagnosticService matches the existing RuntimeManager active_count property and its integration fixture; diagnostics API authorization/redaction tests pass without changing runtime architecture.",
-      "status": "IN_PROGRESS"
+      "status": "COMPLETE",
+      "validation": "Authorized/unauthorized diagnostics API, system regression, service, and model tests passed 8; Ruff and strict mypy passed."
     }
   ],
   "task_queue_after_current": [

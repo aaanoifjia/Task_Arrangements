@@ -23,8 +23,7 @@ class FakeRepository:
 
 
 class FakeRuntime:
-    def active_count(self) -> int:
-        return 3
+    active_count = 3
 
 
 class FakeConfig:
