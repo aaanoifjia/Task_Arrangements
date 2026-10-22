@@ -205,13 +205,13 @@ unexpected_files = []
 
 Current task:
 
-`M12-IMPORT-010` — Workflow Import Validation
+`M12-IMPORT-010` — Workflow Import Parser
 
 M11-RC-001 through M11-BUILD-032 are COMPLETE.
 
 M11-BUILD-033 encountered an external host-specific MSI/WiX blocker: WiX ICE validation failed with Win32 0x643 because the Windows Installer service is unavailable. This does not invalidate the successful M9 MSI/NSIS bundle evidence and does not require changing Windows system state for the M11 idempotency goal.
 
-M11 is COMPLETE through M11-REPORT-036. M12-UX-001 through M12-EXPORT-009 are COMPLETE. Workflow export now has a stable versioned API and a UI download action with deterministic filename sanitization; focused export/list/API tests passed 7/7, frontend tsc -b, and ESLint passed. The next deterministic task is M12-IMPORT-010.
+M11 is COMPLETE through M11-REPORT-036. M12-UX-001 through M12-EXPORT-009 are COMPLETE. Workflow export now has a stable versioned API and a UI download action with deterministic filename sanitization; focused export/list/API tests passed 7/7, frontend tsc -b, and ESLint passed. M12-IMPORT-010 is in progress.
 
 Do not modify/start/enable the Windows Installer service, Windows optional features, security settings, or system packages for this remediation.
 
