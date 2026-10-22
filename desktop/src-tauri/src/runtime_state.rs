@@ -121,6 +121,24 @@ mod tests {
     }
 
     #[test]
+    fn replacing_runtime_state_drops_the_old_token() {
+        let store = RuntimeStateStore::ready(RuntimeState {
+            base_url: "http://127.0.0.1:43127".to_owned(),
+            token: "old-token".to_owned(),
+        });
+        store
+            .replace(RuntimeState {
+                base_url: "http://127.0.0.1:43128".to_owned(),
+                token: "new-token".to_owned(),
+            })
+            .expect("replace state");
+
+        let current = store.current().expect("fresh state");
+        assert_eq!(current.token, "new-token");
+        assert_ne!(current.token, "old-token");
+    }
+
+    #[test]
     fn ready_state_is_returned_exactly_from_memory() {
         let expected = RuntimeState {
             base_url: "http://127.0.0.1:43127".to_owned(),

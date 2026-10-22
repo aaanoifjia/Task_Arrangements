@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M11-DESKTOP-028",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M11-DESKTOP-029",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -280,7 +280,9 @@
     "M11-API-023",
     "M11-WS-024",
     "M11-DESKTOP-025",
-    "M11-DESKTOP-026"
+    "M11-DESKTOP-026",
+    "M11-DESKTOP-027",
+    "M11-DESKTOP-028"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -752,5 +754,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M11-DESKTOP-027 PASS. The existing single-instance focus operation was exercised for a 64-callback burst with no secondary window/state creation; full Tauri Rust suite passed 29/29. M11-DESKTOP-028 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
+  "last_validation_note": "M11-DESKTOP-028 PASS. Relaunching the local API with a fresh session token rejected the old token for REST and WebSocket, authorized both with the new token, and left neither token in temporary files; backend token regression 7 passed with Ruff and full Tauri Rust suite passed 30/30. M11-DESKTOP-029 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
 }
