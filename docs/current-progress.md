@@ -203,7 +203,7 @@ unexpected_files = []
 
 ## Current Task
 
-Current deterministic next task:
+Current task:
 
 `M12-SAMPLE-003` — Sample Workflow Materialization
 
