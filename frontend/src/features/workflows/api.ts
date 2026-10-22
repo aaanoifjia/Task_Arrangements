@@ -1,11 +1,12 @@
 import { createApiClient, type ApiClient } from '../../api/client'
-import type { WorkflowDefinition, WorkflowDetail, WorkflowSummary } from '../../api/types'
+import type { WorkflowDefinition, WorkflowDetail, WorkflowImportRequest, WorkflowSummary } from '../../api/types'
 
 export type WorkflowApi = {
   list: () => Promise<WorkflowSummary[]>
   get: (workflowId: string) => Promise<WorkflowDetail>
   create: (workflow: WorkflowDefinition) => Promise<WorkflowDetail>
   update: (workflowId: string, workflow: WorkflowDefinition) => Promise<WorkflowDetail>
+  import?: (request: WorkflowImportRequest) => Promise<WorkflowDetail>
 }
 
 export function createWorkflowApi(client: ApiClient = createApiClient()): WorkflowApi {
@@ -14,5 +15,6 @@ export function createWorkflowApi(client: ApiClient = createApiClient()): Workfl
     get: (workflowId) => client.getWorkflow(workflowId),
     create: (workflow) => client.saveWorkflow(workflow),
     update: (workflowId, workflow) => client.updateWorkflow(workflowId, workflow),
+    import: (request) => client.importWorkflow(request),
   }
 }

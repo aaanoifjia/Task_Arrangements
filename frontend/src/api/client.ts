@@ -1,21 +1,19 @@
 import type {
   AttemptView, RunDetail, RunStartResponse, RunSummary, TaskRunView,
   ManualActionResponse, WorkflowDefinition, WorkflowDetail, WorkflowSummary,
+  WorkflowImportRequest, WorkflowExportResponse as WorkflowExportResponseType,
 } from './types'
 import { requestJson as requestJsonWithRuntime, type HttpRuntime } from './http'
 
-const jsonHeaders = { 'Content-Type': 'application/json' }
+export type { WorkflowExportResponse } from './types'
 
-export type WorkflowExportResponse = {
-  kind: 'codex_flow.workflow_definition'
-  schema_version: 1
-  workflow: WorkflowDefinition
-}
+const jsonHeaders = { 'Content-Type': 'application/json' }
 
 type ApiClientCore = {
   listWorkflows: () => Promise<WorkflowSummary[]>
   getWorkflow: (id: string) => Promise<WorkflowDetail>
-  exportWorkflow: (id: string) => Promise<WorkflowExportResponse>
+  exportWorkflow: (id: string) => Promise<WorkflowExportResponseType>
+  importWorkflow: (request: WorkflowImportRequest) => Promise<WorkflowDetail>
   saveWorkflow: (workflow: WorkflowDefinition) => Promise<WorkflowDetail>
   updateWorkflow: (id: string, workflow: WorkflowDefinition) => Promise<WorkflowDetail>
   listRuns: () => Promise<RunSummary[]>
@@ -44,9 +42,12 @@ export function createApiClient(fetcher: typeof fetch = fetch, runtime: HttpRunt
   return {
     listWorkflows: () => requestJson<WorkflowSummary[]>('/api/workflows', {}, fetcher),
     getWorkflow: (id: string) => requestJson<WorkflowDetail>(`/api/workflows/${encodeURIComponent(id)}`, {}, fetcher),
-    exportWorkflow: (id: string) => requestJson<WorkflowExportResponse>(
+    exportWorkflow: (id: string) => requestJson<WorkflowExportResponseType>(
       `/api/workflows/${encodeURIComponent(id)}/export`, {}, fetcher,
     ),
+    importWorkflow: (request: WorkflowImportRequest) => requestJson<WorkflowDetail>('/api/workflows/import', {
+      method: 'POST', headers: jsonHeaders, body: JSON.stringify(request),
+    }, fetcher),
     saveWorkflow: (workflow: WorkflowDefinition) => requestJson<WorkflowDetail>('/api/workflows', {
       method: 'POST', headers: jsonHeaders, body: JSON.stringify(workflow),
     }, fetcher),

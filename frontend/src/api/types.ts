@@ -43,6 +43,12 @@ export type WorkflowDefinition = {
 
 export type WorkflowSummary = { id: string; name: string }
 export type WorkflowDetail = { workflow: WorkflowDefinition }
+export type WorkflowExportResponse = {
+  kind: 'codex_flow.workflow_definition'
+  schema_version: 1
+  workflow: WorkflowDefinition
+}
+export type WorkflowImportRequest = WorkflowExportResponse & { replacement_id?: string }
 export type RunStartResponse = { run_id: string }
 export type RunStatus = TaskStatus | 'PENDING'
 export type RunSummary = { id: string; workflow_id: string; status: RunStatus; created_at: string }

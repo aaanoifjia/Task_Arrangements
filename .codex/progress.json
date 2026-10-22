@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-IMPORT-013",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-IMPORT-014",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -303,7 +303,8 @@
     "M12-EXPORT-009",
     "M12-IMPORT-010",
     "M12-IMPORT-011",
-    "M12-IMPORT-012"
+    "M12-IMPORT-012",
+    "M12-IMPORT-013"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -807,5 +808,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-IMPORT-012 PASS: POST /api/workflows/import validates the versioned envelope and graph, persists valid definitions through the application service, and returns stable 400/409 errors for malformed/conflicting imports; API/import regression 5 passed, Ruff and strict mypy passed. Next deterministic task is M12-IMPORT-013."
+  "last_validation_note": "M12-IMPORT-013 PASS: frontend types and client/resource mappings cover versioned workflow import, explicit replacement IDs, endpoint/error behavior, and preserve existing resource fakes; typed client/resource tests 10 passed, tsc -b and ESLint passed. Next deterministic task is M12-IMPORT-014."
 }
