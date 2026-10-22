@@ -1,5 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { describe, expect, it, vi } from 'vitest'
 import type { EventView, RunSummary } from '../../api/types'
@@ -41,10 +40,9 @@ function runApi(listPage: RunApi['listPage']): RunApi {
 
 describe('large history and event performance guard', () => {
   it('loads hundreds of runs with bounded fetches and no duplicate rendered rows', async () => {
-    const user = userEvent.setup()
     const runs = Array.from({ length: 250 }, (_, index) => runFixture(index))
     const pages: RunSummary[][] = [runs.slice(0, 25)]
-    for (let offset = 24; offset < runs.length; offset += 24) {
+    for (let offset = 25; offset < runs.length; offset += 24) {
       pages.push([runs[offset - 1]!, ...runs.slice(offset, offset + 24)])
     }
     let pageIndex = 0
@@ -56,29 +54,33 @@ describe('large history and event performance guard', () => {
     render(<MemoryRouter><RunListPage api={runApi(listPage)} /></MemoryRouter>)
     expect(await screen.findByText('run-000')).toBeInTheDocument()
 
-    while (screen.queryByRole('button', { name: 'Load more' })) {
-      await user.click(screen.getByRole('button', { name: 'Load more' }))
+    const runItems = () => screen.getByRole('list').querySelectorAll(':scope > li')
+    for (let index = 1; index < pages.length; index += 1) {
+      fireEvent.click(screen.getByRole('button', { name: 'Load more' }))
+      const expectedCount = Math.min(25 + (index * 24), runs.length)
+      await waitFor(() => expect(runItems()).toHaveLength(expectedCount))
     }
 
-    const items = screen.getAllByRole('listitem')
-    expect(items).toHaveLength(250)
-    expect(within(items[0]!).getByText('run-000')).toBeInTheDocument()
-    expect(within(items[249]!).getByText('run-249')).toBeInTheDocument()
+    const items = Array.from(runItems())
+    expect(items).toHaveLength(runs.length)
+    expect(within(items[0]! as HTMLElement).getByText('run-000')).toBeInTheDocument()
+    expect(within(items[249]! as HTMLElement).getByText('run-249')).toBeInTheDocument()
     expect(new Set(items.map((item) => item.textContent)).size).toBe(250)
     expect(listPage).toHaveBeenCalledTimes(pages.length)
-  })
+  }, 30000)
 
   it('filters thousands of events in stable order without duplicate rendered entries', async () => {
-    const user = userEvent.setup()
     render(<EventLog events={Array.from({ length: 2000 }, (_, index) => eventFixture(index))} />)
 
-    expect(screen.getAllByRole('listitem')).toHaveLength(2000)
-    await user.selectOptions(screen.getByLabelText('Event type'), 'TURN_COMPLETED')
+    const eventItems = () => screen.getByRole('list').querySelectorAll(':scope > li')
+    expect(eventItems()).toHaveLength(2000)
+    fireEvent.change(screen.getByLabelText('Event type'), { target: { value: 'TURN_COMPLETED' } })
 
-    const items = screen.getAllByRole('listitem')
+    await waitFor(() => expect(eventItems()).toHaveLength(1000))
+    const items = Array.from(eventItems())
     expect(items).toHaveLength(1000)
-    expect(within(items[0]!).getByText('Task: task-0001')).toBeInTheDocument()
-    expect(within(items[999]!).getByText('Task: task-1999')).toBeInTheDocument()
+    expect(within(items[0]! as HTMLElement).getByText('Task: task-0001')).toBeInTheDocument()
+    expect(within(items[999]! as HTMLElement).getByText('Task: task-1999')).toBeInTheDocument()
     expect(new Set(items.map((item) => item.textContent)).size).toBe(1000)
-  }, 30000)
+  }, 60000)
 })

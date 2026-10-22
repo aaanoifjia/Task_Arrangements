@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-PERF-036-R1",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-REPORT-038",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -588,7 +588,8 @@
       ],
       "failing_validation": "Complete frontend suite timed out both large-history/event cases under suite pressure while the isolated assertions passed.",
       "intended_acceptance": "The same 250-run and 2,000-event assertions pass in isolation and in the complete frontend suite without changing production behavior or weakening fixture coverage.",
-      "status": "IN_PROGRESS"
+      "status": "COMPLETE",
+      "validation": "The optimized 250-run/2,000-event guard passed in isolation and in the complete frontend suite (61 files/214 tests); frontend typecheck and lint passed after the direct HTMLElement typing correction."
     }
   ],
   "task_queue_after_current": [
@@ -928,5 +929,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-PERF-036-R1 IN_PROGRESS: making the existing large-history/event regression deterministic under the complete frontend suite using scoped DOM collection and fixture-only timeouts."
+  "last_validation_note": "M12-PERF-036-R1 COMPLETE: optimized 250-run/2,000-event guard passed in isolation and in the complete frontend suite (61 files/214 tests); frontend typecheck and lint passed. Next task: M12-REPORT-038."
 }
