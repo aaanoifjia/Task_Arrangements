@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M11-WORKFLOW-016",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Running a deterministic 20-node mixed DAG with chains, forks, joins, independent workspaces, and valid continuation edges while verifying dependency-ordered single execution."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M11-WORKFLOW-017",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -274,7 +269,8 @@
     "M11-RECOVERY-012",
     "M11-RECOVERY-013",
     "M11-RECOVERY-014",
-    "M11-RECOVERY-015"
+    "M11-RECOVERY-015",
+    "M11-WORKFLOW-016"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -746,5 +742,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M11-RECOVERY-015 PASS. Multiple queued/active/attention workflow runs reopened independently with isolated run/task/thread identities and no cross-workflow recovery; RC test 1 and recovery/runtime regression 9 passed with Ruff. M11-WORKFLOW-016 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
+  "last_validation_note": "M11-WORKFLOW-016 PASS. Deterministic 20-node mixed DAG reached SUCCESS for every task with one prompt/Attempt each, dependency-ordered starts, no premature joins, and exact continuation thread reuse; RC test 1 and DAG/parallel/continuation regression 6 passed with Ruff. M11-WORKFLOW-017 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
 }
