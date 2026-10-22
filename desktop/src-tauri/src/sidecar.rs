@@ -274,7 +274,7 @@ fn drain_output(receiver: &Receiver<SidecarOutput>) -> VecDeque<SidecarOutput> {
 mod tests {
     use super::{command_arguments, generate_session_token, RuntimePaths, SidecarProcess};
     use std::process::Command;
-    use std::path::PathBuf;
+    use std::path::{Path, PathBuf};
     use std::sync::mpsc;
     use std::thread;
 
@@ -464,5 +464,52 @@ mod tests {
         }
 
         assert_eq!(seen_tokens.len(), 16);
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn repeated_packaged_sidecar_cycles_reach_ready_and_shutdown_cleanly() {
+        let binary_name = "codex-flow-server-x86_64-pc-windows-msvc.exe";
+        let mut candidates = vec![
+            PathBuf::from_iter(["binaries", binary_name]),
+            std::env::current_dir()
+                .expect("test working directory")
+                .join(r"desktop\src-tauri\binaries")
+                .join(binary_name),
+        ];
+        if let Some(path) = std::env::current_exe()
+            .ok()
+            .and_then(|path| {
+                path.ancestors()
+                    .find(|parent| parent.ends_with("src-tauri"))
+                    .map(Path::to_path_buf)
+            })
+        {
+            candidates.push(path.join("binaries").join(binary_name));
+        }
+        let executable = candidates
+        .into_iter()
+        .find(|path| path.is_file())
+        .expect("packaged/local sidecar executable");
+        let root = std::env::temp_dir().join(format!("codex-flow-rc-sidecar-{}", std::process::id()));
+
+        for cycle in 0..4 {
+            let app_data = root.join(format!("cycle-{cycle}"));
+            let paths = super::runtime_paths_with_executable(&app_data, executable.clone())
+                .expect("temporary app-data paths");
+            let mut process = super::launch_sidecar(&paths).expect("launch packaged sidecar");
+            let readiness = super::wait_for_readiness(
+                &process.output,
+                std::time::Duration::from_secs(15),
+            )
+            .expect("packaged sidecar readiness");
+
+            assert!(readiness.port > 0);
+            assert!(paths.db_path.parent().expect("database parent").is_dir());
+            process.shutdown().expect("sidecar shutdown");
+            assert!(process.poll_exit().expect("sidecar exit status").is_some());
+        }
+
+        let _ = std::fs::remove_dir_all(root);
     }
 }

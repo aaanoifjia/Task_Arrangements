@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M11-DESKTOP-025",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M11-DESKTOP-026",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -278,7 +278,8 @@
     "M11-WORKFLOW-021",
     "M11-WORKFLOW-022",
     "M11-API-023",
-    "M11-WS-024"
+    "M11-WS-024",
+    "M11-DESKTOP-025"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -750,5 +751,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M11-WS-024 PASS. A WebSocket cursor was consumed, the FastAPI app was recreated over the same SQLite database, and reconnecting with after=<cursor> delivered only the post-cursor event plus the durable terminal snapshot; RC WebSocket/cursor regression 3 passed with Ruff. M11-DESKTOP-025 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
+  "last_validation_note": "M11-DESKTOP-025 PASS. Four packaged/local sidecar start -> ready -> shutdown cycles used isolated temporary app-data paths; child exit was observed each time and the full Tauri Rust suite passed 27/27. M11-DESKTOP-026 is READY. cargo fmt was unavailable because rustfmt is not installed; no toolchain installation was required. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
 }
