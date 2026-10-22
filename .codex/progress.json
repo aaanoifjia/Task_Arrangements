@@ -562,6 +562,17 @@
       "intended_acceptance": "The directly implicated workflow API fake includes getSystemStatus without changing production behavior; About/Runtime tests and frontend typecheck pass.",
       "status": "COMPLETE",
       "validation": "AboutPage and workflow API tests passed 5/5; frontend tsc -b and ESLint passed."
+    },
+    {
+      "id": "M12-A11Y-034-R1",
+      "parent_task": "M12-A11Y-034",
+      "reason": "The accessibility pass exposes event-type filter options in the EventLog, so the existing M7 integration assertion must scope its TURN_COMPLETED lookup to the event summary instead of using a global exact-text query.",
+      "files": [
+        "frontend/src/integration/m7-flow.test.tsx"
+      ],
+      "failing_validation": "Full frontend test suite failed in M7 mocked user flow because screen.findByText('TURN_COMPLETED') matched both the EventLog filter option and the event summary.",
+      "intended_acceptance": "The directly implicated integration assertion remains deterministic with the EventLog filter present; the full frontend regression suite, typecheck, and ESLint pass.",
+      "status": "IN_PROGRESS"
     }
   ],
   "task_queue_after_current": [
