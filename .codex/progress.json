@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M12-A11Y-034",
+  "active_task": "M12-A11Y-034",
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -901,5 +901,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-UX-033 PASS: startup gate distinguishes retryable versus persistent local-backend failure, provides safe Diagnostics/log-category guidance without paths/tokens, and stops after bounded manual retries; DesktopStartupGate tests 5 passed, frontend tsc -b and ESLint passed. Next deterministic task is M12-A11Y-034."
+  "last_validation_note": "M12-A11Y-034 IN_PROGRESS: running the existing accessibility regression stack and repairing bounded focus restoration/dialog semantics without adding a package."
 }
