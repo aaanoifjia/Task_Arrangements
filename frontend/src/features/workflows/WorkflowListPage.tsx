@@ -8,6 +8,7 @@ import { createWorkflowApi } from './api'
 import type { WorkflowApi } from './api'
 import NewWorkflowForm from './NewWorkflowForm'
 import SampleWorkflowPicker from './SampleWorkflowPicker'
+import WorkflowExportButton from './WorkflowExportButton'
 import './WorkflowListPage.css'
 import './workflows.css'
 
@@ -86,6 +87,7 @@ function WorkflowListPage({ api, onTrySample }: WorkflowListPageProps) {
                 <strong>{workflow.name}</strong><span>{workflow.id}</span>
               </Link>
               <Link to={`/runs?workflow_id=${encodeURIComponent(workflow.id)}`}>View runs</Link>
+              <WorkflowExportButton workflowId={workflow.id} workflowName={workflow.name} />
             </li>
           ))}
         </ul>

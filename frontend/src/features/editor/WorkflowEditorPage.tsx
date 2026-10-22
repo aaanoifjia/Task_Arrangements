@@ -7,6 +7,7 @@ import { editorReducer, emptyEditorState, createDefaultTask } from './editorStat
 import { graphToWorkflow, workflowToGraph } from './graphModel'
 import { validateEditorGraph } from './validation'
 import WorkflowEditorLayout from './WorkflowEditorLayout'
+import WorkflowExportButton from '../workflows/WorkflowExportButton'
 
 export type WorkflowEditorPageProps = { api?: WorkflowApi; runApi?: RunApi }
 
@@ -65,7 +66,10 @@ function WorkflowEditorPage({ api, runApi }: WorkflowEditorPageProps) {
 
   return (
     <section aria-labelledby="workflow-editor-heading">
-      <h1 id="workflow-editor-heading">{workflow.name}</h1>
+      <header>
+        <h1 id="workflow-editor-heading">{workflow.name}</h1>
+        <WorkflowExportButton workflowId={workflow.id} workflowName={workflow.name} />
+      </header>
       <WorkflowEditorLayout
         graph={editorState.graph}
         workflowId={workflow.id}

@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-EXPORT-009",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-IMPORT-010",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -299,7 +299,8 @@
     "M12-ONBOARD-005",
     "M12-ONBOARD-006",
     "M12-EXPORT-007",
-    "M12-EXPORT-008"
+    "M12-EXPORT-008",
+    "M12-EXPORT-009"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -803,5 +804,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-EXPORT-008 PASS: GET /api/workflows/{id}/export returns the stable versioned definition-only envelope and stable not-found error; API regression 4 passed, Ruff, and strict mypy passed. Next deterministic task is M12-EXPORT-009."
+  "last_validation_note": "M12-EXPORT-009 PASS: export UI uses the versioned API, downloads a deterministic sanitized JSON filename without mutating workflow state; focused export/list/API tests passed 7/7, frontend tsc -b and ESLint passed. Next deterministic task is M12-IMPORT-010."
 }

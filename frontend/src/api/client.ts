@@ -6,9 +6,16 @@ import { requestJson as requestJsonWithRuntime, type HttpRuntime } from './http'
 
 const jsonHeaders = { 'Content-Type': 'application/json' }
 
+export type WorkflowExportResponse = {
+  kind: 'codex_flow.workflow_definition'
+  schema_version: 1
+  workflow: WorkflowDefinition
+}
+
 type ApiClientCore = {
   listWorkflows: () => Promise<WorkflowSummary[]>
   getWorkflow: (id: string) => Promise<WorkflowDetail>
+  exportWorkflow: (id: string) => Promise<WorkflowExportResponse>
   saveWorkflow: (workflow: WorkflowDefinition) => Promise<WorkflowDetail>
   updateWorkflow: (id: string, workflow: WorkflowDefinition) => Promise<WorkflowDetail>
   listRuns: () => Promise<RunSummary[]>
@@ -37,6 +44,9 @@ export function createApiClient(fetcher: typeof fetch = fetch, runtime: HttpRunt
   return {
     listWorkflows: () => requestJson<WorkflowSummary[]>('/api/workflows', {}, fetcher),
     getWorkflow: (id: string) => requestJson<WorkflowDetail>(`/api/workflows/${encodeURIComponent(id)}`, {}, fetcher),
+    exportWorkflow: (id: string) => requestJson<WorkflowExportResponse>(
+      `/api/workflows/${encodeURIComponent(id)}/export`, {}, fetcher,
+    ),
     saveWorkflow: (workflow: WorkflowDefinition) => requestJson<WorkflowDetail>('/api/workflows', {
       method: 'POST', headers: jsonHeaders, body: JSON.stringify(workflow),
     }, fetcher),
