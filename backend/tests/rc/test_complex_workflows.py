@@ -41,6 +41,44 @@ DEPENDENCIES: dict[str, tuple[str, ...]] = {
 CONTINUATIONS = {"N": "A", "O": "N"}
 
 
+def continuation_workflow() -> WorkflowDefinition:
+    dependencies = {
+        "A": (),
+        "B": ("A",),
+        "C": ("A",),
+        "D": ("B",),
+        "E": ("C",),
+        "F": ("D", "E"),
+        "G": ("A",),
+        "H": ("F", "G"),
+        "I": ("H",),
+        "J": ("I", "C"),
+    }
+    continuation_sources = {"B": "A", "D": "B", "I": "H"}
+    tasks = [
+        TaskDefinition(
+            id=task_id,
+            name=task_id,
+            prompt=task_id,
+            cwd=f"continuation-{task_id}",
+            dependencies=list(task_dependencies),
+            execution_mode=(
+                ExecutionMode.CONTINUE_THREAD
+                if task_id in continuation_sources
+                else ExecutionMode.NEW_THREAD
+            ),
+            continue_from_task_id=continuation_sources.get(task_id),
+        )
+        for task_id, task_dependencies in dependencies.items()
+    ]
+    edges = [
+        Edge(source_task_id=source, target_task_id=target)
+        for target, task_dependencies in dependencies.items()
+        for source in task_dependencies
+    ]
+    return WorkflowDefinition(id="continuation-chain-workflow", name="Continuation Chain", tasks=tasks, edges=edges)
+
+
 class FailureRecoveryAdapter(FakeCodexAdapter):
     def __init__(self) -> None:
         super().__init__()
@@ -212,5 +250,43 @@ async def test_failure_retry_pause_resume_and_skip_preserve_dag_states(tmp_path:
         audit_types = [event["event_type"] for event in repository.load_events_for_run(run_id)]
         assert audit_types.count("MANUAL_ACTION_ACCEPTED") == 4
         assert "RETRY_REQUESTED" in audit_types
+    finally:
+        connection.close()
+
+
+@pytest.mark.asyncio
+async def test_continuation_chain_reuses_only_explicit_source_threads(tmp_path: Path) -> None:
+    workflow = continuation_workflow()
+    dependencies = {
+        "A": (),
+        "B": ("A",),
+        "C": ("A",),
+        "D": ("B",),
+        "E": ("C",),
+        "F": ("D", "E"),
+        "G": ("A",),
+        "H": ("F", "G"),
+        "I": ("H",),
+        "J": ("I", "C"),
+    }
+    connection = open_database(tmp_path / "continuation-chain.sqlite3")
+    try:
+        repository = StorageRepositories(connection)
+        adapter = RecordingAdapter()
+        run_id = await DurableRunner(repository, adapter, max_concurrency=3).run(workflow)
+        rows = {str(row["task_id"]): row for row in repository.load_task_runs(run_id)}
+        order = {task_id: index for index, task_id in enumerate(adapter.started_prompts)}
+
+        assert all(row["status"] == TaskStatus.SUCCESS.value for row in rows.values())
+        assert len(adapter.started_prompts) == 10
+        assert len(set(adapter.started_prompts)) == 10
+        assert all(order[parent] < order[task_id] for task_id, parents in dependencies.items() for parent in parents)
+        assert adapter.resumed_threads == [rows["A"]["thread_id"], rows["B"]["thread_id"], rows["H"]["thread_id"]]
+        assert rows["B"]["thread_id"] == rows["A"]["thread_id"]
+        assert rows["D"]["thread_id"] == rows["B"]["thread_id"]
+        assert rows["I"]["thread_id"] == rows["H"]["thread_id"]
+        new_thread_tasks = ("A", "C", "E", "F", "G", "H", "J")
+        assert len({rows[task_id]["thread_id"] for task_id in new_thread_tasks}) == 7
+        assert all(len(repository.load_attempts(str(row["id"]))) == 1 for row in rows.values())
     finally:
         connection.close()
