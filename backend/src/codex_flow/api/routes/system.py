@@ -1,11 +1,15 @@
 """Local process health and runtime status endpoints."""
 
+import tempfile
+from pathlib import Path
 from typing import Any
 
 from fastapi import APIRouter, Request
+from fastapi.responses import Response
 
 from codex_flow.api.lifespan import get_connection, get_repositories
 from codex_flow.api.schemas import DiagnosticResponse
+from codex_flow.application.diagnostic_bundle import create_diagnostic_bundle
 from codex_flow.application.diagnostics import DiagnosticService
 
 router = APIRouter(tags=["system"])
@@ -42,3 +46,24 @@ async def diagnostics(request: Request) -> DiagnosticResponse:
         log_directory=None,
     ).collect()
     return DiagnosticResponse.model_validate(summary.model_dump())
+
+
+@router.get("/api/system/diagnostics/bundle")
+async def diagnostics_bundle(request: Request) -> Response:
+    connection = get_connection(request.app)
+    schema_version = int(connection.execute("PRAGMA user_version").fetchone()[0])
+    summary = DiagnosticService(
+        get_repositories(request.app),
+        request.app.state.runtime,
+        request.app.state.service_config,
+        schema_version=schema_version,
+        log_directory=None,
+    ).collect()
+    with tempfile.TemporaryDirectory(prefix="codex-flow-diagnostics-") as directory:
+        bundle_path = create_diagnostic_bundle(Path(directory) / "diagnostics.zip", summary)
+        content = bundle_path.read_bytes()
+    return Response(
+        content=content,
+        media_type="application/zip",
+        headers={"Content-Disposition": 'attachment; filename="codex-flow-diagnostics.zip"'},
+    )
