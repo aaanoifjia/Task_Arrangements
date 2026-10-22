@@ -23,6 +23,11 @@ Observed validation: `cargo test --manifest-path desktop/src-tauri/Cargo.toml`
 passed 27/27 tests, including
 `repeated_packaged_sidecar_cycles_reach_ready_and_shutdown_cleanly`.
 
+The crash/relaunch case uses the same packaged executable, confirms the
+database file exists before and after the crash, preserves its exact path,
+observes a fresh session token after one bounded relaunch, and then shuts the
+relaunched child down.
+
 Observed validation: `cargo test --manifest-path desktop/src-tauri/Cargo.toml`
 passed 27/27 tests, including
 `repeated_packaged_sidecar_cycles_reach_ready_and_shutdown_cleanly`.

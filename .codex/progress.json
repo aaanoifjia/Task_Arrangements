@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M11-DESKTOP-026",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M11-DESKTOP-027",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -279,7 +279,8 @@
     "M11-WORKFLOW-022",
     "M11-API-023",
     "M11-WS-024",
-    "M11-DESKTOP-025"
+    "M11-DESKTOP-025",
+    "M11-DESKTOP-026"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -751,5 +752,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M11-DESKTOP-025 PASS. Four packaged/local sidecar start -> ready -> shutdown cycles used isolated temporary app-data paths; child exit was observed each time and the full Tauri Rust suite passed 27/27. M11-DESKTOP-026 is READY. cargo fmt was unavailable because rustfmt is not installed; no toolchain installation was required. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
+  "last_validation_note": "M11-DESKTOP-026 PASS. The packaged sidecar was crashed after readiness and durable database creation, relaunched once with the same database path and a fresh token, reached readiness again, and shut down cleanly; full Tauri Rust suite passed 28/28. M11-DESKTOP-027 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
 }

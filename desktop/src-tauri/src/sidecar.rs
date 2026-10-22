@@ -512,4 +512,57 @@ mod tests {
 
         let _ = std::fs::remove_dir_all(root);
     }
+
+    #[cfg(windows)]
+    #[test]
+    fn packaged_sidecar_crash_relaunch_preserves_database_and_refreshes_token() {
+        let binary_name = "codex-flow-server-x86_64-pc-windows-msvc.exe";
+        let mut candidates = vec![
+            PathBuf::from_iter(["binaries", binary_name]),
+            std::env::current_dir()
+                .expect("test working directory")
+                .join(r"desktop\src-tauri\binaries")
+                .join(binary_name),
+        ];
+        if let Some(path) = std::env::current_exe()
+            .ok()
+            .and_then(|path| {
+                path.ancestors()
+                    .find(|parent| parent.ends_with("src-tauri"))
+                    .map(Path::to_path_buf)
+            })
+        {
+            candidates.push(path.join("binaries").join(binary_name));
+        }
+        let executable = candidates
+            .into_iter()
+            .find(|path| path.is_file())
+            .expect("packaged/local sidecar executable");
+        let app_data = std::env::temp_dir().join(format!("codex-flow-rc-crash-{}", std::process::id()));
+        let paths = super::runtime_paths_with_executable(&app_data, executable)
+            .expect("temporary app-data paths");
+        let mut process = super::launch_sidecar(&paths).expect("launch packaged sidecar");
+        super::wait_for_readiness(&process.output, std::time::Duration::from_secs(15))
+            .expect("initial sidecar readiness");
+        let original_token = process.token.clone();
+        let original_db_size = std::fs::metadata(&paths.db_path)
+            .expect("durable database after readiness")
+            .len();
+
+        process.child.kill().expect("crash sidecar");
+        process.child.wait().expect("crashed sidecar exit");
+        assert!(process.poll_exit().expect("poll crashed sidecar").is_some());
+
+        process.relaunch().expect("bounded sidecar relaunch");
+        super::wait_for_readiness(&process.output, std::time::Duration::from_secs(15))
+            .expect("relaunch readiness");
+        assert_ne!(process.token, original_token);
+        assert_eq!(process.paths.db_path, paths.db_path);
+        assert!(std::fs::metadata(&paths.db_path)
+            .expect("durable database after relaunch")
+            .len() >= original_db_size);
+        process.shutdown().expect("relaunch shutdown");
+
+        let _ = std::fs::remove_dir_all(app_data);
+    }
 }
