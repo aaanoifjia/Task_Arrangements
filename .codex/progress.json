@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M12-EVENT-029",
+  "active_task": "M12-EVENT-029",
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -872,5 +872,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-EVENT-028 PASS: event-type and task/attempt text filters preserve chronological arrival order, clear/reset restores the full log, and empty/filter states are covered; EventLog tests 3 passed, frontend tsc -b and ESLint passed. Next deterministic task is M12-EVENT-029."
+  "last_validation_note": "M12-EVENT-029 IN_PROGRESS: adding explicit safe metadata copy actions with visible clipboard success/fallback feedback and no token/prompt exposure."
 }
