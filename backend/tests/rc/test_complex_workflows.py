@@ -11,6 +11,7 @@ from codex_flow.codex_adapter.fake import FakeCodexAdapter
 from codex_flow.codex_adapter.models import CodexEvent, CodexThreadRef, CodexTurnRef, EventType
 from codex_flow.domain.models import Edge, ExecutionMode, TaskDefinition, WorkflowDefinition
 from codex_flow.domain.status import TaskStatus
+from codex_flow.runtime.manager import RuntimeManager
 from codex_flow.runtime.runner import DurableRunner
 from codex_flow.storage.db import open_database
 from codex_flow.storage.repositories import StorageRepositories
@@ -38,6 +39,26 @@ DEPENDENCIES: dict[str, tuple[str, ...]] = {
     "T": ("S",),
 }
 CONTINUATIONS = {"N": "A", "O": "N"}
+
+
+class FailureRecoveryAdapter(FakeCodexAdapter):
+    def __init__(self) -> None:
+        super().__init__()
+        self.started_prompts: list[str] = []
+        self._failed_turns: set[str] = set()
+
+    async def start_turn(self, thread: CodexThreadRef, prompt: str) -> CodexTurnRef:
+        self.started_prompts.append(prompt)
+        turn = await super().start_turn(thread, prompt)
+        if prompt == "B" and not self._failed_turns:
+            self._failed_turns.add(turn.turn_id)
+        return turn
+
+    async def stream_turn(self, turn: CodexTurnRef) -> AsyncIterator[CodexEvent]:
+        self.calls.append("stream_turn")
+        yield CodexEvent(event_type=EventType.TURN_STARTED, thread_id=turn.thread_id, turn_id=turn.turn_id)
+        terminal = EventType.TURN_FAILED if turn.turn_id in self._failed_turns else EventType.TURN_COMPLETED
+        yield CodexEvent(event_type=terminal, thread_id=turn.thread_id, turn_id=turn.turn_id)
 
 
 def mixed_workflow() -> WorkflowDefinition:
@@ -122,5 +143,74 @@ async def test_twenty_node_mixed_dag_is_deterministic_and_single_execution(tmp_p
         assert by_task["A"]["thread_id"] not in {
             by_task[task_id]["thread_id"] for task_id in ("B", "C", "I", "J", "S")
         }
+    finally:
+        connection.close()
+
+
+@pytest.mark.asyncio
+async def test_failure_retry_pause_resume_and_skip_preserve_dag_states(tmp_path: Path) -> None:
+    workflow = WorkflowDefinition(
+        id="failure-recovery-workflow",
+        name="Failure Recovery Workflow",
+        tasks=[
+            TaskDefinition(id="A", name="A", prompt="A", cwd="."),
+            TaskDefinition(id="B", name="B", prompt="B", cwd=".", dependencies=["A"]),
+            TaskDefinition(id="C", name="C", prompt="C", cwd=".", dependencies=["B"]),
+            TaskDefinition(id="D", name="D", prompt="D", cwd=".",),
+            TaskDefinition(id="E", name="E", prompt="E", cwd=".", dependencies=["D"]),
+        ],
+        edges=[
+            Edge(source_task_id="A", target_task_id="B"),
+            Edge(source_task_id="B", target_task_id="C"),
+            Edge(source_task_id="D", target_task_id="E"),
+        ],
+    )
+    connection = open_database(tmp_path / "failure-recovery.sqlite3")
+    try:
+        repository = StorageRepositories(connection)
+        adapter = FailureRecoveryAdapter()
+        manager = RuntimeManager(repository, adapter)
+        repository.save_workflow_definition(workflow)
+        run_id = repository.create_workflow_run(workflow.id, workflow.model_dump(mode="json"))
+        task_ids = repository.create_task_runs(run_id, ["A", "B", "C", "D", "E"])
+        by_task_id = dict(zip(("A", "B", "C", "D", "E"), task_ids, strict=True))
+        repository.update_workflow_run_state(run_id, TaskStatus.RUNNING.value)
+        repository.update_task_run_state(by_task_id["A"], TaskStatus.PENDING.value)
+        repository.update_task_run_state(by_task_id["B"], TaskStatus.BLOCKED.value)
+        repository.update_task_run_state(by_task_id["C"], TaskStatus.BLOCKED.value)
+        repository.update_task_run_state(by_task_id["D"], TaskStatus.READY.value)
+        repository.update_task_run_state(by_task_id["E"], TaskStatus.BLOCKED.value)
+        manager.restore_workflow(run_id, workflow)
+
+        paused = await manager.pause(run_id)
+        assert paused.accepted
+        assert adapter.calls == []
+        skipped = await manager.skip(run_id, by_task_id["D"])
+        assert skipped.accepted
+        assert repository.get_task_run(by_task_id["E"])["status"] == TaskStatus.BLOCKED.value
+        resumed = await manager.resume(run_id)
+        await manager.wait(run_id)
+
+        assert resumed.accepted
+        assert repository.get_task_run(by_task_id["A"])["status"] == TaskStatus.SUCCESS.value
+        assert repository.get_task_run(by_task_id["B"])["status"] == TaskStatus.FAILED.value
+        assert repository.get_task_run(by_task_id["C"])["status"] == TaskStatus.BLOCKED.value
+        assert repository.get_task_run(by_task_id["D"])["status"] == TaskStatus.SKIPPED.value
+        assert repository.get_task_run(by_task_id["E"])["status"] == TaskStatus.BLOCKED.value
+
+        manager.restore_workflow(run_id, workflow)
+        retried = await manager.retry(run_id, by_task_id["B"])
+        await manager.wait(run_id)
+
+        assert retried.accepted
+        assert repository.get_task_run(by_task_id["B"])["status"] == TaskStatus.SUCCESS.value
+        assert repository.get_task_run(by_task_id["C"])["status"] == TaskStatus.SUCCESS.value
+        assert repository.get_task_run(by_task_id["E"])["status"] == TaskStatus.BLOCKED.value
+        assert repository.get_workflow_run(run_id)["status"] == TaskStatus.FAILED.value
+        assert len(repository.load_attempts(by_task_id["B"])) == 2
+        assert adapter.started_prompts == ["A", "B", "B", "C"]
+        audit_types = [event["event_type"] for event in repository.load_events_for_run(run_id)]
+        assert audit_types.count("MANUAL_ACTION_ACCEPTED") == 4
+        assert "RETRY_REQUESTED" in audit_types
     finally:
         connection.close()
