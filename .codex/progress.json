@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M11-API-023",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M11-WS-024",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -276,7 +276,8 @@
     "M11-WORKFLOW-019",
     "M11-WORKFLOW-020",
     "M11-WORKFLOW-021",
-    "M11-WORKFLOW-022"
+    "M11-WORKFLOW-022",
+    "M11-API-023"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -748,5 +749,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M11-WORKFLOW-022 PASS. Fifty deterministic Fake runs across two workflows survived DB reopen with complete stable run ordering, task/attempt lookups, identities, refs, and events; RC tests 2 and persistent runner/repository/snapshot regression 5 passed with Ruff. M11-API-023 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
+  "last_validation_note": "M11-API-023 PASS. In-process FastAPI lifecycle smoke created/saved a workflow, started a Fake run, exercised pause/resume, polled terminal status, queried attempts, and streamed stable manual audit events; RC/API regression 11 passed with Ruff. M11-WS-024 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
 }
