@@ -6,6 +6,7 @@ from typing import Any
 from codex_flow.api.schemas import (
     AttemptView,
     RunDetail,
+    RunHistoryPage,
     RunStartResponse,
     RunSummary,
     TaskRunView,
@@ -46,6 +47,18 @@ class RunApplicationService:
 
     def list_runs(self, workflow_id: str | None = None) -> list[RunSummary]:
         return [self._summary(row) for row in self._repository.list_workflow_runs(workflow_id)]
+
+    def list_runs_page(
+        self,
+        workflow_id: str | None = None,
+        cursor: str | None = None,
+        limit: int = 50,
+    ) -> RunHistoryPage:
+        rows, next_cursor = self._repository.list_workflow_runs_page(workflow_id, cursor, limit)
+        return RunHistoryPage(
+            items=[self._summary(row) for row in rows],
+            next_cursor=next_cursor,
+        )
 
     def get_run(self, run_id: str) -> RunDetail:
         row = self._repository.get_workflow_run(run_id)

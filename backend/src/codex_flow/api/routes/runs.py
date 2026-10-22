@@ -1,12 +1,13 @@
 """Run and task REST endpoints."""
 
-from fastapi import APIRouter, Request, status
+from fastapi import APIRouter, Query, Request, status
 
-from codex_flow.api.errors import api_error, conflict, not_found
+from codex_flow.api.errors import api_error, conflict, invalid_request, not_found
 from codex_flow.api.lifespan import get_repositories
 from codex_flow.api.schemas import (
     AttemptView,
     RunDetail,
+    RunHistoryPage,
     RunStartResponse,
     RunSummary,
     TaskRunView,
@@ -39,9 +40,20 @@ async def start_run(request: Request, workflow_id: str) -> RunStartResponse:
         raise conflict("ACTIVE_RUN", str(error)) from error
 
 
-@router.get("/runs", response_model=list[RunSummary])
-async def list_runs(request: Request, workflow_id: str | None = None) -> list[RunSummary]:
-    return service(request).list_runs(workflow_id)
+@router.get("/runs", response_model=list[RunSummary] | RunHistoryPage)
+async def list_runs(
+    request: Request,
+    workflow_id: str | None = None,
+    cursor: str | None = None,
+    limit: int | None = Query(default=None, ge=1, le=100),
+) -> list[RunSummary] | RunHistoryPage:
+    run_service = service(request)
+    if cursor is None and limit is None:
+        return run_service.list_runs(workflow_id)
+    try:
+        return run_service.list_runs_page(workflow_id, cursor, limit or 50)
+    except ValueError as error:
+        raise invalid_request("INVALID_RUN_CURSOR", str(error)) from error
 
 
 @router.get("/runs/{run_id}", response_model=RunDetail)

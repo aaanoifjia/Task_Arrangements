@@ -68,6 +68,11 @@ class RunSummary(BaseModel):
     created_at: str
 
 
+class RunHistoryPage(BaseModel):
+    items: list[RunSummary]
+    next_cursor: str | None = None
+
+
 class RunDetail(RunSummary):
     snapshot: dict[str, Any] = Field(default_factory=dict)
 

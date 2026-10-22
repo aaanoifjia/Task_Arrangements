@@ -1,5 +1,6 @@
 """Transactional repositories for the frozen early-phase storage schema."""
 
+import base64
 import json
 import sqlite3
 from collections.abc import Iterable
@@ -16,6 +17,22 @@ def _now() -> str:
 
 
 _RETRYABLE_TASK_STATUSES = frozenset({"FAILED", "INTERRUPTED", "NEEDS_ATTENTION"})
+
+
+def _encode_run_cursor(created_at: str, run_id: str) -> str:
+    payload = json.dumps([created_at, run_id], separators=(",", ":")).encode("utf-8")
+    return base64.urlsafe_b64encode(payload).decode("ascii").rstrip("=")
+
+
+def _decode_run_cursor(cursor: str) -> tuple[str, str]:
+    try:
+        padded = cursor + "=" * (-len(cursor) % 4)
+        value = json.loads(base64.urlsafe_b64decode(padded).decode("utf-8"))
+    except (ValueError, UnicodeDecodeError, json.JSONDecodeError):
+        raise ValueError("invalid run history cursor") from None
+    if not isinstance(value, list) or len(value) != 2 or not all(isinstance(item, str) for item in value):
+        raise ValueError("invalid run history cursor")
+    return value[0], value[1]
 
 
 class StorageRepositories:
@@ -71,6 +88,35 @@ class StorageRepositories:
                 (workflow_id,),
             )
         )
+
+    def list_workflow_runs_page(
+        self,
+        workflow_id: str | None = None,
+        cursor: str | None = None,
+        limit: int = 50,
+    ) -> tuple[list[sqlite3.Row], str | None]:
+        if limit < 1:
+            raise ValueError("run history limit must be at least 1")
+        conditions: list[str] = []
+        parameters: list[str | int] = []
+        if workflow_id is not None:
+            conditions.append("workflow_id = ?")
+            parameters.append(workflow_id)
+        if cursor is not None:
+            created_at, run_id = _decode_run_cursor(cursor)
+            conditions.append("(created_at > ? OR (created_at = ? AND id > ?))")
+            parameters.extend((created_at, created_at, run_id))
+        where = " WHERE " + " AND ".join(conditions) if conditions else ""
+        rows = list(self._connection.execute(
+            f"SELECT * FROM workflow_runs{where} ORDER BY created_at, id LIMIT ?",
+            (*parameters, limit + 1),
+        ))
+        has_more = len(rows) > limit
+        page = rows[:limit]
+        if not has_more or not page:
+            return page, None
+        last = page[-1]
+        return page, _encode_run_cursor(last["created_at"], last["id"])
 
     def create_workflow_run(self, workflow_id: str, snapshot: dict[str, object]) -> str:
         run_id = str(uuid4())
