@@ -5,10 +5,11 @@ import { createWorkflowApi } from './api'
 import type { WorkflowApi } from './api'
 import NewWorkflowForm from './NewWorkflowForm'
 import './WorkflowListPage.css'
+import './workflows.css'
 
-type WorkflowListPageProps = { api?: WorkflowApi }
+type WorkflowListPageProps = { api?: WorkflowApi; onTrySample?: () => void }
 
-function WorkflowListPage({ api }: WorkflowListPageProps) {
+function WorkflowListPage({ api, onTrySample }: WorkflowListPageProps) {
   const stableApi = useMemo(() => api ?? createWorkflowApi(), [api])
   const [showCreate, setShowCreate] = useState(false)
   const [workflows, setWorkflows] = useState<WorkflowSummary[]>([])
@@ -44,7 +45,16 @@ function WorkflowListPage({ api }: WorkflowListPageProps) {
       {showCreate && <NewWorkflowForm api={stableApi} onCreated={() => setShowCreate(false)} />}
       {loading && <p role="status">Loading workflows…</p>}
       {error && <p role="alert">{error}</p>}
-      {!loading && !error && workflows.length === 0 && <p>No workflows yet.</p>}
+      {!loading && !error && workflows.length === 0 && (
+        <div className="workflow-list__empty" aria-labelledby="workflow-empty-heading">
+          <h2 id="workflow-empty-heading">Start your first workflow</h2>
+          <p>No workflows yet. Create one from scratch or try a safe sample.</p>
+          <div className="workflow-list__empty-actions">
+            <button type="button" onClick={() => setShowCreate(true)}>Create workflow</button>
+            <button type="button" onClick={() => onTrySample?.()}>Try a sample</button>
+          </div>
+        </div>
+      )}
       {!loading && !error && workflows.length > 0 && (
         <ul className="workflow-list__items">
           {workflows.map((workflow) => (

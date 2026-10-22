@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-ONBOARD-004",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-ONBOARD-005",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -294,7 +294,8 @@
     "M11-REPORT-036",
     "M12-UX-001",
     "M12-SAMPLE-002",
-    "M12-SAMPLE-003"
+    "M12-SAMPLE-003",
+    "M12-ONBOARD-004"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -786,5 +787,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-SAMPLE-003 PASS: materialization creates fresh deterministic IDs, preserves source samples, applies default/selected cwd, preserves schema fields, and passes 6 focused tests plus typecheck/lint. Next deterministic task is M12-ONBOARD-004."
+  "last_validation_note": "M12-ONBOARD-004 PASS: first-run empty state provides accessible Create workflow and Try a sample actions; non-empty list behavior remains intact; focused tests 3/3, typecheck, and lint passed. Next deterministic task is M12-ONBOARD-005."
 }

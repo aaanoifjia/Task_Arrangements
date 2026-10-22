@@ -21,9 +21,21 @@ describe('WorkflowListPage', () => {
   it('shows empty and error states and supports refresh', async () => {
     const list = vi.fn().mockResolvedValueOnce([]).mockRejectedValueOnce(new Error('offline'))
     const user = userEvent.setup()
-    render(<WorkflowListPage api={api({ list })} />)
-    expect(await screen.findByText('No workflows yet.')).toBeInTheDocument()
+    render(<MemoryRouter><WorkflowListPage api={api({ list })} /></MemoryRouter>)
+    expect(await screen.findByRole('heading', { name: 'Start your first workflow' })).toBeInTheDocument()
+    expect(screen.getByText('No workflows yet. Create one from scratch or try a safe sample.')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Create workflow' }))
+    expect(screen.getByRole('heading', { name: 'New workflow' })).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Refresh' }))
     await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('offline'))
+  })
+
+  it('exposes a keyboard-usable sample action callback', async () => {
+    const onTrySample = vi.fn()
+    const user = userEvent.setup()
+    render(<MemoryRouter><WorkflowListPage api={api({ list: vi.fn().mockResolvedValue([]) })} onTrySample={onTrySample} /></MemoryRouter>)
+    await screen.findByRole('heading', { name: 'Start your first workflow' })
+    await user.click(screen.getByRole('button', { name: 'Try a sample' }))
+    expect(onTrySample).toHaveBeenCalledOnce()
   })
 })

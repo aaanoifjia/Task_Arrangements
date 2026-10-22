@@ -1,0 +1,17 @@
+.workflow-list__empty {
+  border: 1px solid #d7dce5;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.workflow-list__empty h2 {
+  margin: 0;
+}
+
+.workflow-list__empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
