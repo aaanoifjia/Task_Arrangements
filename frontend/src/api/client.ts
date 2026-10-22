@@ -3,9 +3,23 @@ import type {
   ManualActionResponse, WorkflowDefinition, WorkflowDetail, WorkflowSummary,
   WorkflowImportRequest, WorkflowExportResponse as WorkflowExportResponseType,
 } from './types'
-import { requestJson as requestJsonWithRuntime, type HttpRuntime } from './http'
+import { ApiError, requestJson as requestJsonWithRuntime, type HttpRuntime } from './http'
 
 export type { WorkflowExportResponse } from './types'
+
+export type DiagnosticSummary = {
+  app_version: string
+  backend_version: string
+  os_name: string
+  os_release: string
+  python_version: string
+  db_schema_version: number | null
+  db_path_category: string
+  active_run_count: number
+  active_task_count: number
+  recent_error_event_types: string[]
+  log_directory_category: string
+}
 
 const jsonHeaders = { 'Content-Type': 'application/json' }
 
@@ -14,6 +28,8 @@ type ApiClientCore = {
   getWorkflow: (id: string) => Promise<WorkflowDetail>
   exportWorkflow: (id: string) => Promise<WorkflowExportResponseType>
   importWorkflow: (request: WorkflowImportRequest) => Promise<WorkflowDetail>
+  getDiagnostics: () => Promise<DiagnosticSummary>
+  downloadDiagnosticBundle: () => Promise<Blob>
   saveWorkflow: (workflow: WorkflowDefinition) => Promise<WorkflowDetail>
   updateWorkflow: (id: string, workflow: WorkflowDefinition) => Promise<WorkflowDetail>
   listRuns: () => Promise<RunSummary[]>
@@ -48,6 +64,17 @@ export function createApiClient(fetcher: typeof fetch = fetch, runtime: HttpRunt
     importWorkflow: (request: WorkflowImportRequest) => requestJson<WorkflowDetail>('/api/workflows/import', {
       method: 'POST', headers: jsonHeaders, body: JSON.stringify(request),
     }, fetcher),
+    getDiagnostics: () => requestJson<DiagnosticSummary>('/api/system/diagnostics', {}, fetcher),
+    downloadDiagnosticBundle: async () => {
+      const headers: Record<string, string> = { Accept: 'application/zip' }
+      if (runtime.token) headers.Authorization = 'Bearer ' + runtime.token
+      const url = runtime.baseUrl
+        ? new URL('/api/system/diagnostics/bundle', runtime.baseUrl.replace(/\/+$/, '') + '/').toString()
+        : '/api/system/diagnostics/bundle'
+      const response = await fetcher(url, { headers })
+      if (!response.ok) throw new ApiError(response.status, 'HTTP_ERROR', `request failed with status ${response.status}`)
+      return response.blob()
+    },
     saveWorkflow: (workflow: WorkflowDefinition) => requestJson<WorkflowDetail>('/api/workflows', {
       method: 'POST', headers: jsonHeaders, body: JSON.stringify(workflow),
     }, fetcher),
