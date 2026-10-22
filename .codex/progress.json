@@ -462,7 +462,8 @@
       ],
       "failing_validation": "frontend npm run typecheck failed with TS2741 because fakeClient() did not implement ApiClientCore.exportWorkflow.",
       "intended_acceptance": "The directly implicated workflow API fake includes exportWorkflow without changing production behavior; the focused export/list tests and frontend typecheck pass.",
-      "status": "IN_PROGRESS"
+      "status": "COMPLETE",
+      "validation": "Workflow export/list/API tests passed 7/7; frontend tsc -b and ESLint passed."
     }
   ],
   "task_queue_after_current": [
