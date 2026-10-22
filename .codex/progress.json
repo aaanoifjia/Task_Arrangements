@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-DIAG-017",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-DIAG-018",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -307,7 +307,8 @@
     "M12-IMPORT-013",
     "M12-IMPORT-014",
     "M12-IMPORT-015",
-    "M12-DIAG-016"
+    "M12-DIAG-016",
+    "M12-DIAG-017"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -811,5 +812,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-DIAG-016 PASS: SDK-independent diagnostic summaries expose versions, OS/Python, schema/path categories, active counts, bounded safe error labels, and log category without prompts/tokens/path content; model/redaction unit matrix 3 passed, Ruff and strict mypy passed. Next deterministic task is M12-DIAG-017."
+  "last_validation_note": "M12-DIAG-017 PASS: DiagnosticService gathers bounded active-run/runtime counts, schema/path/log categories, and filtered recent error labels from explicit repository/runtime/config sources while excluding prompt/token/path content; service/invariant tests 5 passed, Ruff and strict mypy passed. Next deterministic task is M12-DIAG-018."
 }
