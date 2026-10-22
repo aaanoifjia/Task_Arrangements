@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M12-STATUS-030",
+  "active_task": "M12-STATUS-030",
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -873,5 +873,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-EVENT-029 PASS: explicit copy actions include only safe event metadata, clipboard success is reported, and unavailable clipboard fallback visibly exposes only safe details; EventLog tests 5 passed, frontend tsc -b and ESLint passed. Next deterministic task is M12-STATUS-030."
+  "last_validation_note": "M12-STATUS-030 IN_PROGRESS: extending authenticated local system status with stable version, desktop-mode, schema, and runtime-availability fields without secrets or private SDK data."
 }
