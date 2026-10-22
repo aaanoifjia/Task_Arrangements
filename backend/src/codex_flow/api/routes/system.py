@@ -9,6 +9,7 @@ from fastapi.responses import Response
 
 from codex_flow.api.lifespan import get_connection, get_repositories
 from codex_flow.api.schemas import DiagnosticResponse
+from codex_flow.application.backup import create_database_backup
 from codex_flow.application.diagnostic_bundle import create_diagnostic_bundle
 from codex_flow.application.diagnostics import DiagnosticService
 
@@ -66,4 +67,16 @@ async def diagnostics_bundle(request: Request) -> Response:
         content=content,
         media_type="application/zip",
         headers={"Content-Disposition": 'attachment; filename="codex-flow-diagnostics.zip"'},
+    )
+
+
+@router.get("/api/system/database/backup")
+async def database_backup(request: Request) -> Response:
+    with tempfile.TemporaryDirectory(prefix="codex-flow-backup-") as directory:
+        backup_path = create_database_backup(get_connection(request.app), Path(directory) / "backup.sqlite3")
+        content = backup_path.read_bytes()
+    return Response(
+        content=content,
+        media_type="application/octet-stream",
+        headers={"Content-Disposition": 'attachment; filename="codex-flow-backup.sqlite3"'},
     )

@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-BACKUP-023",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-BACKUP-024",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -313,7 +313,8 @@
     "M12-DIAG-019",
     "M12-DIAG-020",
     "M12-DIAG-021",
-    "M12-BACKUP-022"
+    "M12-BACKUP-022",
+    "M12-BACKUP-023"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -842,5 +843,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-BACKUP-022 PASS: SQLite online backup API creates a consistent schema/workflow/run/task snapshot in an explicit output path without mutating the source DB; integration test passed, Ruff and strict mypy passed. Next deterministic task is M12-BACKUP-023."
+  "last_validation_note": "M12-BACKUP-023 PASS: authenticated database backup download returns a valid SQLite copy with deterministic filename/content type and preserves the source database; authorized/unauthorized backup and bundle tests 4 passed, Ruff and strict mypy passed. Next deterministic task is M12-BACKUP-024."
 }
