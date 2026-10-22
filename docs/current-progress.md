@@ -211,7 +211,7 @@ M11-RC-001 through M11-BUILD-032 are COMPLETE.
 
 M11-BUILD-033 encountered an external host-specific MSI/WiX blocker: WiX ICE validation failed with Win32 0x643 because the Windows Installer service is unavailable. This does not invalidate the successful M9 MSI/NSIS bundle evidence and does not require changing Windows system state for the M11 idempotency goal.
 
-M11 is COMPLETE through M11-REPORT-036. M12-UX-001 through M12-DIAG-021 and M12-BACKUP-022 through M12-BACKUP-023 are COMPLETE. The authenticated database backup endpoint is available; the explicit backup UI action and secure-storage warning are now in progress.
+M11 is COMPLETE through M11-REPORT-036. M12-UX-001 through M12-DIAG-021 and M12-BACKUP-022 through M12-BACKUP-023 are COMPLETE. The authenticated database backup endpoint is available; the explicit backup UI action and secure-storage warning are now in progress. A bounded M12-BACKUP-024-R1 remediation is checkpointed to update the directly implicated typed workflow API fake after the frontend typecheck identified the new shared method.
 
 Do not modify/start/enable the Windows Installer service, Windows optional features, security settings, or system packages for this remediation.
 
