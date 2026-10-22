@@ -203,15 +203,15 @@ unexpected_files = []
 
 ## Current Task
 
-Current task:
+Current deterministic next task:
 
-`M12-SAMPLE-003` — Sample Workflow Materialization
+`M12-ONBOARD-004` — First-run Empty State
 
 M11-RC-001 through M11-BUILD-032 are COMPLETE.
 
 M11-BUILD-033 encountered an external host-specific MSI/WiX blocker: WiX ICE validation failed with Win32 0x643 because the Windows Installer service is unavailable. This does not invalidate the successful M9 MSI/NSIS bundle evidence and does not require changing Windows system state for the M11 idempotency goal.
 
-M11 is COMPLETE through M11-REPORT-036. M12-UX-001 and M12-SAMPLE-002 are COMPLETE. The starter set covers linear, fork/join, and continuation examples with safe placeholder prompts, `.` cwd, valid dependency edges, and acyclic graphs; focused tests, typecheck, and lint passed. M12-SAMPLE-003 is next.
+M11 is COMPLETE through M11-REPORT-036. M12-UX-001, M12-SAMPLE-002, and M12-SAMPLE-003 are COMPLETE. Samples are valid and safe; materialization uses fresh deterministic IDs, preserves source samples, applies default/selected cwd, and passed focused tests, typecheck, and lint. M12-ONBOARD-004 is next.
 
 Do not modify/start/enable the Windows Installer service, Windows optional features, security settings, or system packages for this remediation.
 
