@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-STATUS-031",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-UX-032",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -321,7 +321,8 @@
     "M12-HISTORY-027",
     "M12-EVENT-028",
     "M12-EVENT-029",
-    "M12-STATUS-030"
+    "M12-STATUS-030",
+    "M12-STATUS-031"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -898,5 +899,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-STATUS-031 IN_PROGRESS: adding the About/Runtime view, typed system-status client method, Diagnostics navigation link, and loading/success/error UI states."
+  "last_validation_note": "M12-STATUS-031 PASS: typed system-status client and About/Runtime view show versions, backend availability, desktop mode, active count, and Diagnostics navigation with loading/success/error states; AboutPage/workflow API tests 5 passed, bounded R1 complete, frontend tsc -b and ESLint passed. Next deterministic task is M12-UX-032."
 }

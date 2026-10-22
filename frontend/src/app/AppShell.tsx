@@ -15,6 +15,7 @@ function AppShell({ children, diagnosticsApi }: AppShellProps) {
         <nav aria-label="Primary navigation" className="app-shell__nav">
           <NavLink to="/">Workflows</NavLink>
           <NavLink to="/runs">Runs</NavLink>
+          <NavLink to="/about">About</NavLink>
           <NavLink to="/diagnostics">Diagnostics</NavLink>
         </nav>
         <AttentionCenter />

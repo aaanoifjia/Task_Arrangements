@@ -22,6 +22,17 @@ export type DiagnosticSummary = {
   log_directory_category: string
 }
 
+export type SystemStatus = {
+  service: string
+  database: string
+  schema_version: number
+  active_runtime_count: number
+  app_version: string
+  backend_version: string
+  desktop_mode: boolean
+  runtime_available: boolean
+}
+
 const jsonHeaders = { 'Content-Type': 'application/json' }
 
 type ApiClientCore = {
@@ -30,6 +41,7 @@ type ApiClientCore = {
   exportWorkflow: (id: string) => Promise<WorkflowExportResponseType>
   importWorkflow: (request: WorkflowImportRequest) => Promise<WorkflowDetail>
   getDiagnostics: () => Promise<DiagnosticSummary>
+  getSystemStatus: () => Promise<SystemStatus>
   downloadDiagnosticBundle: () => Promise<Blob>
   downloadDatabaseBackup: () => Promise<Blob>
   saveWorkflow: (workflow: WorkflowDefinition) => Promise<WorkflowDetail>
@@ -68,6 +80,7 @@ export function createApiClient(fetcher: typeof fetch = fetch, runtime: HttpRunt
       method: 'POST', headers: jsonHeaders, body: JSON.stringify(request),
     }, fetcher),
     getDiagnostics: () => requestJson<DiagnosticSummary>('/api/system/diagnostics', {}, fetcher),
+    getSystemStatus: () => requestJson<SystemStatus>('/api/system/status', {}, fetcher),
     downloadDiagnosticBundle: async () => {
       const headers: Record<string, string> = { Accept: 'application/zip' }
       if (runtime.token) headers.Authorization = 'Bearer ' + runtime.token
