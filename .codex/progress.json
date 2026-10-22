@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M11-BUILD-034",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M11-GATE-035",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -288,7 +288,8 @@
     "M11-LOG-031",
     "M11-BUILD-032",
     "M11-BUILD-033-R1",
-    "M11-BUILD-033"
+    "M11-BUILD-033",
+    "M11-BUILD-034"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -780,5 +781,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M11-BUILD-033 PASS: two consecutive builds from the same tracked state succeeded with -BundleTarget nsis. Frontend, PyInstaller sidecar staging, release executable, and NSIS bundle passed both times; staging remained one target-named sidecar plus one runtime tree. MSI was not rebuilt in M11 because the Windows Installer service remained unavailable; prior M9 MSI evidence remains separate."
+  "last_validation_note": "M11-BUILD-034 PASS: release executable PE validation and packaged sidecar handshake/health/authenticated-status/clean-termination smoke passed 2/2; Ruff passed. Bounded R1 replaced generated _internal staging and removed nested-runtime ambiguity."
 }

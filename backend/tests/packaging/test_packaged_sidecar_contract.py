@@ -14,6 +14,7 @@ import pytest
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 SIDECAR = REPOSITORY_ROOT / "desktop" / "src-tauri" / "binaries" / "codex-flow-server-x86_64-pc-windows-msvc.exe"
+RELEASE_EXECUTABLE = REPOSITORY_ROOT / "desktop" / "src-tauri" / "target" / "release" / "codex-flow-desktop.exe"
 
 
 def _read_lines(stream: object, output: queue.Queue[str]) -> None:
@@ -31,6 +32,19 @@ def _get_json(url: str, token: str | None = None) -> dict[str, object]:
     with urllib.request.urlopen(request, timeout=5) as response:
         assert response.status == 200
         return json.loads(response.read().decode("utf-8"))
+
+
+@pytest.mark.skipif(os.name != "nt", reason="the acceptance artifact is a Windows executable")
+def test_release_executable_is_a_valid_pe_artifact() -> None:
+    """Validate the release launcher without opening a GUI or live Codex."""
+
+    if not RELEASE_EXECUTABLE.is_file():
+        pytest.fail(f"release executable is missing: {RELEASE_EXECUTABLE}")
+
+    data = RELEASE_EXECUTABLE.read_bytes()
+    assert data[:2] == b"MZ"
+    pe_offset = int.from_bytes(data[0x3C:0x40], byteorder="little")
+    assert data[pe_offset : pe_offset + 4] == b"PE\0\0"
 
 
 @pytest.mark.skipif(os.name != "nt", reason="the acceptance artifact is a Windows executable")

@@ -203,15 +203,15 @@ unexpected_files = []
 
 ## Current Task
 
-Current task:
+Current deterministic next task:
 
-`M11-BUILD-034` — Release Executable Local Smoke
+`M11-GATE-035` — Release Candidate Automated Gate
 
 M11-RC-001 through M11-BUILD-032 are COMPLETE.
 
 M11-BUILD-033 encountered an external host-specific MSI/WiX blocker: WiX ICE validation failed with Win32 0x643 because the Windows Installer service is unavailable. This does not invalidate the successful M9 MSI/NSIS bundle evidence and does not require changing Windows system state for the M11 idempotency goal.
 
-M11-BUILD-033-R1 and M11-BUILD-033 are COMPLETE. Two consecutive builds from the same tracked state passed using explicit NSIS mode; frontend, PyInstaller sidecar staging, release executable, and NSIS installer passed twice. MSI was not rebuilt in M11 because the Windows Installer service remained unavailable, and prior M9 MSI evidence remains separate. M11-BUILD-034-R1 is COMPLETE: generated `_internal` staging is replaced before copying the current PyInstaller runtime, and the packaged sidecar smoke now passes. M11-BUILD-034 is resumed for final acceptance.
+M11-BUILD-033-R1, M11-BUILD-033, M11-BUILD-034-R1, and M11-BUILD-034 are COMPLETE. Two consecutive NSIS idempotency builds passed; the release executable PE check and packaged sidecar readiness/health/authenticated-status/clean-termination smoke passed 2/2 with Ruff. M11-GATE-035 is next, followed by M11-REPORT-036 → M12.
 
 Do not modify/start/enable the Windows Installer service, Windows optional features, security settings, or system packages for this remediation.
 
