@@ -4,7 +4,7 @@ Updated: 2026-10-22
 
 ## Current Phase
 
-M9 — Desktop Integration & Packaging.
+M11 — Release Candidate / Real-world Validation.
 
 M7 Visual DAG UI is complete with all automated gates PASS. The authoritative late-phase task plan now defines 120 deterministic autonomous tasks across M8–M10: durable human controls and reliability, Windows Tauri/Python-sidecar desktop packaging, then real-world hardening and automated beta gates.
 
@@ -181,21 +181,17 @@ unexpected_files = []
 
 ## Current Task
 
-Current active task:
+Current deterministic next task:
 
-None. M10-REPORT-036 is COMPLETE; `next_task` is `null`.
+`M11-RC-001` — Release Candidate Contract & Preflight
 
-Automated M10 hardening is complete. The project is now waiting for the user
-to complete the manual V1/Desktop checklist in `docs/manual-v1-checklist.md`.
+M10 automated hardening is COMPLETE. M11–M12 are now authoritative and queued on master:
 
-M8 is complete. M9-DESKTOP-001 and M9-DESKTOP-002 are complete. M9-DESKTOP-003 discovered that Rust/Cargo is missing.
+- M11: 36 release-candidate / real-world validation tasks;
+- M12: 38 product-quality / operations tasks.
 
-The repository protocol now supports:
+Continue automatically from M11-RC-001 through M12-REPORT-038.
 
-- bounded automatic remediation for small deterministic non-owned integration repairs;
-- milestone toolchain preflight so missing prerequisites are detected together;
-- system-level installation only for an exact named toolchain explicitly authorized by an authoritative task or the user's current invocation.
+M11/M12 are local/offline by default: no live Codex turn, external web research, new package downloads, or new system toolchains are required by the plan. Small deterministic adjacent integration failures should use bounded automatic remediation instead of stopping.
 
-M9-PREFLIGHT-003A audits Python/Node/PyInstaller/Rust/MSVC/Windows SDK/WebView2/Git. If the current invocation explicitly authorizes Rust, it may install the official Rust toolchain only. Other missing system components remain genuine blockers.
-
-M9-PREFLIGHT-003A through M9-DESKTOP-038 are complete. M9-DESKTOP-038 passed the frontend production build, PyInstaller sidecar staging, Tauri release executable, MSI, and NSIS bundle builds using the installed Tauri CLI 2.12.4 and official packaging toolchains; exact artifact filenames, sizes, and SHA256 hashes are recorded in `docs/windows-build-artifacts.md`. Manual installer launch and visual Desktop checks remain deferred. M9-DESKTOP-037 passed the automated desktop integration harness: Tauri cargo test 25/25, focused frontend desktop tests 8/8, typecheck, and ESLint. Bounded remediation M9-DESKTOP-037-R1 generated a deterministic temporary engineering icon source and complete icon set with the official Tauri CLI, allowing the Tauri Rust suite to compile; the icon is engineering-only and not a final brand identity. M9-DESKTOP-036 passed the real packaged sidecar contract probe covering handshake, healthz, authenticated system status, and clean termination without a live Codex turn; packaging tests 3/3 and Ruff passed. The PyInstaller `_internal` runtime staging was repaired in the owned desktop build script. M9-DESKTOP-035 passed PowerShell dry-run and parser syntax validation; fixed frontend → sidecar/staging → Tauri order, fail-fast handling, and artifact paths are explicit. M9-DESKTOP-034 passed PowerShell check mode and parser syntax validation; prerequisite messages are explicit and no installation is performed. M9-DESKTOP-033 passed the Vite production build; relative asset wiring and Tauri `frontendDist`/`devUrl`/`beforeBuildCommand` configuration were verified, with the runtime bridge documented and no desktop backend URL baked into application code. M9-DESKTOP-032 passed Tauri cargo test 23/23, including safe window-state serialization and off-screen geometry clamping. M9-DESKTOP-031 passed Tauri cargo check/test with `tauri-plugin-single-instance` 2.5.4; 21/21 tests passed including existing-window focus callback coverage. M9-DESKTOP-030 passed desktop notification adapter tests 2/2 and browser notification/dedupe tests 4/4; frontend typecheck and ESLint passed. M9-DESKTOP-029 passed Cargo check/test with `tauri-plugin-notification` 2.7.0, frontend package/lock updates with typecheck and ESLint, and the minimum `notification:default` capability grant. M9-DESKTOP-028 passed strict `codex://threads/<id>` validation, native bridge invocation tests 3/3, Tauri cargo test 20/20, and cargo check. Bounded remediation M9-DESKTOP-028-R1 is complete: the existing Tauri invoke handler now registers the validated open_external command with no architecture change. M9-DESKTOP-027 passed 19/19 Tauri tests, including same-path fresh-token relaunch and one-relaunch/no-loop enforcement. M9-DESKTOP-026 passed 17/17 Tauri tests with unexpected child-exit detection; startup-gate tests 4/4, frontend typecheck, and ESLint also passed. M9-DESKTOP-025 passed 15/15 Tauri tests, including idempotent sidecar shutdown on application exit. M9-DESKTOP-024 passed the full frontend suite (51 files, 169 tests), including loading, ready, and failure startup-gate states; frontend typecheck and ESLint also passed. M9-DESKTOP-012 passed Cargo metadata, standalone Rust library/test compilation, and 2/2 sidecar command-construction unit tests. M9-DESKTOP-013 passed canonical readiness parsing, malformed/invalid fail-closed behavior, timeout, stderr/non-handshake filtering, and sidecar integration with 6/6 Rust tests. M9-DESKTOP-014 passed Tauri Cargo compilation and 5/5 tests for unavailable-before-ready, exact ready state, IPC payload, and sidecar command regressions. M9-DESKTOP-015 passed 4/4 browser/Tauri runtime bridge tests, frontend typecheck, and ESLint. M9-DESKTOP-016 passed 7/7 API client tests for browser-relative and desktop absolute URL/bearer-token behavior, frontend typecheck, and ESLint. M9-DESKTOP-017 passed 3/3 browser/desktop WebSocket URL tests, frontend typecheck, and ESLint. M9-DESKTOP-018 passed 7/7 allowed/disallowed desktop CORS and token/config regression tests, Ruff, and strict mypy. M9-DESKTOP-019 passed Tauri Cargo compilation and 7/7 path/runtime/sidecar tests, including spaces/non-ASCII normalization and deterministic child names. M9-DESKTOP-020 passed Tauri Cargo compilation and 9/9 path, persistence, command, runtime, and sidecar tests. M9-DESKTOP-021 passed 11/11 bounded logging/token-redaction and readiness/CLI tests, Ruff, and strict mypy. M9-DESKTOP-022 passed 11/11 Tauri tests proving canonical HOME/USERPROFILE/PATH inheritance without redirecting Codex authentication to app-data. M9-DESKTOP-023 passed 14/14 Tauri tests, including immediate-ready, delayed-ready, and bounded-timeout /healthz polling after handshake. The complete declared Windows/Tauri prerequisite audit is recorded in docs/m9-environment-preflight.md; the authorized official Rustup stable toolchain is installed and verified. Bounded remediation M9-DESKTOP-012-R1 is complete: the target-named sidecar binary required by the already-authoritative Tauri externalBin configuration was staged and verified. M9-DESKTOP-010-R1 repaired the packaged server entrypoint and is recorded complete in remediation history.
+Subjective/manual Desktop verification remains intentionally deferred until M12-REPORT-038.
