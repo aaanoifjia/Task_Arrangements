@@ -518,6 +518,17 @@
       "intended_acceptance": "The directly implicated workflow API fake includes downloadDatabaseBackup without changing production behavior; focused backup UI tests and frontend typecheck pass.",
       "status": "COMPLETE",
       "validation": "DiagnosticsPanel and workflow API tests passed 5/5; frontend tsc -b and ESLint passed."
+    },
+    {
+      "id": "M12-HISTORY-026-R1",
+      "parent_task": "M12-HISTORY-026",
+      "reason": "Adding the paginated run-history method to the shared ApiClient contract makes the existing workflow API unit-test fake incomplete, so frontend strict typecheck cannot pass until that direct fake is updated.",
+      "files": [
+        "frontend/src/features/workflows/api.test.ts"
+      ],
+      "failing_validation": "frontend npm run typecheck failed with TS2741 because fakeClient() did not implement ApiClientCore.listRunsPage.",
+      "intended_acceptance": "The directly implicated workflow API fake includes listRunsPage without changing production behavior; the focused run-history tests and frontend typecheck pass.",
+      "status": "IN_PROGRESS"
     }
   ],
   "task_queue_after_current": [
