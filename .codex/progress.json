@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M12-PERF-036",
+  "active_task": "M12-PERF-036",
+  "next_task": null,
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -914,5 +914,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-PERF-035 COMPLETE: 100-node mapping/validation/render guard passed; related editor/run tests passed 13/13, full frontend regression passed 60 files/212 tests, typecheck and lint passed. Next task: M12-PERF-036."
+  "last_validation_note": "M12-PERF-036 IN_PROGRESS: adding deterministic large run-history/event fixture coverage for bounded fetches, stable ordering, and duplicate-free rendering."
 }
