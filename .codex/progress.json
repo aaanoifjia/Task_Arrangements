@@ -15,13 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M11-DATA-010",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-10-22T00:00:00.0000000Z",
-    "note": "Creating immutable retry Attempt history with distinct external references, restarting storage/runtime objects, and verifying ordered history remains queryable without overwrite."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M11-RECOVERY-011",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -632,6 +627,7 @@
     "M11-DATA-007",
     "M11-DATA-008",
     "M11-DATA-009",
+    "M11-DATA-010",
     "M11-FIXTURE-002",
     "M11-PATH-003",
     "M11-PATH-004",
@@ -728,5 +724,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M11-DATA-009 PASS. Restarted EventStream resumed only the later event after its cursor with no loss or duplication; RC cursor test 1 and event/query regression 4 passed with Ruff. M11-DATA-010 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
+  "last_validation_note": "M11-DATA-010 PASS. Two immutable Attempt records with distinct IDs/status/thread/turn refs survived storage restart in exact order; RC test 1 and attempt transaction/identity/continuation regression 4 passed with Ruff. M11-RECOVERY-011 is READY. Manual Desktop/UI verification remains deferred until M12-REPORT-038."
 }

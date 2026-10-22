@@ -161,6 +161,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M11-DATA-007 — SQLite reopen matrix PASS; workflow/run/task/attempt identifiers, snapshots, statuses, controls, references, and event order survived reopen; 6 related tests and Ruff passed
 - M11-DATA-008 — fresh/v1/v2/v3 migration rehearsal and reopen idempotence PASS; latest schema/indexes and historical data preserved; 9 related tests and Ruff passed
 - M11-DATA-009 — event cursor restart PASS; resumed EventStream returned only later events in stable order with no loss or duplication; 5 related tests and Ruff passed
+- M11-DATA-010 — Attempt history restart PASS; immutable IDs, statuses, thread/turn references, and ordering survived restart without overwrite; 5 related tests and Ruff passed
 
 ## Verified Codex Runtime
 
@@ -190,16 +191,16 @@ unexpected_files = []
 
 ## Current Task
 
-Current task:
+Current deterministic next task:
 
-`M11-DATA-010` — Attempt History Across Restart (IN_PROGRESS)
+`M11-RECOVERY-011` — Queued Run Restart
 
 M10 automated hardening is COMPLETE. M11–M12 are now authoritative and queued on master:
 
 - M11: 36 release-candidate / real-world validation tasks;
 - M12: 38 product-quality / operations tasks.
 
-M11-RC-001 through M11-DATA-009 are COMPLETE. The M11-DATA-010 start checkpoint is committed; continue automatically through M12-REPORT-038.
+M11-RC-001 through M11-DATA-010 are COMPLETE. Continue automatically through M12-REPORT-038.
 
 M11/M12 are local/offline by default: no live Codex turn, external web research, new package downloads, or new system toolchains are required by the plan. Small deterministic adjacent integration failures should use bounded automatic remediation instead of stopping.
 
