@@ -173,6 +173,7 @@ M7 Visual DAG UI is complete with all automated gates PASS. The authoritative la
 - M11-WORKFLOW-019 — independent workspace parallelism PASS; event-synchronized overlap at capacity 2 and deterministic final state verified; 9 related tests and Ruff passed
 - M11-WORKFLOW-020 — equivalent same-workspace serialization PASS; peak overlap 1 and release-gated second start verified; 8 related tests and Ruff passed
 - M11-WORKFLOW-021 — repeated run isolation PASS; distinct run/task/attempt/thread/turn identities and per-run events verified; 8 related tests and Ruff passed
+- M11-WORKFLOW-022 — 50-run history durability PASS; complete stable run ordering, task/attempt lookups, identities, references, and events survived reopen; 7 related tests and Ruff passed
 
 ## Verified Codex Runtime
 
@@ -204,14 +205,14 @@ unexpected_files = []
 
 Current task:
 
-`M11-WORKFLOW-022` — 50-run History Durability (IN_PROGRESS)
+`M11-API-023` — Release Candidate API Lifecycle Smoke
 
 M10 automated hardening is COMPLETE. M11–M12 are now authoritative and queued on master:
 
 - M11: 36 release-candidate / real-world validation tasks;
 - M12: 38 product-quality / operations tasks.
 
-M11-RC-001 through M11-WORKFLOW-021 are COMPLETE. The M11-WORKFLOW-022 start checkpoint is committed; continue automatically through M12-REPORT-038.
+M11-RC-001 through M11-WORKFLOW-022 are COMPLETE. Continue automatically through M12-REPORT-038.
 
 M11/M12 are local/offline by default: no live Codex turn, external web research, new package downloads, or new system toolchains are required by the plan. Small deterministic adjacent integration failures should use bounded automatic remediation instead of stopping.
 

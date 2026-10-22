@@ -63,3 +63,70 @@ async def test_repeated_runs_keep_distinct_durable_identities_and_events(tmp_pat
         assert adapter.calls.count("start_turn") == 2
     finally:
         connection.close()
+
+
+@pytest.mark.asyncio
+async def test_fifty_run_history_reopens_complete_and_deterministic(tmp_path: Path) -> None:
+    connection = open_database(tmp_path / "fifty-runs.sqlite3")
+    expected: list[tuple[str, str, str, str, str, str]] = []
+    try:
+        repository = StorageRepositories(connection)
+        adapter = FakeCodexAdapter()
+        runner = DurableRunner(repository, adapter)
+        workflows = (
+            WorkflowDefinition(
+                id="history-workflow-a",
+                name="History Workflow A",
+                tasks=[TaskDefinition(id="A", name="A", prompt="history-a", cwd=".")],
+                edges=[],
+            ),
+            WorkflowDefinition(
+                id="history-workflow-b",
+                name="History Workflow B",
+                tasks=[TaskDefinition(id="B", name="B", prompt="history-b", cwd=".")],
+                edges=[],
+            ),
+        )
+        for index in range(50):
+            workflow = workflows[index % 2]
+            run_id = await runner.run(workflow)
+            task_row = repository.load_task_runs(run_id)[0]
+            attempt = repository.load_attempts(str(task_row["id"]))[0]
+            expected.append(
+                (
+                    workflow.id,
+                    run_id,
+                    str(task_row["id"]),
+                    str(attempt["id"]),
+                    str(task_row["thread_id"]),
+                    str(task_row["turn_id"]),
+                )
+            )
+        assert len(repository.list_workflow_runs()) == 50
+    finally:
+        connection.close()
+
+    reopened_connection = open_database(tmp_path / "fifty-runs.sqlite3")
+    try:
+        reopened = StorageRepositories(reopened_connection)
+        assert len(reopened.list_workflow_runs()) == 50
+        for workflow_id in ("history-workflow-a", "history-workflow-b"):
+            first_order = [row["id"] for row in reopened.list_workflow_runs(workflow_id)]
+            second_order = [row["id"] for row in reopened.list_workflow_runs(workflow_id)]
+            assert first_order == second_order
+        for workflow_id, run_id, task_run_id, attempt_id, thread_id, turn_id in expected:
+            run = reopened.get_workflow_run(run_id)
+            task = reopened.get_task_run(task_run_id)
+            attempts = reopened.load_attempts(task_run_id)
+            assert run is not None and run["workflow_id"] == workflow_id
+            assert task is not None and task["status"] == TaskStatus.SUCCESS.value
+            assert task["thread_id"] == thread_id and task["turn_id"] == turn_id
+            assert len(attempts) == 1 and attempts[0]["id"] == attempt_id
+            assert attempts[0]["thread_id"] == thread_id and attempts[0]["turn_id"] == turn_id
+            events = reopened_connection.execute(
+                "SELECT event_type FROM events WHERE task_run_id = ? ORDER BY rowid",
+                (task_run_id,),
+            ).fetchall()
+            assert [event["event_type"] for event in events] == ["TURN_STARTED", "TURN_COMPLETED"]
+    finally:
+        reopened_connection.close()
