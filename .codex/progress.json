@@ -15,8 +15,8 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": "M12-GATE-037",
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M12-REPORT-038",
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
@@ -325,7 +325,10 @@
     "M12-STATUS-031",
     "M12-UX-032",
     "M12-UX-033",
-    "M12-A11Y-034"
+    "M12-A11Y-034",
+    "M12-PERF-035",
+    "M12-PERF-036",
+    "M12-GATE-037"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -914,5 +917,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-GATE-037 IN_PROGRESS: running the complete offline M10/M11/M12 backend, frontend, packaging, and Tauri regression gate without live Codex, network, or GUI interaction."
+  "last_validation_note": "M12-GATE-037 COMPLETE: backend non-live 417 passed/6 deselected/2 xfailed; packaging/stress 23 passed; Ruff and strict mypy passed; frontend 61 files/214 tests with typecheck/lint/build passed; Tauri cargo check and 31 Rust tests passed. Next task: M12-REPORT-038."
 }
