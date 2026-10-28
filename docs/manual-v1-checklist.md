@@ -2,6 +2,11 @@
 
 Status: PENDING user verification after the automated M12 productization gate.
 
+Latest smoke result: **FAIL — SMOKE-WIN-001**. The installed application
+exited/crashed before the UI became usable; see
+[`manual-v1-smoke-test-report.md`](manual-v1-smoke-test-report.md). The
+checklist remains pending and must not be marked PASS from automated evidence.
+
 Use the packaged Windows artifacts recorded in
 [`windows-build-artifacts.md`](windows-build-artifacts.md). Record the date,
 artifact filename, and observation for every item. Do not mark an item PASS
