@@ -19,6 +19,55 @@ Result: **FAIL**
 
 Status: **UNDER INVESTIGATION**
 
+### SMOKE-WIN-003 diagnosis and remediation
+
+The packaged backend route was healthy. In an isolated run of the generated
+sidecar, the canonical request returned:
+
+```text
+HTTP 201
+Content-Type: application/json
+Body: {"workflow":{"id":"test1","name":"Quick Smoke Test","description":null,"tasks":[],"edges":[]}}
+```
+
+The root cause was in the packaged frontend runtime wiring: `DesktopStartupGate`
+loaded the sidecar `baseUrl` and bearer token but discarded the result. Default
+API clients therefore sent a relative `/api/workflows` request without the
+sidecar URL or authorization header. The HTTP client also attempted JSON
+parsing before checking the HTTP status, so a non-JSON response from the wrong
+origin was reported only as `response was not valid JSON`.
+
+The repair injects the loaded desktop runtime into default requests and maps
+non-JSON HTTP failures to a useful `HTTP_ERROR` while preserving the existing
+invalid-success-response behavior.
+
+Files changed:
+
+- `frontend/src/api/http.ts`
+- `frontend/src/api/client.test.ts`
+- `frontend/src/api/http.desktop.test.ts`
+
+Regression and packaged validation:
+
+- Frontend focused tests: 14 passed.
+- Backend API/workflow tests: 5 passed.
+- Frontend typecheck, lint, and production build: passed.
+- Ruff: passed.
+- A fresh packaged sidecar probe created a unique disposable workflow and then
+  retrieved it successfully: POST 201, GET 200, JSON content type, no backend
+  traceback.
+- Final NSIS rebuild: passed.
+
+Final NSIS artifact:
+
+| Artifact | Absolute path | Size (bytes) | SHA256 | Last write |
+| --- | --- | ---: | --- | --- |
+| NSIS installer | `D:\fiona\Codex_Projects\Task_Arrangements\desktop\src-tauri\target\release\bundle\nsis\Codex Flow_0.1.0_x64-setup.exe` | 17960171 | `6144B052365C16CA40CF7AB12215F90CBEDEFE45DA8F1606088F9F6426E001D0` | `2026-10-29T20:56:02.2231457+08:00` |
+| Release executable | `D:\fiona\Codex_Projects\Task_Arrangements\desktop\src-tauri\target\release\codex-flow-desktop.exe` | 9091584 | `F75571993AD43B27FDF640144B38CDCBC9161118A4AAD63755AF04D680381237` | `2026-10-29T20:56:02.2530220+08:00` |
+
+Automated remediation is **PASS**. The original manual result remains **FAIL**;
+manual retest is **PENDING**.
+
 The original failure is preserved as the baseline and must not be replaced by
 post-fix evidence. The remaining manual checklist is not marked PASS by this
 report.

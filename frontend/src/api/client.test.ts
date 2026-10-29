@@ -44,6 +44,20 @@ describe('API client', () => {
     await expect(createApiClient(fetcher).listWorkflows()).rejects.toMatchObject({ code: 'INVALID_RESPONSE' })
   })
 
+  it('surfaces non-JSON HTTP failures instead of reporting only a parse error', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response('<html>route missing</html>', { status: 404, statusText: 'Not Found' }),
+    )
+
+    await expect(createApiClient(fetcher).listWorkflows()).rejects.toEqual(
+      expect.objectContaining({
+        status: 404,
+        code: 'HTTP_ERROR',
+        message: 'request failed with status 404: <html>route missing</html>',
+      }),
+    )
+  })
+
   it('maps all control actions with encoded run and task ids', async () => {
     const fetcher = vi.fn<typeof fetch>().mockImplementation(async () => response(200, { accepted: true }))
     const client = createApiClient(fetcher)
