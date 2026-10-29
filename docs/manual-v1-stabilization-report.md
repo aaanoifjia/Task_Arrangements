@@ -43,3 +43,16 @@ the actual GET/POST and surfaced `Failed to fetch`. The concrete repair lets
 OPTIONS reach the existing explicit CORS allowlist while keeping bearer-token
 authentication on all API data requests. No wildcard CORS or loopback binding
 change was introduced.
+
+## Stabilization repairs
+
+- `081784e` — isolated WebView2 data directories per desktop process and
+  terminated only the owned sidecar process tree during shutdown.
+- `5a0e6dc` — allowed CORS preflight requests while retaining bearer auth for
+  authenticated API requests.
+- `f32950c` — injected packaged runtime URL/token into frontend API requests.
+
+The reusable harness is [`scripts/smoke_windows_release.ps1`](../scripts/smoke_windows_release.ps1).
+It exercises the packaged release executable, packaged sidecar, health check,
+the exact `http://tauri.localhost` preflight, authenticated workflow list/create
+and reload, two-task DAG persistence, and three consecutive isolated cycles.
