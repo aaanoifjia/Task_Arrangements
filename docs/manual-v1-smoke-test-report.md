@@ -19,6 +19,21 @@ Result: **FAIL**
 
 Status: **UNDER INVESTIGATION**
 
+## SMOKE-WIN-004
+
+Step: Open the installed Codex Flow application and access the Workflows page
+or create a workflow.
+
+Expected: The packaged frontend communicates with the localhost sidecar API and
+loads workflow data.
+
+Observed: The UI displays `Failed to fetch` on the initial page and when
+creating a workflow.
+
+Result: **FAIL**
+
+Status: **UNDER INVESTIGATION**
+
 ### SMOKE-WIN-003 diagnosis and remediation
 
 The packaged backend route was healthy. In an isolated run of the generated
