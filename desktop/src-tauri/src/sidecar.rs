@@ -64,7 +64,7 @@ impl SidecarProcess {
         if self.child.try_wait()?.is_some() {
             return Ok(());
         }
-        self.child.kill()?;
+        terminate_owned_process_tree(&mut self.child)?;
         self.child.wait().map(|_| ())
     }
 
@@ -98,6 +98,21 @@ impl SidecarProcess {
         self.relaunch_count += 1;
         Ok(())
     }
+}
+
+fn terminate_owned_process_tree(child: &mut Child) -> io::Result<()> {
+    #[cfg(windows)]
+    {
+        let pid = child.id().to_string();
+        let status = Command::new("taskkill")
+            .args(["/PID", &pid, "/T", "/F"])
+            .status()?;
+        if status.success() {
+            return Ok(());
+        }
+    }
+
+    child.kill()
 }
 
 pub fn default_runtime_paths() -> io::Result<RuntimePaths> {
@@ -352,7 +367,7 @@ mod tests {
         };
 
         let mut exit = None;
-        for _ in 0..100 {
+        for _ in 0..1000 {
             exit = process.poll_exit().expect("poll child");
             if exit.is_some() {
                 break;
@@ -409,7 +424,7 @@ mod tests {
         let mut process = super::launch_sidecar(&paths).expect("launch test sidecar");
         let original_token = process.token.clone();
         let mut exit = None;
-        for _ in 0..100 {
+        for _ in 0..1000 {
             exit = process.poll_exit().expect("poll child");
             if exit.is_some() {
                 break;

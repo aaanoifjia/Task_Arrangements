@@ -94,16 +94,17 @@ fn configure_webview_data_directory() {
     let Some(local_app_data) = std::env::var_os("LOCALAPPDATA") else {
         return;
     };
-    let path = webview_data_directory(Path::new(&local_app_data));
+    let path = webview_data_directory(Path::new(&local_app_data), std::process::id());
     let _ = std::fs::create_dir_all(&path);
     std::env::set_var("WEBVIEW2_USER_DATA_FOLDER", path);
 }
 
 #[cfg(windows)]
-fn webview_data_directory(local_app_data: &Path) -> PathBuf {
+fn webview_data_directory(local_app_data: &Path, process_id: u32) -> PathBuf {
     local_app_data
         .join("com.codexflow.desktop")
         .join("CodexFlowWebView2")
+        .join(format!("process-{process_id}"))
 }
 
 #[cfg(all(test, windows))]
@@ -114,8 +115,8 @@ mod webview_tests {
     #[test]
     fn webview_data_directory_is_stable_and_application_owned() {
         assert_eq!(
-            webview_data_directory(Path::new(r"C:\Users\Tester\AppData\Local")),
-            Path::new(r"C:\Users\Tester\AppData\Local\com.codexflow.desktop\CodexFlowWebView2")
+            webview_data_directory(Path::new(r"C:\Users\Tester\AppData\Local"), 42),
+            Path::new(r"C:\Users\Tester\AppData\Local\com.codexflow.desktop\CodexFlowWebView2\process-42")
         );
     }
 }
