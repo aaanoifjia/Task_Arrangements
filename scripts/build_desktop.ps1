@@ -9,8 +9,8 @@ $ErrorActionPreference = 'Stop'
 $RepositoryRoot = Split-Path -Parent $PSScriptRoot
 $Python = Join-Path $RepositoryRoot '.venv\Scripts\python.exe'
 $SidecarBuilder = Join-Path $RepositoryRoot 'backend\scripts\build_sidecar.py'
-$SidecarDist = Join-Path $RepositoryRoot 'desktop\sidecar\dist\codex-flow-server'
-$SidecarInternal = Join-Path $SidecarDist '_internal'
+$SidecarDist = Join-Path $RepositoryRoot 'desktop\sidecar\dist'
+$SidecarExecutable = Join-Path $SidecarDist 'codex-flow-server.exe'
 $TauriBinaryRoot = Join-Path $RepositoryRoot 'desktop\src-tauri\binaries'
 $TauriBinary = Join-Path $RepositoryRoot 'desktop\src-tauri\binaries\codex-flow-server-x86_64-pc-windows-msvc.exe'
 $BundleRoot = Join-Path $RepositoryRoot 'desktop\src-tauri\target\release\bundle'
@@ -55,13 +55,8 @@ try {
     Invoke-Step 'PyInstaller sidecar build and Tauri staging' $Python @($SidecarBuilder)
     if (-not $DryRun) {
         Require-File $TauriBinary 'staged target-named sidecar executable'
-        Require-File (Join-Path $SidecarInternal 'python311.dll') 'PyInstaller sidecar runtime'
-        $StagedSidecarInternal = Join-Path $TauriBinaryRoot '_internal'
-        if (Test-Path -LiteralPath $StagedSidecarInternal) {
-            Remove-Item -LiteralPath $StagedSidecarInternal -Recurse -Force
-        }
-        Copy-Item -LiteralPath $SidecarInternal -Destination $StagedSidecarInternal -Recurse -Force
-        Write-Output "ARTIFACT: sidecar runtime = $StagedSidecarInternal"
+        Require-File $SidecarExecutable 'single-file PyInstaller sidecar executable'
+        Write-Output "ARTIFACT: sidecar executable = $SidecarExecutable"
     }
     $TauriBuildArguments = @('--prefix', 'frontend', 'exec', 'tauri', 'build', '--', '--config', 'desktop/src-tauri/tauri.conf.json')
     if ($BundleTarget -ne 'all') {

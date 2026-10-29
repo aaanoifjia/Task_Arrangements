@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
 import subprocess
 import sys
@@ -14,6 +15,14 @@ SPEC_PATH = BACKEND_ROOT / "codex_flow_sidecar.spec"
 DEFAULT_OUTPUT_ROOT = BACKEND_ROOT.parent / "desktop" / "sidecar"
 TAURI_BINARY_ROOT = BACKEND_ROOT.parent / "desktop" / "src-tauri" / "binaries"
 TAURI_SIDECAR_NAME = "codex-flow-server-x86_64-pc-windows-msvc.exe"
+
+
+def preserve_existing(path: Path) -> None:
+    """Move a prior generated binary aside so Windows can replace it safely."""
+    if not path.exists():
+        return
+    backup = path.with_name(f"{path.name}.previous-{os.getpid()}")
+    path.replace(backup)
 
 
 def build_command(output_root: Path = DEFAULT_OUTPUT_ROOT) -> list[str]:
@@ -35,11 +44,13 @@ def build_command(output_root: Path = DEFAULT_OUTPUT_ROOT) -> list[str]:
 def build_sidecar(output_root: Path = DEFAULT_OUTPUT_ROOT) -> None:
     """Run the sidecar build with the project environment's Python."""
     output_root.mkdir(parents=True, exist_ok=True)
+    preserve_existing(output_root / "dist" / "codex-flow-server.exe")
     subprocess.run(build_command(output_root), cwd=BACKEND_ROOT, check=True)
-    built_executable = output_root / "dist" / "codex-flow-server" / "codex-flow-server.exe"
+    built_executable = output_root / "dist" / "codex-flow-server.exe"
     if not built_executable.is_file():
         raise FileNotFoundError(f"PyInstaller output missing: {built_executable}")
     TAURI_BINARY_ROOT.mkdir(parents=True, exist_ok=True)
+    preserve_existing(TAURI_BINARY_ROOT / TAURI_SIDECAR_NAME)
     shutil.copy2(built_executable, TAURI_BINARY_ROOT / TAURI_SIDECAR_NAME)
 
 

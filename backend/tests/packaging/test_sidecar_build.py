@@ -1,6 +1,7 @@
 """Deterministic checks for the Windows sidecar packaging inputs."""
 
 import importlib.util
+import inspect
 from pathlib import Path
 
 BACKEND_ROOT = Path(__file__).resolve().parents[2]
@@ -36,3 +37,20 @@ def test_spec_collects_codex_runtime_and_sql_migrations() -> None:
     assert '"codex_flow/storage/migrations"' in spec_text
     assert "0001_initial.sql" not in spec_text
     assert "OPENAI_API_KEY" not in spec_text
+
+
+def test_spec_builds_a_single_file_sidecar_for_tauri_external_bin() -> None:
+    spec_text = (BACKEND_ROOT / "codex_flow_sidecar.spec").read_text(encoding="utf-8")
+
+    assert "exclude_binaries=False" in spec_text
+    assert "analysis.binaries" in spec_text
+    assert "analysis.datas" in spec_text
+    assert "COLLECT(" not in spec_text
+
+
+def test_builder_expects_the_single_file_output() -> None:
+    module = _build_module()
+
+    assert 'output_root / "dist" / "codex-flow-server.exe"' in inspect.getsource(
+        module.build_sidecar
+    )

@@ -36,21 +36,14 @@ pyz = PYZ(analysis.pure)
 executable = EXE(
     pyz,
     analysis.scripts,
+    analysis.binaries,
+    analysis.datas,
     [],
-    exclude_binaries=True,
+    exclude_binaries=False,
     name="codex-flow-server",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
     console=True,
-)
-
-COLLECT(
-    executable,
-    analysis.binaries,
-    analysis.datas,
-    strip=False,
-    upx=True,
-    name="codex-flow-server",
 )
