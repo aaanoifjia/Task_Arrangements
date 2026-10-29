@@ -14,6 +14,15 @@ $oldWebViewFolder = $env:WEBVIEW2_USER_DATA_FOLDER
 $env:LOCALAPPDATA = $smokeRoot
 $env:WEBVIEW2_USER_DATA_FOLDER = Join-Path $smokeRoot 'webview'
 
+Add-Type @"
+using System;
+using System.Runtime.InteropServices;
+public static class CodexFlowSmokeWindow {
+    [DllImport("user32.dll", SetLastError = true)]
+    public static extern IntPtr SendMessage(IntPtr hWnd, uint message, IntPtr wParam, IntPtr lParam);
+}
+"@
+
 function Get-ProcessSnapshot {
     @(Get-CimInstance Win32_Process | Select-Object ProcessId, ParentProcessId, Name, ExecutablePath, CommandLine)
 }
@@ -97,8 +106,11 @@ try {
         $port = ([regex]::Match($portLine.ToString(), '"port":(\d+)')).Groups[1].Value
         $base = "http://127.0.0.1:$port"
         Wait-Healthy $base
+        $beforeAppServers = @(Get-Process -Name codex-flow-server -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id)
         $desktop = Start-Process -FilePath $exe -PassThru
         Wait-ProcessById $desktop.Id | Out-Null
+        Start-Sleep -Seconds 2
+        $appServers = @(Get-Process -Name codex-flow-server -ErrorAction SilentlyContinue | Where-Object { $_.Id -notin $beforeAppServers })
         $health = Invoke-WebRequest -UseBasicParsing "$base/healthz" -TimeoutSec 5
         if ($health.StatusCode -ne 200) { throw "cycle $cycle health failed" }
         $headers = @{ Authorization = "Bearer $token"; Origin = 'http://tauri.localhost'; Accept = 'application/json' }
@@ -113,11 +125,17 @@ try {
         $loadedBody = $loaded.Content | ConvertFrom-Json
         if ($loadedBody.workflow.tasks.Count -ne 2 -or $loadedBody.workflow.edges.Count -ne 1 -or $loadedBody.workflow.tasks[0].cwd -ne 'D:\codex-flow-smoke') { throw "cycle $cycle workflow persistence failed" }
         Write-Output "CYCLE $cycle PASS origin=http://tauri.localhost sidecar=$($sidecar.Id) port=$port"
-        Stop-Process -Id $desktop.Id -Force
-        Stop-Process -Id $sidecar.Id -Force
+        $desktopProcess = Get-Process -Id $desktop.Id -ErrorAction SilentlyContinue
+        if (-not $desktopProcess -or $desktopProcess.MainWindowHandle -eq 0) { throw "cycle $cycle desktop window handle was unavailable" }
+        [void][CodexFlowSmokeWindow]::SendMessage($desktopProcess.MainWindowHandle, 0x0010, [IntPtr]::Zero, [IntPtr]::Zero)
         $deadline = (Get-Date).AddSeconds(10)
-        do { Start-Sleep -Milliseconds 250; $owned = Get-Process -Id $sidecar.Id -ErrorAction SilentlyContinue } while ($owned -and (Get-Date) -lt $deadline)
-        if ($owned) { throw "cycle $cycle owned sidecar survived controlled desktop shutdown" }
+        do {
+            Start-Sleep -Milliseconds 250
+            $ownedDesktop = Get-Process -Id $desktop.Id -ErrorAction SilentlyContinue
+            $ownedAppServers = @($appServers | Where-Object { Get-Process -Id $_.Id -ErrorAction SilentlyContinue })
+        } while (($ownedDesktop -or $ownedAppServers) -and (Get-Date) -lt $deadline)
+        if ($ownedDesktop -or $ownedAppServers) { throw "cycle $cycle owned desktop/sidecar process survived graceful shutdown" }
+        Stop-Process -Id $sidecar.Id -Force
     }
     Write-Output "PACKAGED_RELEASE_SMOKE PASS cycles=$Cycles"
 }

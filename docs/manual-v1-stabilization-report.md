@@ -56,3 +56,36 @@ The reusable harness is [`scripts/smoke_windows_release.ps1`](../scripts/smoke_w
 It exercises the packaged release executable, packaged sidecar, health check,
 the exact `http://tauri.localhost` preflight, authenticated workflow list/create
 and reload, two-task DAG persistence, and three consecutive isolated cycles.
+
+## Automated stabilization gate
+
+The final harness passed three consecutive cycles. Each cycle launched the
+release executable, created the owned sidecar, verified the packaged
+`http://tauri.localhost` CORS/auth boundary, round-tripped a unique two-task
+workflow, and closed the desktop window through its native close message. The
+owned sidecar process tree was gone after each graceful close; unrelated
+processes were not targeted.
+
+| Validation | Result |
+| --- | --- |
+| Backend non-live regression | 420 passed, 6 deselected, 2 xfailed |
+| Backend packaging/stress | 25 passed |
+| Ruff | PASS |
+| Strict mypy | 56 source files, PASS |
+| Frontend tests | 62 files, 216 tests passed |
+| Frontend typecheck/lint/build | PASS |
+| Tauri cargo check | PASS |
+| Tauri cargo test | 32 passed |
+| Packaged smoke harness | 3 consecutive cycles PASS |
+| Live Codex execution | `LIVE-CODEX-MANUAL-GATE` — local Codex process exited with `Could not find home directory`; no credentials or account state were changed |
+
+## Final NSIS artifact
+
+| Artifact | Absolute path | Size (bytes) | SHA256 | Timestamp |
+| --- | --- | ---: | --- | --- |
+| NSIS installer | `D:\fiona\Codex_Projects\Task_Arrangements\desktop\src-tauri\target\release\bundle\nsis\Codex Flow_0.1.0_x64-setup.exe` | 17957648 | `C2B10DC5F2ACAE0D9C7CDD7F435936FDD075D46F64551D373655B62390568EB3` | `2026-10-29T22:35:43.1367560+08:00` |
+| Release executable | `D:\fiona\Codex_Projects\Task_Arrangements\desktop\src-tauri\target\release\codex-flow-desktop.exe` | 9107968 | `4E2AEE753A5D8919317920C4A8CFA52F09AE5CE9EEAC6E993B029D0AD22E8CAD` | `2026-10-29T22:35:43.1683850+08:00` |
+
+The artifact was installed through the supported silent NSIS path for local
+validation. Manual retesting of the installed UI, native notifications,
+Open-in-Codex, and subjective presentation remains user-owned.
