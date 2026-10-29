@@ -88,3 +88,22 @@ artifacts are:
 | `desktop/src-tauri/target/release/bundle/nsis/Codex Flow_0.1.0_x64-setup.exe` | 17959739 | `26A4999C0FD580D1F866AC0988F156BEAC222AD79F1545F223E0EBC0E9C2B7FA` |
 
 Automated post-fix launch is **PASS**. Manual retest remains **PENDING**.
+
+## SMOKE-WIN-003
+
+Step: Create a new workflow in the installed Codex Flow application.
+
+Input:
+
+- Workflow id: `test1`
+- Name: `Quick Smoke Test`
+
+Expected: Workflow is created and the application transitions to the
+workflow/editor or success state.
+
+Observed: The UI displays `response was not valid JSON`; the workflow is not
+created.
+
+Result: **FAIL**
+
+Status: **UNDER INVESTIGATION**

@@ -2,8 +2,11 @@
 
 Status: PENDING user verification after the automated M12 productization gate.
 
-Latest smoke result: **FAIL — SMOKE-WIN-001**. The installed application
-exited/crashed before the UI became usable; see
+Latest smoke results: **FAIL — SMOKE-WIN-001** and **FAIL — SMOKE-WIN-003**.
+The original startup failure and workflow-creation failure are recorded in
+[`manual-v1-smoke-test-report.md`](manual-v1-smoke-test-report.md). The
+installed application startup remediation is complete, but the workflow
+creation failure remains under investigation; see
 [`manual-v1-smoke-test-report.md`](manual-v1-smoke-test-report.md). The
 checklist remains pending and must not be marked PASS from automated evidence.
 
