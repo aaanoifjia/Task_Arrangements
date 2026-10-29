@@ -9,10 +9,13 @@ mod window_state;
 
 use std::time::Duration;
 use std::sync::Mutex;
+#[cfg(windows)]
+use std::path::{Path, PathBuf};
 
 use tauri::{Manager, PhysicalPosition, PhysicalSize, RunEvent, WindowEvent};
 
 fn main() {
+    configure_webview_data_directory();
     let app = tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
             single_instance::focus_existing_window(app);
@@ -81,4 +84,38 @@ fn main() {
             }
         }
     });
+}
+
+#[cfg(windows)]
+fn configure_webview_data_directory() {
+    if std::env::var_os("WEBVIEW2_USER_DATA_FOLDER").is_some() {
+        return;
+    }
+    let Some(local_app_data) = std::env::var_os("LOCALAPPDATA") else {
+        return;
+    };
+    let path = webview_data_directory(Path::new(&local_app_data));
+    let _ = std::fs::create_dir_all(&path);
+    std::env::set_var("WEBVIEW2_USER_DATA_FOLDER", path);
+}
+
+#[cfg(windows)]
+fn webview_data_directory(local_app_data: &Path) -> PathBuf {
+    local_app_data
+        .join("com.codexflow.desktop")
+        .join("CodexFlowWebView2")
+}
+
+#[cfg(all(test, windows))]
+mod webview_tests {
+    use super::webview_data_directory;
+    use std::path::Path;
+
+    #[test]
+    fn webview_data_directory_is_stable_and_application_owned() {
+        assert_eq!(
+            webview_data_directory(Path::new(r"C:\Users\Tester\AppData\Local")),
+            Path::new(r"C:\Users\Tester\AppData\Local\com.codexflow.desktop\CodexFlowWebView2")
+        );
+    }
 }

@@ -54,12 +54,37 @@ The rebuilt NSIS artifacts are:
 | `desktop/src-tauri/target/release/codex-flow-desktop.exe` | 9096192 | `806534BB9BCCD5C7DD9CA7F89384B3FE37B0EF5424E53F19EF0A14E3985C4A45` |
 | `desktop/src-tauri/target/release/bundle/nsis/Codex Flow_0.1.0_x64-setup.exe` | 17956685 | `C4AE247EB3F9900FFBC35445045E6F64465BB7865511D33E749B4B4224B9FF1F` |
 
-The automated desktop launch probe remains **BLOCKED** on this host. Both a
-normal launch and a launch with a fresh temporary profile fail during Tauri
+The first post-fix automated desktop launch probe was blocked on this host.
+The baseline launch and a launch with the existing profile failed during Tauri
 WebView creation with:
 
 `WebView2 error: WindowsError(Error { code: HRESULT(0x800700AA), message: "requested resource is in use" })`
 
-The debug build reports the same error, before the application can create its
-window. This is a host WebView2 resource-lock prerequisite, separate from the
-fixed sidecar packaging defect. Manual retest remains **PENDING**.
+The debug build reported the same error before the application could create
+its window. No Codex Flow, sidecar, or WebView2 process was running before the
+baseline launch, and no WebView2 environment override or relevant policy
+registry value was present. The installed WebView2 Runtime was
+`156.0.4314.50` at `C:\Program Files (x86)\Microsoft\EdgeWebView\Application`.
+
+The official diagnostic `WEBVIEW2_USER_DATA_FOLDER` isolation launch used a
+new temporary directory and remained alive. Its WebView2 profile was created
+under that directory. This identifies the failure as a default Codex Flow
+WebView profile resource conflict, not a missing runtime, host-wide WebView2
+failure, or sidecar defect.
+
+The smallest product-safe repair sets a stable process-local
+`WEBVIEW2_USER_DATA_FOLDER` before Tauri creates the window, only when the user
+has not already supplied one. The stable application-owned path is
+`%LOCALAPPDATA%\com.codexflow.desktop\CodexFlowWebView2`; it is not temporary,
+random, persisted as an environment override, or shared with another app.
+
+After the repair, a clean rebuilt release executable remained alive for eight
+seconds, and the sidecar and WebView2 processes were present. The rebuilt
+artifacts are:
+
+| Artifact | Size (bytes) | SHA256 |
+| --- | ---: | --- |
+| `desktop/src-tauri/target/release/codex-flow-desktop.exe` | 9091584 | `48C57185391E0793415E25EC2BAF7725FC8865D4968A6E320356CC2FC0353273` |
+| `desktop/src-tauri/target/release/bundle/nsis/Codex Flow_0.1.0_x64-setup.exe` | 17959739 | `26A4999C0FD580D1F866AC0988F156BEAC222AD79F1545F223E0EBC0E9C2B7FA` |
+
+Automated post-fix launch is **PASS**. Manual retest remains **PENDING**.
