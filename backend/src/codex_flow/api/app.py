@@ -52,7 +52,11 @@ def create_app(
     @app.middleware("http")
     async def local_token_middleware(request: Request, call_next: RequestResponseEndpoint) -> Response:
         """Protect REST data endpoints when a desktop process token is configured."""
-        if service_config.token is None or not _requires_local_token(request.url.path):
+        if (
+            service_config.token is None
+            or request.method == "OPTIONS"
+            or not _requires_local_token(request.url.path)
+        ):
             return await call_next(request)
         authorization = request.headers.get("authorization", "")
         if not _valid_bearer_token(authorization, service_config.token):

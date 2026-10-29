@@ -21,3 +21,25 @@ workflow APIs, workflow-definition persistence, repeated launch cycles, and
 the reusable release smoke harness.
 
 Detailed evidence will be appended as each repair and validation gate passes.
+
+## SMOKE-WIN-004 diagnosis
+
+The installed desktop process reached a live WebView and exposed the actual
+production origin as `http://tauri.localhost`. The owned sidecar was alive on a
+loopback port and `/healthz` returned HTTP 200. The original browser-equivalent
+preflight was:
+
+```text
+OPTIONS /api/workflows
+Origin: http://tauri.localhost
+Access-Control-Request-Method: GET
+Access-Control-Request-Headers: authorization
+HTTP 401
+```
+
+The backend log showed the sidecar startup but no workflow request. The token
+middleware authenticated the preflight itself, so the browser stopped before
+the actual GET/POST and surfaced `Failed to fetch`. The concrete repair lets
+OPTIONS reach the existing explicit CORS allowlist while keeping bearer-token
+authentication on all API data requests. No wildcard CORS or loopback binding
+change was introduced.
