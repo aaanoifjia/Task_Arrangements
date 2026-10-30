@@ -160,4 +160,7 @@ def _codex_environment(source: Mapping[str, str] | None = None) -> dict[str, str
             profile = f"{drive}{path}"
     if profile:
         environment["HOME"] = profile
-    return environment
+        return environment
+    raise ValueError(
+        "Codex requires HOME or a valid USERPROFILE/HOMEDRIVE+HOMEPATH environment"
+    )

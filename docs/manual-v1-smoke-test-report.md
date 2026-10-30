@@ -125,6 +125,35 @@ session; this is not an authentication-only gate. The unresolved strict
 criterion is visible live-agent output adherence plus GUI observation, which
 must not be fabricated from terminal completion events.
 
+### HOME normalization follow-up
+
+The implementation now explicitly rejects an environment with no usable home
+information instead of silently passing a malformed environment. It preserves
+an existing non-empty `HOME`, derives `HOME` from `USERPROFILE`, and falls
+back to `HOMEDRIVE + HOMEPATH`; the existing `PATH`, `USERPROFILE`,
+`HOMEDRIVE`, and `HOMEPATH` values remain inherited. The current interactive
+Windows shell has `USERPROFILE`, `HOMEDRIVE`, `HOMEPATH`, and `PATH`, while
+`HOME` is absent, matching the confirmed defect.
+
+Environment regression: **6 passed**. Backend non-live regression, Ruff, and
+strict mypy passed. The authenticated external Codex probe and the real
+Codex Flow single-task and A→B probes passed previously with automatic Task B
+readiness; output validation accepts the requested markers without requiring
+byte-perfect newline behavior.
+
+A fresh NSIS build and authorized silent installation completed. The installed
+desktop and sidecar processes started, but the installed WebView exposed only
+`about:blank` with no rendered application controls. Therefore the installed-app
+live smoke is **FAIL / BLOCKED on the separate packaged UI load issue**; no
+HOME error was observed. Manual retest remains **PENDING**.
+
+Latest NSIS artifact:
+
+| Artifact | Absolute path | Size (bytes) | SHA256 | Last write |
+| --- | --- | ---: | --- | --- |
+| NSIS installer | `D:\\fiona\\Codex_Projects\\Task_Arrangements\\desktop\\src-tauri\\target\\release\\bundle\\nsis\\Codex Flow_0.1.0_x64-setup.exe` | 17964626 | `43D2CA1F8C19306C318AB192ECA572DE23253864B1B1D2F18542948D8EBC31E7` | `2026-10-30T19:07:42.0558724+08:00` |
+| Release executable | `D:\\fiona\\Codex_Projects\\Task_Arrangements\\desktop\\src-tauri\\target\\release\\codex-flow-desktop.exe` | 9107968 | `B0DE2DE8107D3521829A47EC30B096FD11210AE7CB92CBEBD41D7C956E019E68` | `2026-10-30T19:08:13.8316890+08:00` |
+
 ## SMOKE-WIN-004
 
 Step: Open the installed Codex Flow application and access the Workflows page
