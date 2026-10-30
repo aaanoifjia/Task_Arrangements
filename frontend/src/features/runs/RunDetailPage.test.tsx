@@ -45,7 +45,7 @@ describe('RunDetailPage', () => {
 
   it('opens the task drawer from the explicit View details action', async () => {
     const user = userEvent.setup()
-    renderPage(api())
+    renderPage(api({ attempts: vi.fn().mockResolvedValue([]) }))
     await screen.findByRole('heading', { name: 'Run run-1' })
     await user.click(screen.getByRole('button', { name: 'View details' }))
     expect(screen.getByTestId('task-run-drawer')).toBeInTheDocument()
