@@ -30,10 +30,10 @@ build process was running, and exactly one locked `build_desktop.ps1
 | Release EXE | `5EC213F4A15FD21F571B26AB453ABC6FCE72EAF9DE01BA140A09A8F73A97FCC9` |
 | NSIS payload EXE | `5677F897C847B36F09A4B13376C3CA80EAE19784448776F7B7F4A505A5588D12` |
 
-The hashes still differ despite the build lock and clean generated-output
-boundary. The identity gate therefore correctly returns **FAIL** and the new
-NSIS is not installed. No installed-app launch, UI conclusion, or
-`SMOKE-WIN-007` classification was made.
+This historical exact-hash result was later re-evaluated against the installed
+Tauri bundler behavior. Tauri 2.12.4 intentionally patches the executable's
+bundle marker for each bundle type, so this exact-hash comparison is not a
+valid identity criterion for a normal NSIS build.
 
 ## Workflow persistence manual verification
 
@@ -211,15 +211,38 @@ The current release executable measured:
 Both are unsigned and both report product/file version `0.1.0`; no intentional
 signing or resource post-processing explains the difference. The NSIS payload
 therefore differs from both the prior installed `C64E...` binary and the
-current release binary: this is CASE C, an artifact staging/replacement
-problem.
+current release binary. The initial CASE C classification is superseded by
+the marker-level comparison below.
 
 The Windows build script now holds an exclusive temporary build lock and, for
 NSIS builds, extracts the generated installer to a disposable directory and
-compares the payload SHA256 with the release executable. The identity gate
-correctly fails on the current mismatch, preventing a stale installer from
-being accepted for smoke testing. The clean rebuild remains blocked at this
-gate; no application launch or further UI diagnosis was performed.
+compares the payload with the release executable after replacing only the
+expected `__TAURI_BUNDLE_TYPE_VAR_UNK` marker with
+`__TAURI_BUNDLE_TYPE_VAR_NSS`. Arbitrary differences still fail the gate.
+
+### Expected Tauri bundle patch confirmation
+
+The installed versions are Tauri CLI `2.12.4`, Cargo `tauri 2.12.5`,
+`tauri-build 2.7.4`, and `tauri-bundler 2.7.4`. The CLI supports
+`--no-binary-patching`.
+
+The serialized binaries were equal in size and had one meaningful three-byte
+difference at offset `6868050`: release `55 4E 4B` (`UNK`) versus payload
+`4E 53 53` (`NSS`). The full marker begins at offset `6868026` in both files.
+No other byte difference exists after normalizing that marker.
+
+The diagnostic `--no-binary-patching` control produced exact release/payload
+SHA equality: `AAA6556005E00305946C51F559E64B9014782963BFE77737E7A70B61F2CD08E4`.
+
+The corrected normal NSIS gate passed on the subsequent build. Its current
+release/payload hashes are respectively
+`4050080CA8BB23619158AE48836BC532C03B5B961CFAAE71946FF0DB423D4FB4` and
+`D9022C762F5CE90A92FDE3A5E3AF1B0D764EE9BF4FEEDD852B89E0BB89C25033`;
+normalized comparison reports zero unexpected differing bytes. This is
+`EXPECTED_TAURI_BUNDLE_TYPE_PATCH`, not a stale staging defect.
+
+The application has not been installed or launched as part of this
+re-evaluation. `SMOKE-WIN-007` remains **NOT CONFIRMED**.
 
 ### HOME normalization follow-up
 

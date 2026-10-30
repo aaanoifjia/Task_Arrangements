@@ -54,20 +54,54 @@ function Assert-NsisPayloadIdentity {
         if ($null -eq $payload) {
             throw 'NSIS_PAYLOAD_INSPECTION_FAILED: packaged codex-flow-desktop.exe was not found.'
         }
+        $releaseBytes = [System.IO.File]::ReadAllBytes($ReleaseExecutable)
+        $payloadBytes = [System.IO.File]::ReadAllBytes($payload.FullName)
+        $releaseMarker = [System.Text.Encoding]::ASCII.GetBytes('__TAURI_BUNDLE_TYPE_VAR_UNK')
+        $payloadMarker = [System.Text.Encoding]::ASCII.GetBytes('__TAURI_BUNDLE_TYPE_VAR_NSS')
+        if ($releaseBytes.Length -ne $payloadBytes.Length) {
+            throw 'NSIS_PAYLOAD_IDENTITY_MISMATCH: release and payload sizes differ.'
+        }
+        $releaseOffset = Find-ByteSequence $releaseBytes $releaseMarker
+        $payloadOffset = Find-ByteSequence $payloadBytes $payloadMarker
+        if ($releaseOffset -lt 0 -or $payloadOffset -lt 0 -or $releaseOffset -ne $payloadOffset) {
+            throw 'NSIS_PAYLOAD_IDENTITY_MISMATCH: expected Tauri bundle markers are missing or misplaced.'
+        }
+        $normalizedRelease = [byte[]]$releaseBytes.Clone()
+        for ($index = 0; $index -lt $payloadMarker.Length; $index++) {
+            $normalizedRelease[$releaseOffset + $index] = $payloadMarker[$index]
+        }
+        for ($index = 0; $index -lt $payloadBytes.Length; $index++) {
+            if ($normalizedRelease[$index] -ne $payloadBytes[$index]) {
+                throw "NSIS_PAYLOAD_IDENTITY_MISMATCH: unexplained byte difference at offset $index."
+            }
+        }
         $releaseHash = (Get-FileHash -LiteralPath $ReleaseExecutable -Algorithm SHA256).Hash
         $payloadHash = (Get-FileHash -LiteralPath $payload.FullName -Algorithm SHA256).Hash
         Write-Output "IDENTITY_GATE: release EXE SHA256 = $releaseHash"
         Write-Output "IDENTITY_GATE: NSIS payload EXE = $($payload.FullName)"
         Write-Output "IDENTITY_GATE: NSIS payload SHA256 = $payloadHash"
-        if ($releaseHash -ne $payloadHash) {
-            throw 'NSIS_PAYLOAD_IDENTITY_MISMATCH: installer payload differs from the release executable.'
-        }
+        Write-Output "IDENTITY_GATE: expected Tauri NSIS bundle marker at offset $releaseOffset"
+        Write-Output 'IDENTITY_GATE: PASS (release normalized from UNK to NSS matches payload)'
     }
     finally {
         if (Test-Path -LiteralPath $inspectionRoot) {
             Remove-Item -LiteralPath $inspectionRoot -Recurse -Force -ErrorAction SilentlyContinue
         }
     }
+}
+
+function Find-ByteSequence([byte[]]$Bytes, [byte[]]$Sequence) {
+    for ($offset = 0; $offset -le $Bytes.Length - $Sequence.Length; $offset++) {
+        $matches = $true
+        for ($index = 0; $index -lt $Sequence.Length; $index++) {
+            if ($Bytes[$offset + $index] -ne $Sequence[$index]) {
+                $matches = $false
+                break
+            }
+        }
+        if ($matches) { return $offset }
+    }
+    return -1
 }
 
 Require-Command 'node' 'Install Node.js using the approved project setup before retrying.'
