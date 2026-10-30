@@ -125,6 +125,37 @@ session; this is not an authentication-only gate. The unresolved strict
 criterion is visible live-agent output adherence plus GUI observation, which
 must not be fabricated from terminal completion events.
 
+### SMOKE-WIN-007 — Installed WebView navigation observation
+
+Status: **UNCONFIRMED / DIAGNOSING**. The automation bridge reported
+`about:blank`, but this is not yet evidence that the installed application is
+blank. No `SMOKE-WIN-007` failure is recorded.
+
+The latest source release was independently checked before any new rebuild:
+
+- configured `frontendDist`: `../../frontend/dist`;
+- `frontend/dist/index.html` exists and references
+  `assets/index-StAksiA8.js` and `assets/index-BjHm3EnW.css`;
+- both referenced assets exist;
+- Tauri release dependency metadata lists those exact files and generated
+  `tauri-codegen-assets`, proving that the release executable embeds the
+  configured frontend resource set.
+
+The installed executable launched from the normal per-user installation path
+was also fingerprinted. It does **not** match the latest rebuilt release:
+
+| Artifact | Absolute path | Size (bytes) | SHA256 | Last write |
+| --- | --- | ---: | --- | --- |
+| Installed executable | `C:\\Users\\Administrator\\AppData\\Local\\Codex Flow\\codex-flow-desktop.exe` | 9107968 | `8D68CB90253C141334FFF09A42F330F950E9C7513C0201551F55C3E6748AF691` | `2026-10-30T16:40:20+08:00` |
+| Latest release executable | `D:\\fiona\\Codex_Projects\\Task_Arrangements\\desktop\\src-tauri\\target\\release\\codex-flow-desktop.exe` | 9107968 | `B0DE2DE8107D3521829A47EC30B096FD11210AE7CB92CBEBD41D7C956E019E68` | `2026-10-30T19:08:13.8316890+08:00` |
+
+Therefore the `about:blank` observation is currently attributable to an
+unverified automation/install-selection mismatch, not a proven Tauri resource
+or navigation failure. The next diagnostic step is to establish the exact
+installed binary selected by Start Menu and capture WebView navigation/runtime
+evidence from that matching build before changing frontend or Tauri
+configuration.
+
 ### HOME normalization follow-up
 
 The implementation now explicitly rejects an environment with no usable home
