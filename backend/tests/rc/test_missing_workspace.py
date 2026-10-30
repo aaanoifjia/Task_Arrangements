@@ -51,12 +51,11 @@ async def test_removed_workspace_fails_visible_without_fallback_or_child_start(
         runner = DurableRunner(repository, adapter)
         run_id = runner.prepare_run(workflow)
 
-        with pytest.raises(FileNotFoundError, match="removed workspace"):
-            await runner.execute_run(run_id, workflow)
+        await runner.execute_run(run_id, workflow)
 
         rows = {str(row["task_id"]): row for row in repository.load_task_runs(run_id)}
         assert adapter.observed_cwd == str(removed_workspace)
-        assert rows["A"]["status"] == "STARTING"
+        assert rows["A"]["status"] == "FAILED"
         assert rows["B"]["status"] == "BLOCKED"
         assert adapter.calls == []
     finally:

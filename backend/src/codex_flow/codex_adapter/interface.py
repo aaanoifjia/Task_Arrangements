@@ -13,6 +13,10 @@ from codex_flow.codex_adapter.models import (
 )
 
 
+class CodexStartupError(RuntimeError):
+    """A deterministic failure before a thread reference is created."""
+
+
 class CodexAdapter(Protocol):
     async def create_thread(self, config: CodexExecutionConfig) -> CodexThreadRef: ...
 

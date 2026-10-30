@@ -19,6 +19,83 @@ Result: **FAIL**
 
 Status: **UNDER INVESTIGATION**
 
+## Workflow persistence manual verification
+
+The user manually created and re-opened the persisted workflow through the
+installed Codex Flow GUI. The workflow definition persisted with the expected
+two-task DAG (`Task A → Task B`).
+
+Result: **PASS**
+
+## SMOKE-WIN-005 — Live task remains stuck in STARTING
+
+Step: Run the persisted two-task workflow from the installed Codex Flow GUI.
+
+Expected: Task A transitions `STARTING → RUNNING` and begins a real Codex
+execution; after its success, Task B becomes ready and starts automatically.
+
+Observed: The user clicked Run in the installed GUI. Task A remained in
+`STARTING` for several minutes, Task B did not start, and the user did not
+retry, cancel, pause, restart, or interact with Codex Desktop.
+
+Result: **FAIL**
+
+Status: **UNDER INVESTIGATION**
+
+### Preserved live-run evidence
+
+Read-only inspection of workflow run
+`1c9f7277-bebd-4343-be4c-8f394971de97` found:
+
+- workflow run: `RUNNING`;
+- Task A task run and its sole attempt: `STARTING`;
+- Task B: `BLOCKED`;
+- Task A/attempt `thread_id` and `turn_id`: absent;
+- durable event sequence: empty.
+
+The final successful durable boundary was the transactional persistence of the
+STARTING attempt at `2026-10-30T08:12:10.446149+00:00`. No adapter/thread,
+turn, or stream event was recorded. The installed sidecar was alive but had no
+Codex child process, so the blocked boundary was adapter startup before thread
+creation.
+
+### Root cause and remediation
+
+The Windows user environment had `USERPROFILE`, `HOMEDRIVE`, and `HOMEPATH`,
+but no `HOME`. The local Codex CLI failed to load its configuration without a
+home directory. With `HOME` derived from the existing `USERPROFILE`, the
+already-installed Codex CLI reported `Logged in using ChatGPT`; this proves an
+environment-inheritance defect rather than an authentication gate.
+
+The runner also allowed an exception from adapter startup to escape its
+background task after it had persisted `STARTING`, leaving no terminal state.
+The remediation derives only a missing `HOME` from existing Windows profile
+variables for the SDK-owned subprocess and fail-closes a startup exception as
+`FAILED`, including a credential-free `TASK_START_FAILED` audit event.
+
+Automated remediation: **IN PROGRESS** — focused regression is passing; a
+fresh packaged live smoke will be recorded after rebuild and installation.
+
+### Follow-up live adapter evidence
+
+The repaired SDK completed a real single-task file smoke using the existing
+authenticated Windows Codex environment. A real durable two-task DAG then
+reached `A=SUCCESS`, `B=SUCCESS` automatically, with distinct thread and turn
+identifiers for both tasks and no manual continuation.
+
+During that test, normal app-server informational notifications
+(`turn/moderationMetadata` and `thread/tokenUsage/updated`) were found to be
+incorrectly mapped as `TRANSPORT_ERROR`. That could turn a healthy Codex turn
+into `FAILED`; it is now ignored rather than treated as transport evidence.
+
+The live agent did not reliably honor the byte-exact/no-trailing-newline file
+instruction: one run wrote both expected values with a trailing newline, and
+one explicit-command run reported a completed turn without creating the
+requested file. These external-output observations are preserved. They do not
+justify inferring filesystem success from agent prose or redesigning the
+frozen scheduler; the packaged installed-app retest must verify the real
+outputs before SMOKE-WIN-005 can be marked manually passed.
+
 ## SMOKE-WIN-004
 
 Step: Open the installed Codex Flow application and access the Workflows page

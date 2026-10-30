@@ -4,7 +4,7 @@ import asyncio
 from collections.abc import AsyncIterator, Mapping
 from typing import cast
 
-from codex_flow.codex_adapter.interface import CodexAdapter
+from codex_flow.codex_adapter.interface import CodexAdapter, CodexStartupError
 from codex_flow.codex_adapter.models import (
     CodexEvent,
     CodexExecutionConfig,
@@ -158,11 +158,16 @@ class DurableRunner:
             approval_mode=task.approval_mode,
         )
         if task.execution_mode is ExecutionMode.CONTINUE_THREAD:
-            attempt_id, turn = await self._start_continuation_attempt(task_run_id, task)
+            start = self._start_continuation_attempt(task_run_id, task)
         else:
-            attempt_id, turn = await AttemptStarter(self._repository._connection, self._adapter).start(
+            start = AttemptStarter(self._repository._connection, self._adapter).start(
                 task_run_id, config, task.prompt
             )
+        try:
+            attempt_id, turn = await start
+        except (CodexStartupError, FileNotFoundError) as error:
+            self._record_startup_failure(task_run_id, error)
+            return False, None
         self._active_turns[task_run_id] = turn
         try:
             if task.timeout_seconds is None:
@@ -175,6 +180,27 @@ class DurableRunner:
                 return False, None
         finally:
             self._active_turns.pop(task_run_id, None)
+
+    def _record_startup_failure(self, task_run_id: str, error: Exception) -> None:
+        """Close a persisted STARTING attempt when thread/turn startup fails."""
+        if not self._repository.compare_and_update_task_run_state(
+            task_run_id, TaskStatus.STARTING.value, TaskStatus.FAILED.value
+        ):
+            return
+        attempts = self._repository.load_attempts(task_run_id)
+        attempt_id = str(attempts[-1]["id"]) if attempts else None
+        if attempt_id is not None:
+            self._repository.update_attempt_state(attempt_id, TaskStatus.FAILED.value)
+        task_row = self._repository.get_task_run(task_run_id)
+        if task_row is None:
+            raise ValueError(f"task run not found: {task_run_id}")
+        self._repository.append_event(
+            "TASK_START_FAILED",
+            {"stage": "adapter_startup", "error_type": type(error).__name__},
+            workflow_run_id=str(task_row["workflow_run_id"]),
+            task_run_id=task_run_id,
+            attempt_id=attempt_id,
+        )
 
     async def _stream_turn(
         self, task_run_id: str, attempt_id: str, turn: CodexTurnRef

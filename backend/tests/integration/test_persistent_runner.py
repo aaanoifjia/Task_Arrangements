@@ -1,4 +1,6 @@
 from codex_flow.codex_adapter.fake import FakeCodexAdapter, FakeScenario
+from codex_flow.codex_adapter.interface import CodexStartupError
+from codex_flow.codex_adapter.models import CodexExecutionConfig
 from codex_flow.domain.models import Edge, TaskDefinition, WorkflowDefinition
 from codex_flow.runtime.runner import DurableRunner
 from codex_flow.storage.db import open_database
@@ -43,6 +45,33 @@ async def test_failure_stays_closed_and_does_not_start_child(tmp_path) -> None:
         "B": "BLOCKED",
     }
     assert adapter.calls == ["create_thread", "start_turn", "stream_turn"]
+
+
+class StartupFailingAdapter(FakeCodexAdapter):
+    async def create_thread(self, config: CodexExecutionConfig):  # type: ignore[override]
+        self.calls.append("create_thread")
+        raise CodexStartupError("deterministic startup failure")
+
+
+async def test_adapter_startup_failure_closes_starting_attempt_and_blocks_child(tmp_path) -> None:
+    repository = StorageRepositories(open_database(tmp_path / "flow.sqlite3"))
+    adapter = StartupFailingAdapter()
+
+    run_id = await DurableRunner(repository, adapter).run(workflow())
+
+    task_rows = {row["task_id"]: row for row in repository.load_task_runs(run_id)}
+    assert {task_id: row["status"] for task_id, row in task_rows.items()} == {
+        "A": "FAILED",
+        "B": "BLOCKED",
+    }
+    attempts = repository.load_attempts(str(task_rows["A"]["id"]))
+    assert len(attempts) == 1
+    assert attempts[0]["status"] == "FAILED"
+    events = repository.load_events_for_run(run_id)
+    assert [(event["event_type"], event["payload_json"]) for event in events] == [
+        ("TASK_START_FAILED", '{"error_type": "CodexStartupError", "stage": "adapter_startup"}')
+    ]
+    assert adapter.calls == ["create_thread"]
 
 
 async def test_restart_reconciles_active_run_without_duplicate_attempt_or_prompt(tmp_path) -> None:

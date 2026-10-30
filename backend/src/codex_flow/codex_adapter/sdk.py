@@ -1,10 +1,13 @@
 """Official-SDK implementation of the internal Codex adapter."""
 
-from collections.abc import AsyncIterator
+import os
+from collections.abc import AsyncIterator, Mapping
 from typing import Any
 
-from openai_codex import ApprovalMode, AsyncCodex, Sandbox
+from openai_codex import ApprovalMode, AsyncCodex, Sandbox, TransportClosedError
+from openai_codex.client import CodexConfig
 
+from codex_flow.codex_adapter.interface import CodexStartupError
 from codex_flow.codex_adapter.models import (
     CodexEvent,
     CodexExecutionConfig,
@@ -19,15 +22,18 @@ from codex_flow.domain.models import SandboxMode
 
 class SdkCodexAdapter:
     def __init__(self) -> None:
-        self._codex = AsyncCodex()
+        self._codex = AsyncCodex(CodexConfig(env=_codex_environment()))
         self._threads: dict[str, Any] = {}
         self._turns: dict[str, Any] = {}
 
     async def create_thread(self, config: CodexExecutionConfig) -> CodexThreadRef:
-        thread = await self._codex.thread_start(
-            cwd=config.cwd, model=config.model, approval_mode=ApprovalMode.auto_review,
-            sandbox=self._sandbox(config.sandbox),
-        )
+        try:
+            thread = await self._codex.thread_start(
+                cwd=config.cwd, model=config.model, approval_mode=ApprovalMode.auto_review,
+                sandbox=self._sandbox(config.sandbox),
+            )
+        except TransportClosedError as error:
+            raise CodexStartupError("Codex closed before creating a thread") from error
         self._threads[thread.id] = thread
         return CodexThreadRef(thread_id=thread.id)
 
@@ -48,6 +54,8 @@ class SdkCodexAdapter:
             method = str(notification.method)
             payload = notification.payload
             event_type = self._event_type(method, payload)
+            if event_type is None:
+                continue
             message = getattr(payload, "delta", None)
             yield CodexEvent(
                 event_type=event_type,
@@ -85,7 +93,7 @@ class SdkCodexAdapter:
                 SandboxMode.FULL_ACCESS: Sandbox.full_access}[mode]
 
     @staticmethod
-    def _event_type(method: str, payload: object) -> EventType:
+    def _event_type(method: str, payload: object) -> EventType | None:
         if method == "turn/started":
             return EventType.TURN_STARTED
         if method == "turn/completed":
@@ -97,7 +105,10 @@ class SdkCodexAdapter:
         if method == "item/agentMessage/delta": return EventType.AGENT_MESSAGE
         if method == "item/started": return EventType.TOOL_STARTED
         if method == "item/completed": return EventType.TOOL_COMPLETED
-        return EventType.TRANSPORT_ERROR
+        # The app-server emits informational notifications (for example token
+        # usage and moderation metadata) during an otherwise healthy turn.
+        # They are not transport failures and must not terminate the task.
+        return None
 
     @classmethod
     def _event_details(cls, method: str, payload: object) -> dict[str, object]:
@@ -128,3 +139,25 @@ class SdkCodexAdapter:
         if raw is None or isinstance(raw, (str, int, float, bool)):
             return raw
         return str(raw)
+
+
+def _codex_environment(source: Mapping[str, str] | None = None) -> dict[str, str]:
+    """Preserve the Windows user home for the SDK-owned Codex subprocess.
+
+    Codex CLI resolves its configuration home from ``HOME`` on this host even
+    when Windows profile variables are present. The desktop sidecar inherits
+    the user's profile variables, so derive only the missing portable alias
+    without hardcoding a user or machine-specific path.
+    """
+    environment = dict(os.environ if source is None else source)
+    if environment.get("HOME"):
+        return environment
+    profile = environment.get("USERPROFILE")
+    if not profile:
+        drive = environment.get("HOMEDRIVE")
+        path = environment.get("HOMEPATH")
+        if drive and path:
+            profile = f"{drive}{path}"
+    if profile:
+        environment["HOME"] = profile
+    return environment
