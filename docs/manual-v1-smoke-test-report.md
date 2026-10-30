@@ -181,6 +181,30 @@ This is now a confirmed packaging/install identity blocker; `SMOKE-WIN-007`
 remains **NOT CONFIRMED** because no verified-current build was run and no
 product UI conclusion can be drawn.
 
+### Packaging identity investigation
+
+The current NSIS was extracted to an isolated temporary destination without
+launching Codex Flow. Its packaged executable measured:
+
+`CBA35F913191D70BBBCD7B0C79572A50F3F7D64CC7D9CFAF1B04EC593E64E8C7`
+
+The current release executable measured:
+
+`045F5B6922BEC80520188D1C7A435FD2F47AA9C49DCBA36D1F0A0FBFE5B24695`
+
+Both are unsigned and both report product/file version `0.1.0`; no intentional
+signing or resource post-processing explains the difference. The NSIS payload
+therefore differs from both the prior installed `C64E...` binary and the
+current release binary: this is CASE C, an artifact staging/replacement
+problem.
+
+The Windows build script now holds an exclusive temporary build lock and, for
+NSIS builds, extracts the generated installer to a disposable directory and
+compares the payload SHA256 with the release executable. The identity gate
+correctly fails on the current mismatch, preventing a stale installer from
+being accepted for smoke testing. The clean rebuild remains blocked at this
+gate; no application launch or further UI diagnosis was performed.
+
 ### HOME normalization follow-up
 
 The implementation now explicitly rejects an environment with no usable home
