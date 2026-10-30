@@ -73,8 +73,9 @@ The remediation derives only a missing `HOME` from existing Windows profile
 variables for the SDK-owned subprocess and fail-closes a startup exception as
 `FAILED`, including a credential-free `TASK_START_FAILED` audit event.
 
-Automated remediation: **IN PROGRESS** — focused regression is passing; a
-fresh packaged live smoke will be recorded after rebuild and installation.
+Automated remediation: **PASS** — focused regression, the relevant durable
+runner regression, the non-live backend suite, Ruff, and strict mypy passed.
+A freshly rebuilt NSIS installer was installed over the existing application.
 
 ### Follow-up live adapter evidence
 
@@ -95,6 +96,34 @@ requested file. These external-output observations are preserved. They do not
 justify inferring filesystem success from agent prose or redesigning the
 frozen scheduler; the packaged installed-app retest must verify the real
 outputs before SMOKE-WIN-005 can be marked manually passed.
+
+### Packaged recovery and retest artifact
+
+After the repaired NSIS installer was installed, the original preserved run
+was inspected read-only. Startup recovery had deterministically changed Task A
+from the previously orphaned `STARTING` state to `FAILED`; Task B remained
+`BLOCKED`, with no thread or turn identifiers. This confirms that the original
+failure can no longer remain indefinitely in `STARTING` after an application
+restart. It is recovery evidence, not a replacement for a fresh manual GUI
+run.
+
+The installed desktop and two sidecar processes were live and responding. The
+native accessibility bridge exposed no rendered content and its screenshot
+request timed out in this environment, so a new GUI-driven run and its output
+files could not be independently observed by automation in this pass.
+
+Fresh retest artifact:
+
+| Artifact | Absolute path | Size (bytes) | SHA256 | Last write |
+| --- | --- | ---: | --- | --- |
+| NSIS installer | `D:\\fiona\\Codex_Projects\\Task_Arrangements\\desktop\\src-tauri\\target\\release\\bundle\\nsis\\Codex Flow_0.1.0_x64-setup.exe` | 17963292 | `3565F99AD7007E1A65A8D92E83376388398823511487317237ECE7516D62DCF5` | `2026-10-30T16:40:32.2231074+08:00` |
+| Release executable | `D:\\fiona\\Codex_Projects\\Task_Arrangements\\desktop\\src-tauri\\target\\release\\codex-flow-desktop.exe` | 9107968 | `5C01879B65E05853245F463438FCC567F0EAEDE6F0543DFA714EE58CF986FBE2` | `2026-10-30T16:40:32.2530542+08:00` |
+
+The original manual result remains **FAIL** and the fresh manual GUI/output
+retest remains **PENDING**. The environment has a usable authenticated Codex
+session; this is not an authentication-only gate. The unresolved strict
+criterion is visible live-agent output adherence plus GUI observation, which
+must not be fabricated from terminal completion events.
 
 ## SMOKE-WIN-004
 
