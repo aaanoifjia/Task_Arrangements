@@ -6,12 +6,14 @@ from codex_flow.api.errors import api_error, conflict, invalid_request, not_foun
 from codex_flow.api.lifespan import get_repositories
 from codex_flow.api.schemas import (
     AttemptView,
+    EventView,
     RunDetail,
     RunHistoryPage,
     RunStartResponse,
     RunSummary,
     TaskRunView,
 )
+from codex_flow.application.events import EventApplicationService
 from codex_flow.application.runs import (
     ActiveRunConflictError,
     RunApplicationService,
@@ -68,6 +70,17 @@ async def get_run(request: Request, run_id: str) -> RunDetail:
 async def list_tasks(request: Request, run_id: str) -> list[TaskRunView]:
     try:
         return service(request).list_task_runs(run_id)
+    except RunNotFoundError as error:
+        raise not_found("RUN_NOT_FOUND", str(error)) from error
+
+
+@router.get("/runs/{run_id}/events", response_model=list[EventView])
+async def list_events(request: Request, run_id: str) -> list[EventView]:
+    try:
+        repositories = get_repositories(request.app)
+        if repositories.get_workflow_run(run_id) is None:
+            raise RunNotFoundError(f"run not found: {run_id}")
+        return EventApplicationService(repositories).list_events(run_id)
     except RunNotFoundError as error:
         raise not_found("RUN_NOT_FOUND", str(error)) from error
 

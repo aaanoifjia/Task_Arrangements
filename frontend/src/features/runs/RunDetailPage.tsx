@@ -36,6 +36,7 @@ function RunDetailPage({ api, streamOptions }: RunDetailPageProps) {
   const [paused, setPaused] = useState(false)
   const [pendingControl, setPendingControl] = useState<RunControlAction | null>(null)
   const [controlError, setControlError] = useState<string | null>(null)
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
 
   useEffect(() => {
     setEvents([])
@@ -62,10 +63,11 @@ function RunDetailPage({ api, streamOptions }: RunDetailPageProps) {
     setLoading(true)
     setNotFound(false)
     setError(null)
-    void Promise.all([stableApi.get(runId), stableApi.tasks(runId)]).then(([detail, taskSnapshot]) => {
+    void Promise.all([stableApi.get(runId), stableApi.tasks(runId), stableApi.events?.(runId) ?? Promise.resolve([])]).then(([detail, taskSnapshot, persistedEvents]) => {
       if (!mounted) return
       setRun(detail)
       setTasks(taskSnapshot)
+      setEvents(persistedEvents)
     }).catch((cause: unknown) => {
       if (!mounted) return
       setRun(null)
@@ -140,7 +142,7 @@ function RunDetailPage({ api, streamOptions }: RunDetailPageProps) {
       <RunSummaryPanel runStatus={run.status} tasks={visibleTasks} />
       <section aria-labelledby="run-graph-heading">
         <h2 id="run-graph-heading">Snapshot graph</h2>
-        <RunGraph snapshot={run.snapshot} taskRuns={visibleTasks} attemptApi={stableApi} />
+        <RunGraph snapshot={run.snapshot} taskRuns={visibleTasks} attemptApi={stableApi} selectedTaskId={selectedTaskId} onSelectTask={setSelectedTaskId} />
       </section>
       <section aria-labelledby="run-tasks-heading">
         <h2 id="run-tasks-heading">Tasks</h2>
@@ -152,6 +154,7 @@ function RunDetailPage({ api, streamOptions }: RunDetailPageProps) {
                 <strong>{task.task_id}</strong>
                 <span>{task.status}</span>
                 {task.thread_id && <span>Thread: {task.thread_id}</span>}
+                <button type="button" onClick={() => setSelectedTaskId(task.task_id)}>View details</button>
               </li>
             ))}
           </ul>}

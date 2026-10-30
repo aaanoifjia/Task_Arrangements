@@ -1,5 +1,5 @@
 import type {
-  AttemptView, RunDetail, RunStartResponse, RunSummary, TaskRunView,
+  AttemptView, EventView, RunDetail, RunStartResponse, RunSummary, TaskRunView,
   ManualActionResponse, WorkflowDefinition, WorkflowDetail, WorkflowSummary,
   WorkflowImportRequest, WorkflowExportResponse as WorkflowExportResponseType,
   RunHistoryPage, RunHistoryQuery,
@@ -52,6 +52,7 @@ type ApiClientCore = {
   startRun: (workflowId: string) => Promise<RunStartResponse>
   listTasks: (runId: string) => Promise<TaskRunView[]>
   listAttempts: (runId: string, taskId: string) => Promise<AttemptView[]>
+  listEvents?: (runId: string) => Promise<EventView[]>
 }
 
 export type ApiClient = ApiClientCore
@@ -121,6 +122,7 @@ export function createApiClient(fetcher: typeof fetch = fetch, runtime: HttpRunt
       `/api/workflows/${encodeURIComponent(workflowId)}/runs`, { method: 'POST' }, fetcher,
     ),
     listTasks: (runId: string) => requestJson<TaskRunView[]>(`/api/runs/${encodeURIComponent(runId)}/tasks`, {}, fetcher),
+    listEvents: (runId: string) => requestJson<EventView[]>(`/api/runs/${encodeURIComponent(runId)}/events`, {}, fetcher),
     listAttempts: (runId: string, taskId: string) => requestJson<AttemptView[]>(
       `/api/runs/${encodeURIComponent(runId)}/tasks/${encodeURIComponent(taskId)}/attempts`, {}, fetcher,
     ),

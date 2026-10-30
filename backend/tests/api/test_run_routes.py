@@ -34,6 +34,9 @@ def test_run_start_and_history_endpoints(tmp_path: Path) -> None:
         assert task.status_code == 200
         assert task.json()["status"] == "SUCCESS"
         assert len(client.get(f"/api/runs/{run_id}/tasks/A/attempts").json()) == 1
+        events = client.get(f"/api/runs/{run_id}/events")
+        assert events.status_code == 200
+        assert [event["event_type"] for event in events.json()] == ["TURN_STARTED", "TURN_COMPLETED"]
 
 
 def test_run_routes_return_stable_missing_and_runtime_errors(tmp_path: Path) -> None:

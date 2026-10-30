@@ -8,6 +8,7 @@ SOURCE_ROOT = BACKEND_ROOT / "src"
 MIGRATION_ROOT = SOURCE_ROOT / "codex_flow" / "storage" / "migrations"
 
 codex_datas, codex_binaries, codex_hiddenimports = collect_all("openai_codex")
+cli_datas, cli_binaries, cli_hiddenimports = collect_all("codex_cli_bin")
 migration_datas = [
     (str(path), "codex_flow/storage/migrations") for path in MIGRATION_ROOT.glob("*.sql")
 ]
@@ -15,9 +16,10 @@ migration_datas = [
 analysis = Analysis(
     [str(SOURCE_ROOT / "codex_flow" / "server.py")],
     pathex=[str(SOURCE_ROOT)],
-    binaries=codex_binaries,
-    datas=codex_datas + migration_datas,
+    binaries=codex_binaries + cli_binaries,
+    datas=codex_datas + cli_datas + migration_datas,
     hiddenimports=codex_hiddenimports
+    + cli_hiddenimports
     + [
         "uvicorn.logging",
         "uvicorn.loops.auto",

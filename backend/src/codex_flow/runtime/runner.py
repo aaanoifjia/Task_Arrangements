@@ -1,6 +1,7 @@
 """Minimal durable runner using the frozen scheduler and storage contracts."""
 
 import asyncio
+import logging
 from collections.abc import AsyncIterator, Mapping
 from typing import cast
 
@@ -27,6 +28,9 @@ from codex_flow.storage.attempts import AttemptStarter
 from codex_flow.storage.recovery import StartupReconciler
 from codex_flow.storage.repositories import StorageRepositories
 from codex_flow.storage.snapshots import create_run_snapshot
+
+
+LOGGER = logging.getLogger("codex_flow.server")
 
 
 class DurableRunner:
@@ -166,6 +170,14 @@ class DurableRunner:
         try:
             attempt_id, turn = await start
         except (CodexStartupError, FileNotFoundError) as error:
+            LOGGER.exception(
+                "Codex startup failed task_run_id=%s error_type=%s errno=%s filename=%s winerror=%s",
+                task_run_id,
+                type(error).__name__,
+                getattr(error, "errno", None),
+                getattr(error, "filename", None),
+                getattr(error, "winerror", None),
+            )
             self._record_startup_failure(task_run_id, error)
             return False, None
         self._active_turns[task_run_id] = turn
@@ -225,11 +237,16 @@ class DurableRunner:
     ) -> tuple[bool, str | None]:
         failed_command_observed = False
         turn_started = False
+        task_row = self._repository.get_task_run(task_run_id)
+        if task_row is None:
+            raise ValueError(f"task run not found: {task_run_id}")
+        workflow_run_id = str(task_row["workflow_run_id"])
         stream = cast("AsyncIterator[CodexEvent]", self._adapter.stream_turn(turn))
         async for event in stream:
             self._repository.append_event(
                 event.event_type.value,
                 event.details,
+                workflow_run_id=workflow_run_id,
                 task_run_id=task_run_id,
                 attempt_id=attempt_id,
             )

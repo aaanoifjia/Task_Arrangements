@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import type { EventView, TaskRunView, StreamMessage } from '../../api/types'
 import { RunWebSocketClient, type WebSocketFactory } from '../../api/ws'
+import { isTauriEnvironment, loadRuntimeState } from '../../desktop/runtime'
 
-export type UseRunStreamOptions = { webSocketFactory?: WebSocketFactory; terminal?: boolean }
+export type UseRunStreamOptions = { webSocketFactory?: WebSocketFactory; terminal?: boolean; runtime?: import('../../api/ws').WebSocketRuntime }
 
 export type RunStreamState = {
   tasks: TaskRunView[]
@@ -36,7 +37,7 @@ function applyMessage(message: StreamMessage, setState: (update: (current: RunSt
 
 export function useRunStream(runId: string | null | undefined, options: UseRunStreamOptions = {}): RunStreamState {
   const [state, setState] = useState<RunStreamState>(emptyState)
-  const { terminal = false, webSocketFactory } = options
+  const { terminal = false, webSocketFactory, runtime } = options
   const eventCursor = useRef<string | null>(null)
   const seenEventIds = useRef<Set<string>>(new Set())
 
@@ -54,11 +55,12 @@ export function useRunStream(runId: string | null | undefined, options: UseRunSt
     const reconnectDelays = [250, 500, 1000, 2000, 4000] as const
     setState(emptyState)
 
-    const connect = () => {
+    const connect = (effectiveRuntime?: import('../../api/ws').WebSocketRuntime) => {
       if (!active) return
       client = new RunWebSocketClient(runId, {
         after: eventCursor.current ?? undefined,
         webSocketFactory,
+        runtime: effectiveRuntime,
         onMessage: (message) => {
           if (!active) return
           if (message.kind === 'snapshot' && isTerminalSnapshot(message.payload.tasks)) {
@@ -77,7 +79,7 @@ export function useRunStream(runId: string | null | undefined, options: UseRunSt
           if (terminalSnapshotObserved) return
           const delay = reconnectDelays[Math.min(reconnectAttempt, reconnectDelays.length - 1)]
           reconnectAttempt += 1
-          reconnectTimer = setTimeout(connect, delay)
+          reconnectTimer = setTimeout(() => connect(effectiveRuntime), delay)
         },
       })
       client.connect()
@@ -86,7 +88,13 @@ export function useRunStream(runId: string | null | undefined, options: UseRunSt
 
     eventCursor.current = null
     seenEventIds.current = new Set()
-    connect()
+    if (runtime || !isTauriEnvironment()) {
+      connect(runtime)
+    } else {
+      void loadRuntimeState().catch(() => null).then((desktopRuntime) => {
+        if (active) connect(desktopRuntime ?? undefined)
+      })
+    }
     return () => {
       active = false
       if (reconnectTimer) clearTimeout(reconnectTimer)

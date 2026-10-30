@@ -43,6 +43,15 @@ describe('RunDetailPage', () => {
     expect(runApi.tasks).toHaveBeenCalledWith('run-1')
   })
 
+  it('opens the task drawer from the explicit View details action', async () => {
+    const user = userEvent.setup()
+    renderPage(api())
+    await screen.findByRole('heading', { name: 'Run run-1' })
+    await user.click(screen.getByRole('button', { name: 'View details' }))
+    expect(screen.getByTestId('task-run-drawer')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Task A' })).toBeInTheDocument()
+  })
+
   it('renders a not-found state for a 404 response', async () => {
     const error = Object.assign(new Error('missing'), { status: 404 })
     renderPage(api({ get: vi.fn().mockRejectedValue(error) }))

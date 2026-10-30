@@ -1,6 +1,6 @@
 import { createApiClient, type ControlApiClient } from '../../api/client'
 import type {
-  AttemptView, ManualActionResponse, RunDetail, RunHistoryPage, RunHistoryQuery,
+  AttemptView, EventView, ManualActionResponse, RunDetail, RunHistoryPage, RunHistoryQuery,
   RunStartResponse, RunSummary, TaskRunView,
 } from '../../api/types'
 
@@ -11,6 +11,7 @@ type RunApiCore = {
   get: (runId: string) => Promise<RunDetail>
   tasks: (runId: string) => Promise<TaskRunView[]>
   attempts: (runId: string, taskId: string) => Promise<AttemptView[]>
+  events?: (runId: string) => Promise<EventView[]>
 }
 
 type RunControlMethods = {
@@ -33,6 +34,7 @@ export function createRunApi(client: ControlApiClient = createApiClient()): RunC
     get: (runId) => client.getRun(runId),
     tasks: (runId) => client.listTasks(runId),
     attempts: (runId, taskId) => client.listAttempts(runId, taskId),
+    events: (runId) => client.listEvents?.(runId) ?? Promise.resolve([]),
     pause: (runId) => client.pauseRun(runId),
     resume: (runId) => client.resumeRun(runId),
     retry: (runId, taskId) => client.retryTask(runId, taskId),
