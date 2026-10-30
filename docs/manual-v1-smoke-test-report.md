@@ -156,6 +156,31 @@ installed binary selected by Start Menu and capture WebView navigation/runtime
 evidence from that matching build before changing frontend or Tauri
 configuration.
 
+### Stale-build recovery attempt
+
+The old per-user executable was fingerprinted, the Codex Flow-owned processes
+were closed, and the bundled uninstaller was run successfully. The uninstaller
+left the mixed application/data directory in place, so only the confirmed old
+application binaries and uninstaller were removed; the SQLite database, WAL,
+SHM, and logs were preserved.
+
+The required NSIS hash was verified before installation:
+
+`43D2CA1F8C19306C318AB192ECA572DE23253864B1B1D2F18542948D8EBC31E7`
+
+The elevated silent installation returned exit code 0, but the resulting
+installed executable still did not match the corresponding release executable:
+
+| Artifact | SHA256 |
+| --- | --- |
+| Required release EXE | `B0DE2DE8107D3521829A47EC30B096FD11210AE7CB92CBEBD41D7C956E019E68` |
+| Installed EXE after exact NSIS install | `C64E485AD54BA877DF3BD8FE7ACBC69D57C17E84D4D5ECD15FE0EA839BBB45A1` |
+
+Per the verification gate, the installed application was **not launched**.
+This is now a confirmed packaging/install identity blocker; `SMOKE-WIN-007`
+remains **NOT CONFIRMED** because no verified-current build was run and no
+product UI conclusion can be drawn.
+
 ### HOME normalization follow-up
 
 The implementation now explicitly rejects an environment with no usable home
