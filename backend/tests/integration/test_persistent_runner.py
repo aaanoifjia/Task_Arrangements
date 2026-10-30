@@ -69,7 +69,13 @@ async def test_adapter_startup_failure_closes_starting_attempt_and_blocks_child(
     assert attempts[0]["status"] == "FAILED"
     events = repository.load_events_for_run(run_id)
     assert [(event["event_type"], event["payload_json"]) for event in events] == [
-        ("TASK_START_FAILED", '{"error_type": "CodexStartupError", "stage": "adapter_startup"}')
+         (
+             "TASK_START_FAILED",
+             (
+                 '{"error_code": "CODEX_STARTUP_FAILED", "error_type": "CodexStartupError", '
+                 '"message": "Codex closed before creating a thread.", "stage": "adapter_startup"}'
+             ),
+         )
     ]
     assert adapter.calls == ["create_thread"]
 

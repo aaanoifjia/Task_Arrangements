@@ -194,13 +194,31 @@ class DurableRunner:
         task_row = self._repository.get_task_run(task_run_id)
         if task_row is None:
             raise ValueError(f"task run not found: {task_run_id}")
+        error_code, safe_message = self._startup_error_details(error)
         self._repository.append_event(
             "TASK_START_FAILED",
-            {"stage": "adapter_startup", "error_type": type(error).__name__},
+            {
+                "stage": "adapter_startup",
+                "error_code": error_code,
+                "error_type": type(error).__name__,
+                "message": safe_message,
+            },
             workflow_run_id=str(task_row["workflow_run_id"]),
             task_run_id=task_run_id,
             attempt_id=attempt_id,
         )
+
+    @staticmethod
+    def _startup_error_details(error: Exception) -> tuple[str, str]:
+        """Return credential-safe, stable startup diagnostics for the run detail UI."""
+        if isinstance(error, FileNotFoundError):
+            return (
+                "STARTUP_FILE_NOT_FOUND",
+                "Codex startup could not find a required file or executable.",
+            )
+        if isinstance(error, CodexStartupError):
+            return "CODEX_STARTUP_FAILED", "Codex closed before creating a thread."
+        return "ADAPTER_STARTUP_FAILED", "Codex adapter startup failed before creating a thread."
 
     async def _stream_turn(
         self, task_run_id: str, attempt_id: str, turn: CodexTurnRef

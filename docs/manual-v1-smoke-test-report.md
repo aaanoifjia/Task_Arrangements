@@ -244,6 +244,41 @@ normalized comparison reports zero unexpected differing bytes. This is
 The application has not been installed or launched as part of this
 re-evaluation. `SMOKE-WIN-007` remains **NOT CONFIRMED**.
 
+### SMOKE-WIN-006 startup observability follow-up
+
+The preserved failed run is
+`ebb44601-4a76-4470-996d-c5e6f66f528c`; Task A attempt is
+`48d462e7-4b2f-4ed4-b0d4-8ccfea21d035`. Its persisted configuration is
+`cwd=D:\\codex-flow-smoke`, `sandbox=workspace_write`,
+`execution_mode=NEW_THREAD`, with null approval mode, model, and reasoning
+effort. Task A is `FAILED` and Task B is `BLOCKED`.
+
+Read-only database evidence records `TASK_START_FAILED` with
+`error_type=FileNotFoundError`, but the earlier installed build did not retain
+the exception message. A direct current `SdkCodexAdapter.create_thread()` with
+the identical configuration succeeded and returned a real thread id. The
+workspace exists and a read/write probe passed, so D-drive authorization is not
+the cause of the current failure evidence; the exact old exception message is
+not recoverable from that run without mutating its history.
+
+The runner now persists credential-safe startup diagnostics:
+
+- stable `error_code`;
+- `error_type`;
+- safe `message`;
+- existing stage/task/attempt references.
+
+`TASK_START_FAILED` still transitions the task to `FAILED`, leaves the child
+`BLOCKED`, and prevents duplicate execution. The existing Run Detail event log
+renders the persisted payload, so startup failures no longer appear only as
+`No events recorded.`
+
+Focused regression: **5 passed**, Ruff and strict mypy passed. A new verified
+installed build was launched, but the Computer Use accessibility tree exposed
+no WebView content and screenshot capture timed out; therefore no installed
+Task A or A→B run was started and no live installed result is claimed. Manual
+SMOKE-WIN-006 retest remains **PENDING**.
+
 ### Verified patched-build installation
 
 The normalized identity gate passed for the production NSIS. The registered
