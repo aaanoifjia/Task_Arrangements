@@ -244,6 +244,23 @@ normalized comparison reports zero unexpected differing bytes. This is
 The application has not been installed or launched as part of this
 re-evaluation. `SMOKE-WIN-007` remains **NOT CONFIRMED**.
 
+### Verified patched-build installation
+
+The normalized identity gate passed for the production NSIS. The registered
+Codex Flow uninstaller was run, stale application binaries were removed while
+SQLite, WAL/SHM, and logs were preserved, and the exact NSIS was installed
+without launching the application.
+
+| Artifact | SHA256 |
+| --- | --- |
+| NSIS installer | `395FEB3D6701FAD20792CFFA68C2F8C6AE66B958FB64B6E57D8CCB7F760F3835` |
+| Release EXE (unpatched) | `4050080CA8BB23619158AE48836BC532C03B5B961CFAAE71946FF0DB423D4FB4` |
+| NSIS payload EXE (NSS patched) | `D9022C762F5CE90A92FDE3A5E3AF1B0D764EE9BF4FEEDD852B89E0BB89C25033` |
+| Installed EXE | `D9022C762F5CE90A92FDE3A5E3AF1B0D764EE9BF4FEEDD852B89E0BB89C25033` |
+
+Installed identity equals the NSIS payload identity: **PASS**. The installed
+application remains unopened pending the next explicit smoke-test step.
+
 ### HOME normalization follow-up
 
 The implementation now explicitly rejects an environment with no usable home
