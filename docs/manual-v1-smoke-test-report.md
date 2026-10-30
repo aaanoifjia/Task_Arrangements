@@ -19,6 +19,22 @@ Result: **FAIL**
 
 Status: **UNDER INVESTIGATION**
 
+## Packaging identity gate — serialized clean rebuild follow-up
+
+The generated release and bundle outputs were removed, no Codex Flow-owned
+build process was running, and exactly one locked `build_desktop.ps1
+-BundleTarget nsis` invocation was executed. The new identity measurements were:
+
+| Artifact | SHA256 |
+| --- | --- |
+| Release EXE | `5EC213F4A15FD21F571B26AB453ABC6FCE72EAF9DE01BA140A09A8F73A97FCC9` |
+| NSIS payload EXE | `5677F897C847B36F09A4B13376C3CA80EAE19784448776F7B7F4A505A5588D12` |
+
+The hashes still differ despite the build lock and clean generated-output
+boundary. The identity gate therefore correctly returns **FAIL** and the new
+NSIS is not installed. No installed-app launch, UI conclusion, or
+`SMOKE-WIN-007` classification was made.
+
 ## Workflow persistence manual verification
 
 The user manually created and re-opened the persisted workflow through the
