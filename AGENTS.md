@@ -201,3 +201,36 @@ Use the project virtual environment:
 For pure core work, run targeted pytest, Ruff, and mypy checks specified by the task. Before completing a core milestone task, also run the relevant existing unit suite to catch regressions.
 
 Never treat assistant text, elapsed time, or file existence alone as Codex turn completion. Real execution completion must come from the Codex terminal event.
+
+## 10. Windows Desktop UI / E2E Automation
+
+### Desktop architecture
+
+Codex Flow 的生产 UI 是 Tauri + WebView2 Desktop application，不是普通浏览器网页。Desktop 验证必须针对真实 installed application；Vite dev server、独立 React、独立 backend 或未安装 release exe 只能作为诊断层，不能替代 installed Desktop acceptance。
+
+### Validation evidence priority
+
+按以下优先级获取确定性证据：
+
+1. SQLite / REST API / logs / process tree / filesystem；
+2. 真实 installed Tauri application + WebView2 CDP；
+3. Tauri/WebDriver Desktop E2E；
+4. generic Computer Use / screenshot / accessibility 作为 fallback。
+
+只要 CDP、WebDriver、API、SQLite 或其它确定性手段可验证，就不得仅因任务涉及 GUI 而停止并要求人工确认。只有这些方式均无法自动验证时，才可标记 manual GUI gate。
+
+### WebView2 debugging
+
+WebView2 remote debugging 仅可在 test、smoke、diagnostics 启动时临时开启，绑定地址必须是 `127.0.0.1`；正常生产启动不得默认开放 remote debugging port。自动化应优先通过 `/json/list` 发现目标并验证其属于 Codex Flow，而非普通 Chrome/Edge 页面。
+
+### Computer Use fallback
+
+generic Computer Use 无法读取 WebView2 accessibility tree 或 screenshot 时，不得反复尝试同一种 Computer Use；应切换到 WebView2 CDP 或官方 Tauri/WebDriver Desktop E2E。
+
+### Installed-build acceptance
+
+发布 smoke 必须覆盖真实 installed NSIS payload，并验证 installed executable 与 NSIS payload identity。不得以 frontend dev server、standalone backend 或 uninstalled release exe 替代最终 Desktop smoke。
+
+### Automation stop rule
+
+普通 GUI 自动化失败不是 blocker。无人值守任务仅可在 UAC/管理员授权、密码/登录/验证码等新凭据、Windows reboot、修改 firewall/group/security policy、安装 driver、购买/license、destructive Git、无法自动解决的 architecture conflict 或用户明确产品决策时停止。其它失败应自动收集证据、修复、重建、安装并继续。

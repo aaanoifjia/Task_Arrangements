@@ -213,6 +213,14 @@ Update progress with:
 - last successful validation;
 - deterministic next action.
 
+## Windows Desktop UI / E2E Automation
+
+Codex Flow 的生产 UI 是 Tauri + WebView2。真实 Desktop 验证优先使用确定性证据：SQLite/REST/logs/process tree/filesystem，其次是 installed Tauri + WebView2 CDP，再其次是 Tauri/WebDriver；generic Computer Use、screenshot 和 accessibility 仅作 fallback。能够通过 CDP、API、SQLite 或日志验证时，不得把普通 GUI 操作当作 manual gate。
+
+发布 smoke 必须运行真实 installed NSIS payload；frontend dev server、standalone React/backend 和未安装 release exe 不能替代 installed acceptance。WebView2 remote debugging 只能在 test/smoke/diagnostics 临时开启，且只绑定 `127.0.0.1`，不得写入正常生产默认配置。自动化必须通过 `/json/list` 验证 target 属于 Codex Flow Desktop。
+
+Computer Use 无法读取 WebView2 accessibility tree 或 screenshot 时，切换到 WebView2 CDP 或 Tauri/WebDriver，不得循环重复同一失败方式。普通 GUI 自动化失败不是 blocker；只有 UAC/管理员授权、新凭据/验证码、reboot、安全策略修改、driver/license、destructive Git、无法自动解决的架构冲突或明确产品决策才停止。其余失败应收集证据、修复、重建、安装并继续。
+
 Commit blocker metadata only if no unsafe/failed implementation files need to be included:
 
 ```text
