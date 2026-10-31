@@ -19,6 +19,68 @@ Result: **FAIL**
 
 Status: **UNDER INVESTIGATION**
 
+## SMOKE-WIN-006 — installed Windows Desktop stabilization retest
+
+This section is appended to the historical report; earlier failures above are
+intentionally preserved.
+
+### STARTING investigation and repair
+
+The exact installed run showed Task A persisted as `STARTING` before the
+external adapter startup completed. The boundary was
+`DurableRunner._execute_task_external()` awaiting `AttemptStarter.start()`,
+first at `AttemptStarter.start() -> await adapter.create_thread(config)` and
+then at `await adapter.start_turn(thread, prompt)`. The runner previously only
+started its timeout around `_stream_turn()`, so either startup await could leave
+the durable row in `STARTING` indefinitely.
+
+The repair adds a fail-closed startup timeout (task timeout or a 60-second
+default), credential-safe phase logs, and a regression test proving a hanging
+adapter produces `CODEX_STARTUP_TIMEOUT`, marks the attempt failed, and blocks
+dependent tasks. The installed log showed `CODEX_CREATE_THREAD_BEGIN/OK`,
+`CODEX_START_TURN_BEGIN/OK`, `CODEX_STREAM_BEGIN`, `TURN_STARTED`, and
+`TURN_COMPLETED` for the real run.
+
+The first repaired installed run also exposed a packaging defect: the bundled
+Uvicorn process returned WebSocket handshake 404 because the runtime image did
+not include the optional `websockets` implementation. The backend now declares
+`websockets>=13,<16` and the PyInstaller spec includes its Uvicorn/websockets
+modules. The rebuilt installed handshake succeeded and realtime DOM updates
+were observed.
+
+### Final installed evidence
+
+- WebView2 CDP attached to the installed `Codex Flow` target at
+  `http://tauri.localhost/`; DOM, Runtime, Network, and click automation all
+  passed.
+- Installed runs `7e79bf6a-06b3-4794-b571-d64da67b0562`,
+  `a6f6ebe2-8dc9-4dae-8a90-1b41d90febc4`, and
+  `29f8a6b7-2905-429f-996a-789340654da6` each completed `SUCCESS`; Task B was
+  started automatically after Task A and also completed `SUCCESS`.
+- `D:\codex-flow-smoke\task_a.txt` contains `TASK_A_DONE`; `task_b.txt`
+  contains `TASK_B_DONE`.
+- SQLite event counts were 150, 170, and 163 respectively. The final Run
+  Detail DOM showed `Run result: SUCCESS`, two successful tasks, thread/turn
+  identifiers, and historical Event Log entries. A live run DOM transitioned
+  from `RUNNING`/`BLOCKED` to `SUCCESS` while the WebSocket connection was
+  open; the original 404 handshake is preserved as the pre-fix evidence.
+- `View details` opened the task drawer with status, attempt, thread, and turn
+  data. After a clean close, a fresh installed launch reopened Run history with
+  all three successful runs and did not duplicate execution.
+- The final owned process-tree cleanup reported zero remaining installed
+  `codex-flow-desktop.exe`/`codex-flow-server.exe` processes.
+
+### Artifact hashes
+
+| Artifact | SHA256 |
+| --- | --- |
+| Latest NSIS installer | `920379F99A505272E64C28716068567D8432DE39CA17DF55ED74CDAA6D9BB895` |
+| Installed `codex-flow-desktop.exe` (NSIS payload) | `29EE9A48A1810AB0C0A07308953C331319618DE08860F465E16BD49636487F19` |
+| Installed `codex-flow-server.exe` | `FADC70C32A30ED63A743F0BA75D0BDA95F1A550EF7519C36D5E1C3B9220658B4` |
+
+The current installed stabilization retest is **PASS**. Historical manual and
+Computer-Use failures remain unchanged above.
+
 ## Packaging identity gate — serialized clean rebuild follow-up
 
 The generated release and bundle outputs were removed, no Codex Flow-owned

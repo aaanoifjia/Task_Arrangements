@@ -1,3 +1,5 @@
+import asyncio
+
 from codex_flow.codex_adapter.fake import FakeCodexAdapter, FakeScenario
 from codex_flow.codex_adapter.interface import CodexStartupError
 from codex_flow.codex_adapter.models import CodexExecutionConfig
@@ -53,6 +55,13 @@ class StartupFailingAdapter(FakeCodexAdapter):
         raise CodexStartupError("deterministic startup failure")
 
 
+class HangingStartupAdapter(FakeCodexAdapter):
+    async def create_thread(self, config: CodexExecutionConfig):  # type: ignore[override]
+        self.calls.append("create_thread")
+        await asyncio.sleep(1)
+        return await super().create_thread(config)
+
+
 async def test_adapter_startup_failure_closes_starting_attempt_and_blocks_child(tmp_path) -> None:
     repository = StorageRepositories(open_database(tmp_path / "flow.sqlite3"))
     adapter = StartupFailingAdapter()
@@ -78,6 +87,22 @@ async def test_adapter_startup_failure_closes_starting_attempt_and_blocks_child(
          )
     ]
     assert adapter.calls == ["create_thread"]
+
+
+async def test_hanging_adapter_startup_fails_closed_after_default_timeout(monkeypatch, tmp_path) -> None:
+    monkeypatch.setattr("codex_flow.runtime.runner.DEFAULT_STARTUP_TIMEOUT_SECONDS", 0.01)
+    repository = StorageRepositories(open_database(tmp_path / "flow.sqlite3"))
+    adapter = HangingStartupAdapter()
+
+    run_id = await DurableRunner(repository, adapter).run(workflow())
+
+    task_rows = {row["task_id"]: row for row in repository.load_task_runs(run_id)}
+    assert task_rows["A"]["status"] == "FAILED"
+    assert task_rows["B"]["status"] == "BLOCKED"
+    attempts = repository.load_attempts(str(task_rows["A"]["id"]))
+    assert attempts[0]["status"] == "FAILED"
+    events = repository.load_events_for_run(run_id)
+    assert '"error_code": "CODEX_STARTUP_TIMEOUT"' in events[0]["payload_json"]
 
 
 async def test_restart_reconciles_active_run_without_duplicate_attempt_or_prompt(tmp_path) -> None:

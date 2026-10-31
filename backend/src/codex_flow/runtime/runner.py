@@ -29,8 +29,8 @@ from codex_flow.storage.recovery import StartupReconciler
 from codex_flow.storage.repositories import StorageRepositories
 from codex_flow.storage.snapshots import create_run_snapshot
 
-
 LOGGER = logging.getLogger("codex_flow.server")
+DEFAULT_STARTUP_TIMEOUT_SECONDS = 60
 
 
 class DurableRunner:
@@ -168,17 +168,24 @@ class DurableRunner:
                 task_run_id, config, task.prompt
             )
         try:
-            attempt_id, turn = await start
+            startup_timeout = task.timeout_seconds or DEFAULT_STARTUP_TIMEOUT_SECONDS
+            async with asyncio.timeout(startup_timeout):
+                attempt_id, turn = await start
         except (CodexStartupError, FileNotFoundError) as error:
             LOGGER.exception(
-                "Codex startup failed task_run_id=%s error_type=%s errno=%s filename=%s winerror=%s",
+                "Codex startup failed task_run_id=%s error_type=%s",
                 task_run_id,
                 type(error).__name__,
-                getattr(error, "errno", None),
-                getattr(error, "filename", None),
-                getattr(error, "winerror", None),
             )
             self._record_startup_failure(task_run_id, error)
+            return False, None
+        except TimeoutError:
+            LOGGER.error(
+                "CODEX_STARTUP_TIMEOUT task_run_id=%s timeout_seconds=%s",
+                task_run_id,
+                task.timeout_seconds or DEFAULT_STARTUP_TIMEOUT_SECONDS,
+            )
+            self._record_startup_failure(task_run_id, TimeoutError())
             return False, None
         self._active_turns[task_run_id] = turn
         try:
@@ -230,6 +237,8 @@ class DurableRunner:
             )
         if isinstance(error, CodexStartupError):
             return "CODEX_STARTUP_FAILED", "Codex closed before creating a thread."
+        if isinstance(error, TimeoutError):
+            return "CODEX_STARTUP_TIMEOUT", "Codex startup exceeded the configured timeout."
         return "ADAPTER_STARTUP_FAILED", "Codex adapter startup failed before creating a thread."
 
     async def _stream_turn(
@@ -242,7 +251,28 @@ class DurableRunner:
             raise ValueError(f"task run not found: {task_run_id}")
         workflow_run_id = str(task_row["workflow_run_id"])
         stream = cast("AsyncIterator[CodexEvent]", self._adapter.stream_turn(turn))
+        LOGGER.info(
+            "CODEX_STREAM_BEGIN task_run_id=%s attempt_id=%s thread_id=%s turn_id=%s",
+            task_run_id,
+            attempt_id,
+            turn.thread_id,
+            turn.turn_id,
+        )
         async for event in stream:
+            if event.event_type in {
+                EventType.TURN_STARTED,
+                EventType.TURN_COMPLETED,
+                EventType.TURN_FAILED,
+                EventType.TURN_INTERRUPTED,
+            }:
+                LOGGER.info(
+                    "%s task_run_id=%s attempt_id=%s thread_id=%s turn_id=%s",
+                    event.event_type.value,
+                    task_run_id,
+                    attempt_id,
+                    turn.thread_id,
+                    turn.turn_id,
+                )
             self._repository.append_event(
                 event.event_type.value,
                 event.details,

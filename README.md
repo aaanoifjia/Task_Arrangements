@@ -68,3 +68,18 @@ $env:Path = "C:\Users\Administrator\.cargo\bin;$env:Path"
 See [the productization test report](docs/productization-test-report.md) for
 the exact automated evidence and [the manual checklist](docs/manual-v1-checklist.md)
 for the remaining release-candidate observations.
+
+### Installed Windows Desktop diagnostics
+
+The installed Tauri/WebView2 application can be inspected without a mouse or
+keyboard by enabling a loopback-only CDP port for the debug process:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/debug_windows_desktop.ps1 -CloseExisting -KeepOpen
+node scripts/webview2_cdp_probe.mjs --port <port> --text 'Start run'
+```
+
+The helper launches only the installed Codex Flow process tree, uses a
+repo-local temporary directory for PyInstaller extraction, and restores the
+parent process environment when it exits. Remote debugging is not enabled by
+normal production startup.

@@ -1,11 +1,15 @@
 """Transactional launch ordering for external Codex attempts."""
 
+import logging
 import sqlite3
+import time
 from datetime import UTC, datetime
 from uuid import uuid4
 
 from codex_flow.codex_adapter.interface import CodexAdapter
 from codex_flow.codex_adapter.models import CodexExecutionConfig, CodexThreadRef, CodexTurnRef
+
+LOGGER = logging.getLogger("codex_flow.server")
 
 
 def _now() -> str:
@@ -35,8 +39,37 @@ class AttemptStarter:
                 (attempt_id, task_run_id, _now()),
             )
 
-        thread = await self._adapter.create_thread(config)
-        turn = await self._adapter.start_turn(thread, prompt)
+        started_at = time.perf_counter()
+        LOGGER.info("ATTEMPT_START_PERSISTED task_run_id=%s attempt_id=%s", task_run_id, attempt_id)
+        LOGGER.info("CODEX_CREATE_THREAD_BEGIN task_run_id=%s attempt_id=%s", task_run_id, attempt_id)
+        try:
+            thread = await self._adapter.create_thread(config)
+        except Exception:
+            LOGGER.exception(
+                "CODEX_CREATE_THREAD_FAILED task_run_id=%s attempt_id=%s elapsed_ms=%d",
+                task_run_id, attempt_id, (time.perf_counter() - started_at) * 1000,
+            )
+            raise
+        LOGGER.info(
+            "CODEX_CREATE_THREAD_OK task_run_id=%s attempt_id=%s thread_id=%s elapsed_ms=%d",
+            task_run_id, attempt_id, thread.thread_id, (time.perf_counter() - started_at) * 1000,
+        )
+        LOGGER.info(
+            "CODEX_START_TURN_BEGIN task_run_id=%s attempt_id=%s thread_id=%s",
+            task_run_id, attempt_id, thread.thread_id,
+        )
+        try:
+            turn = await self._adapter.start_turn(thread, prompt)
+        except Exception:
+            LOGGER.exception(
+                "CODEX_START_TURN_FAILED task_run_id=%s attempt_id=%s thread_id=%s elapsed_ms=%d",
+                task_run_id, attempt_id, thread.thread_id, (time.perf_counter() - started_at) * 1000,
+            )
+            raise
+        LOGGER.info(
+            "CODEX_START_TURN_OK task_run_id=%s attempt_id=%s thread_id=%s turn_id=%s elapsed_ms=%d",
+            task_run_id, attempt_id, turn.thread_id, turn.turn_id, (time.perf_counter() - started_at) * 1000,
+        )
         self._persist_external_refs(task_run_id, attempt_id, turn)
         return attempt_id, turn
 
@@ -57,10 +90,45 @@ class AttemptStarter:
                 (attempt_id, task_run_id, _now()),
             )
 
-        thread = await self._adapter.resume_thread(CodexThreadRef(thread_id=source_thread_id))
+        started_at = time.perf_counter()
+        LOGGER.info(
+            "ATTEMPT_START_PERSISTED task_run_id=%s attempt_id=%s continuation=true",
+            task_run_id, attempt_id,
+        )
+        LOGGER.info(
+            "CODEX_CREATE_THREAD_BEGIN task_run_id=%s attempt_id=%s continuation=true source_thread_id=%s",
+            task_run_id, attempt_id, source_thread_id,
+        )
+        try:
+            thread = await self._adapter.resume_thread(CodexThreadRef(thread_id=source_thread_id))
+        except Exception:
+            LOGGER.exception(
+                "CODEX_CREATE_THREAD_FAILED task_run_id=%s attempt_id=%s continuation=true elapsed_ms=%d",
+                task_run_id, attempt_id, (time.perf_counter() - started_at) * 1000,
+            )
+            raise
         if thread.thread_id != source_thread_id:
             raise ValueError("continuation adapter changed the source thread")
-        turn = await self._adapter.start_turn(thread, prompt)
+        LOGGER.info(
+            "CODEX_CREATE_THREAD_OK task_run_id=%s attempt_id=%s continuation=true thread_id=%s elapsed_ms=%d",
+            task_run_id, attempt_id, thread.thread_id, (time.perf_counter() - started_at) * 1000,
+        )
+        LOGGER.info(
+            "CODEX_START_TURN_BEGIN task_run_id=%s attempt_id=%s thread_id=%s continuation=true",
+            task_run_id, attempt_id, thread.thread_id,
+        )
+        try:
+            turn = await self._adapter.start_turn(thread, prompt)
+        except Exception:
+            LOGGER.exception(
+                "CODEX_START_TURN_FAILED task_run_id=%s attempt_id=%s thread_id=%s elapsed_ms=%d",
+                task_run_id, attempt_id, thread.thread_id, (time.perf_counter() - started_at) * 1000,
+            )
+            raise
+        LOGGER.info(
+            "CODEX_START_TURN_OK task_run_id=%s attempt_id=%s thread_id=%s turn_id=%s elapsed_ms=%d",
+            task_run_id, attempt_id, turn.thread_id, turn.turn_id, (time.perf_counter() - started_at) * 1000,
+        )
         self._persist_external_refs(task_run_id, attempt_id, turn)
         return attempt_id, turn
 

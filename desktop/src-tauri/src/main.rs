@@ -12,7 +12,7 @@ use std::sync::Mutex;
 #[cfg(windows)]
 use std::path::{Path, PathBuf};
 
-use tauri::{Manager, PhysicalPosition, PhysicalSize, RunEvent, WindowEvent};
+use tauri::{Manager, PhysicalPosition, PhysicalSize, RunEvent, WebviewWindowBuilder, WindowEvent};
 
 fn main() {
     configure_webview_data_directory();
@@ -21,11 +21,23 @@ fn main() {
             single_instance::focus_existing_window(app);
         }))
         .setup(|app| {
+            let window_config = app
+                .config()
+                .app
+                .windows
+                .iter()
+                .find(|window| window.label == "main")
+                .ok_or_else(|| std::io::Error::other("main window config missing"))?
+                .clone();
+            let mut window_builder = WebviewWindowBuilder::from_config(app.handle(), &window_config)?;
+            if let Ok(arguments) = std::env::var("CODEX_FLOW_WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS") {
+                if !arguments.trim().is_empty() {
+                    window_builder = window_builder.additional_browser_args(&arguments);
+                }
+            }
+            let main_window = window_builder.build()?;
             let runtime_paths = paths::resolve_runtime_paths(app.handle())?;
             app.manage(runtime_paths);
-            let main_window = app
-                .get_webview_window("main")
-                .ok_or_else(|| std::io::Error::other("main window missing"))?;
             let window_state_path = app
                 .path()
                 .app_data_dir()
