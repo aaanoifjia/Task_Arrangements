@@ -198,6 +198,7 @@ class RuntimeManager:
                 return result
             result = accepted_result(command, previous_status=previous_status)
             self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
+            self._finalize_if_terminal(run_id)
             return result
         if previous_status not in {TaskStatus.PENDING, TaskStatus.BLOCKED, TaskStatus.READY}:
             result = rejected_result(
@@ -218,6 +219,7 @@ class RuntimeManager:
             return result
         result = accepted_result(command, previous_status=previous_status)
         self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
+        self._finalize_if_terminal(run_id)
         return result
 
     async def skip(self, run_id: str, task_run_id: str) -> ControlResult:
@@ -347,6 +349,23 @@ class RuntimeManager:
         result = accepted_result(command, previous_status=previous_status)
         self._repository.append_manual_action_audit(result, task_run_id=task_run_id)
         return result
+
+    def _finalize_if_terminal(self, run_id: str) -> None:
+        """Close a run after a manual action makes every task terminal."""
+        run = self._repository.get_workflow_run(run_id)
+        if run is None or is_terminal(TaskStatus(str(run["status"]))):
+            return
+        statuses = [
+            TaskStatus(str(row["status"]))
+            for row in self._repository.load_task_runs(run_id)
+        ]
+        if statuses and all(is_terminal(status) for status in statuses):
+            final_status = (
+                TaskStatus.SUCCESS
+                if all(status is TaskStatus.SUCCESS for status in statuses)
+                else TaskStatus.FAILED
+            )
+            self._repository.update_workflow_run_state(run_id, final_status.value)
 
     async def wait(self, run_id: str) -> None:
         task = self._tasks.get(run_id)
