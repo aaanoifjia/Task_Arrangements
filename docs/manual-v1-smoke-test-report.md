@@ -19,6 +19,58 @@ Result: **FAIL**
 
 Status: **UNDER INVESTIGATION**
 
+## Final installed WebView2/CDP stabilization evidence
+
+This section records the automated installed-desktop retest performed after
+the runtime stabilization commits. It does not replace the preserved manual
+baseline failures above.
+
+### Artifact
+
+| Artifact | Absolute path | Size (bytes) | SHA256 | Last write |
+| --- | --- | ---: | --- | --- |
+| NSIS installer | `D:\fiona\Codex_Projects\Task_Arrangements\desktop\src-tauri\target\release\bundle\nsis\Codex Flow_0.1.0_x64-setup.exe` | 168610450 | `AEB990FF5341AE25D6C20B70DD04776DC1BCBD8BF985DC864EEF20DE71018B53` | 2026-11-01 12:49:49 +08:00 |
+| Release executable | `D:\fiona\Codex_Projects\Task_Arrangements\desktop\src-tauri\target\release\codex-flow-desktop.exe` | 9160704 | `FB5212C3C193DF830E55FA73A94539B64F3736B14B9AD21EBE791B167CAE8CC6` | 2026-11-01 12:49:49 +08:00 |
+| Installed executable | `C:\Users\Administrator\AppData\Local\Codex Flow\codex-flow-desktop.exe` | 9160704 | `D2D750046081D586800D9A2EAAF1C12177A73FE389386F725B8AB83A9F42E2CF` | 2026-11-01 12:48:44 +08:00 |
+
+The marker-aware NSIS identity gate passed. The installed executable hash
+matches the extracted NSIS payload hash; it is intentionally different from
+the restored release executable because Tauri applies its NSIS bundle marker.
+
+### Installed automated retest
+
+- WebView2 CDP: **PASS**. The installed app served `tauri.localhost`, loaded
+  the embedded JS/CSS with HTTP 200, and rendered `#root` with title `Codex Flow`.
+- The first post-launch `about:blank` observation was transient: after the
+  normal WebView readiness interval, the page navigated to the Tauri asset
+  document and rendered normally.
+- Historical events: **PASS**. Run Detail loaded persisted events from
+  `GET /api/runs/{run_id}/events` and displayed TURN/TOOL/AGENT events.
+- Realtime events: **PASS**. The installed page opened the runtime-resolved
+  WebSocket at `ws://127.0.0.1:<port>/ws/runs/<id>?token=...`.
+- View details: **PASS**. The Tasks-list action opened the same
+  `TaskRunDrawer` used by the graph selection.
+- Three consecutive installed cycles: **PASS**. Run IDs
+  `fee0e13d-000e-4362-971a-ac2133594031`,
+  `ca1e41e2-9204-4129-bbfb-29e71bc3a284`, and
+  `538276de-0b4b-48f7-83bd-c9717d9795cb` each completed A SUCCESS followed
+  by B SUCCESS; both `task_a.txt` and `task_b.txt` existed afterward.
+- Persistence/reopen: **PASS**. After closing the desktop and owned sidecar,
+  no Codex Flow process remained; reopening the installed app showed the
+  preserved workflow and all three completed runs.
+
+### Root-cause clarification
+
+The earlier packaged instant-failure path was the frozen sidecar not carrying
+the pinned `codex_cli_bin` runtime. The current packaged sidecar explicitly
+includes that runtime and the final installed A→B runs created real thread and
+turn IDs and reached terminal events. The apparent STARTING state at the first
+CDP snapshot was the normal adapter startup interval, not a terminal failure;
+the persisted stage evidence then showed `TURN_STARTED` and subsequent tool
+events.
+
+Final implementation commits: `776667a`, `1c32cf0`.
+
 ## SMOKE-WIN-006 — installed Windows Desktop stabilization retest
 
 This section is appended to the historical report; earlier failures above are
