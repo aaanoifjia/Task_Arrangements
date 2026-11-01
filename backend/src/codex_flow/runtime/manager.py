@@ -40,6 +40,7 @@ class RuntimeManager:
     def restore_workflow(self, run_id: str, workflow: WorkflowDefinition) -> None:
         """Register a durable run snapshot for controls after process restart."""
         self._workflows[run_id] = workflow
+        self._finalize_if_terminal(run_id)
 
     async def start(self, workflow: WorkflowDefinition) -> str:
         if not self._accepting:

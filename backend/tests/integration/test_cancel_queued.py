@@ -57,3 +57,17 @@ async def test_cancel_last_task_finalizes_run_without_external_work(tmp_path: Pa
     assert result.accepted is True
     assert repository.get_workflow_run(run_id)["status"] == "FAILED"  # type: ignore[index]
     assert adapter.calls == []
+
+
+@pytest.mark.asyncio
+async def test_restore_finalizes_stale_run_with_terminal_tasks(tmp_path: Path) -> None:
+    repository = StorageRepositories(open_database(tmp_path / "flow.sqlite3"))
+    repository.save_workflow_definition(workflow())
+    run_id = repository.create_workflow_run("workflow", {"workflow": "snapshot"})
+    task_run_id = repository.create_task_runs(run_id, ["A"])[0]
+    repository.update_workflow_run_state(run_id, "RUNNING")
+    repository.update_task_run_state(task_run_id, "CANCELLED")
+
+    RuntimeManager(repository, FakeCodexAdapter()).restore_workflow(run_id, workflow())
+
+    assert repository.get_workflow_run(run_id)["status"] == "FAILED"  # type: ignore[index]
