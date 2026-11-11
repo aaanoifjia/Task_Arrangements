@@ -4,6 +4,7 @@ import '@xyflow/react/dist/style.css'
 import type { TaskRunView } from '../../api/types'
 import type { RunApi } from './api'
 import RunTaskNode, { type RunTaskNodeData } from './RunTaskNode'
+import type { RunControlAction } from './RunControls'
 import TaskRunDrawer from './TaskRunDrawer'
 import './RunGraph.css'
 
@@ -14,6 +15,11 @@ export type RunGraphProps = {
   snapshot: Record<string, unknown>
   taskRuns: TaskRunView[]
   attemptApi?: Pick<RunApi, 'attempts'>
+  onRetry?: () => void
+  onCancel?: () => void
+  onSkip?: () => void
+  onMarkSuccess?: () => void
+  pendingAction?: RunControlAction | null
   selectedTaskId?: string | null
   onSelectTask?: (taskId: string | null) => void
 }
@@ -39,7 +45,18 @@ function readSnapshotEdges(snapshot: Record<string, unknown>, knownIds: Set<stri
   })
 }
 
-function RunGraph({ snapshot, taskRuns, attemptApi, selectedTaskId: controlledTaskId, onSelectTask }: RunGraphProps) {
+function RunGraph({
+  snapshot,
+  taskRuns,
+  attemptApi,
+  onRetry,
+  onCancel,
+  onSkip,
+  onMarkSuccess,
+  pendingAction,
+  selectedTaskId: controlledTaskId,
+  onSelectTask,
+}: RunGraphProps) {
   const [internalTaskId, setInternalTaskId] = useState<string | null>(null)
   const selectedTaskId = controlledTaskId === undefined ? internalTaskId : controlledTaskId
   const selectTask = (taskId: string | null) => {
@@ -95,6 +112,11 @@ function RunGraph({ snapshot, taskRuns, attemptApi, selectedTaskId: controlledTa
         task={selectedTaskId ? taskRuns.find((task) => task.task_id === selectedTaskId) ?? null : null}
         onClose={() => selectTask(null)}
         attemptApi={attemptApi}
+        onRetry={onRetry}
+        onCancel={onCancel}
+        onSkip={onSkip}
+        onMarkSuccess={onMarkSuccess}
+        pendingAction={pendingAction}
       />
     </div>
   )

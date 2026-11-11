@@ -106,6 +106,30 @@ function RunDetailPage({ api, streamOptions }: RunDetailPageProps) {
     }
   }, [refreshRun, runId, stableApi])
 
+  const applyTaskControl = useCallback(async (action: Exclude<RunControlAction, 'pause' | 'resume'>) => {
+    if (!runId || !selectedTaskId) return
+    const operation = action === 'retry'
+      ? stableApi.retry
+      : action === 'cancel'
+        ? stableApi.cancel
+        : action === 'skip'
+          ? stableApi.skip
+          : stableApi.markSuccess
+    if (!operation) return
+    setPendingControl(action)
+    setControlError(null)
+    try {
+      const result = await operation(runId, selectedTaskId)
+      if (!result.accepted) throw new Error(result.message ?? `Unable to ${action} task.`)
+      await refreshRun()
+    } catch (cause: unknown) {
+      if (isConflict(cause)) await refreshRun().catch(() => undefined)
+      setControlError(cause instanceof Error ? cause.message : `Unable to ${action} task.`)
+    } finally {
+      setPendingControl(null)
+    }
+  }, [refreshRun, runId, selectedTaskId, stableApi])
+
   if (loading) return <p role="status">Loading run…</p>
   if (notFound) return <section aria-labelledby="run-not-found-heading"><h1 id="run-not-found-heading">Run not found</h1><p>The requested run does not exist.</p></section>
   if (error) return <section aria-labelledby="run-error-heading"><h1 id="run-error-heading">Unable to load run</h1><p role="alert">{error}</p></section>
@@ -142,7 +166,18 @@ function RunDetailPage({ api, streamOptions }: RunDetailPageProps) {
       <RunSummaryPanel runStatus={run.status} tasks={visibleTasks} />
       <section aria-labelledby="run-graph-heading">
         <h2 id="run-graph-heading">Snapshot graph</h2>
-        <RunGraph snapshot={run.snapshot} taskRuns={visibleTasks} attemptApi={stableApi} selectedTaskId={selectedTaskId} onSelectTask={setSelectedTaskId} />
+        <RunGraph
+          snapshot={run.snapshot}
+          taskRuns={visibleTasks}
+          attemptApi={stableApi}
+          onRetry={() => { void applyTaskControl('retry') }}
+          onCancel={() => { void applyTaskControl('cancel') }}
+          onSkip={() => { void applyTaskControl('skip') }}
+          onMarkSuccess={() => { void applyTaskControl('mark-success') }}
+          pendingAction={pendingControl}
+          selectedTaskId={selectedTaskId}
+          onSelectTask={setSelectedTaskId}
+        />
       </section>
       <section aria-labelledby="run-tasks-heading">
         <h2 id="run-tasks-heading">Tasks</h2>

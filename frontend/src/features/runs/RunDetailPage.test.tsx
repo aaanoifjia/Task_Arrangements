@@ -52,6 +52,22 @@ describe('RunDetailPage', () => {
     expect(screen.getByRole('heading', { name: 'Task A' })).toBeInTheDocument()
   })
 
+  it('wires retry from the task drawer through the durable RunApi', async () => {
+    const user = userEvent.setup()
+    const retry = vi.fn().mockResolvedValue({ accepted: true, action: 'RETRY' })
+    renderPage(api({
+      tasks: vi.fn().mockResolvedValue([{ ...fixtureTaskRun, status: 'FAILED' }]),
+      attempts: vi.fn().mockResolvedValue([]),
+      retry,
+    }))
+
+    await screen.findByRole('heading', { name: 'Run run-1' })
+    await user.click(screen.getByRole('button', { name: 'View details' }))
+    await user.click(screen.getByRole('button', { name: 'Retry' }))
+
+    expect(retry).toHaveBeenCalledWith('run-1', 'A')
+  })
+
   it('renders a not-found state for a 404 response', async () => {
     const error = Object.assign(new Error('missing'), { status: 404 })
     renderPage(api({ get: vi.fn().mockRejectedValue(error) }))
