@@ -75,7 +75,10 @@ export function useRunStream(runId: string | null | undefined, options: UseRunSt
         },
         onClose: () => {
           if (!active) return
-          setState((current) => ({ ...current, connected: false }))
+          // A stream snapshot is only authoritative while its connection is
+          // alive. Falling back to the durable REST snapshot prevents a
+          // backgrounded WebView from displaying frozen task states.
+          setState((current) => ({ ...current, tasks: [], hasSnapshot: false, connected: false }))
           if (terminalSnapshotObserved) return
           const delay = reconnectDelays[Math.min(reconnectAttempt, reconnectDelays.length - 1)]
           reconnectAttempt += 1

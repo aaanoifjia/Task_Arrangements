@@ -11,6 +11,13 @@ import './RunDetailPage.css'
 
 export type RunDetailPageProps = { api?: RunApi; streamOptions?: UseRunStreamOptions }
 
+const terminalRunStatuses = new Set(['SUCCESS', 'FAILED', 'CANCELLED', 'INTERRUPTED', 'NEEDS_ATTENTION'])
+
+function mergeEvents(current: EventView[], incoming: EventView[]): EventView[] {
+  const known = new Set(current.map((event) => event.id))
+  return [...current, ...incoming.filter((event) => !known.has(event.id))]
+}
+
 function isNotFound(cause: unknown): boolean {
   if (!cause || typeof cause !== 'object') return false
   const error = cause as { status?: number; code?: string }
@@ -47,14 +54,19 @@ function RunDetailPage({ api, streamOptions }: RunDetailPageProps) {
   useEffect(() => {
     const event = stream.latestEvent
     if (!event) return
-    setEvents((current) => current.some((item) => item.id === event.id) ? current : [...current, event])
+    setEvents((current) => mergeEvents(current, [event]))
   }, [stream.latestEvent])
 
   const refreshRun = useCallback(async () => {
     if (!runId) return
-    const [detail, taskSnapshot] = await Promise.all([stableApi.get(runId), stableApi.tasks(runId)])
+    const [detail, taskSnapshot, persistedEvents] = await Promise.all([
+      stableApi.get(runId),
+      stableApi.tasks(runId),
+      stableApi.events?.(runId) ?? Promise.resolve([]),
+    ])
     setRun(detail)
     setTasks(taskSnapshot)
+    setEvents((current) => mergeEvents(current, persistedEvents))
   }, [runId, stableApi])
 
   useEffect(() => {
@@ -84,6 +96,12 @@ function RunDetailPage({ api, streamOptions }: RunDetailPageProps) {
     if (!stream.latestEventId) return
     void refreshRun().catch(() => undefined)
   }, [refreshRun, stream.latestEventId])
+
+  useEffect(() => {
+    if (!runId || !run || terminalRunStatuses.has(run.status)) return undefined
+    const interval = setInterval(() => { void refreshRun().catch(() => undefined) }, 1000)
+    return () => clearInterval(interval)
+  }, [refreshRun, run?.status, runId])
 
   const applyRunControl = useCallback(async (action: 'pause' | 'resume') => {
     if (!runId) return
@@ -134,7 +152,12 @@ function RunDetailPage({ api, streamOptions }: RunDetailPageProps) {
   if (notFound) return <section aria-labelledby="run-not-found-heading"><h1 id="run-not-found-heading">Run not found</h1><p>The requested run does not exist.</p></section>
   if (error) return <section aria-labelledby="run-error-heading"><h1 id="run-error-heading">Unable to load run</h1><p role="alert">{error}</p></section>
   if (!run) return <p role="alert">Run data is unavailable.</p>
-  const visibleTasks = stream.hasSnapshot ? stream.tasks : tasks
+  // A terminal server-side state is durable authority.  A backgrounded WebView
+  // can retain an apparently connected but stale socket snapshot, so never let
+  // that snapshot mask the final REST task state.
+  const visibleTasks = stream.hasSnapshot && stream.connected && !terminalRunStatuses.has(run.status)
+    ? stream.tasks
+    : tasks
 
   return (
     <section aria-labelledby="run-detail-heading" className="run-detail">

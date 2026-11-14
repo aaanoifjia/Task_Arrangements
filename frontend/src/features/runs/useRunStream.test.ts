@@ -85,6 +85,17 @@ describe('useRunStream', () => {
     expect(result.current.latestEvent).toBe(firstEvent)
   })
 
+  it('clears a disconnected snapshot so durable REST state can take over', () => {
+    FakeWebSocket.instances = []
+    const { result } = renderHook(() => useRunStream('run-1', { webSocketFactory: FakeWebSocket }))
+    const socket = FakeWebSocket.instances[0]!
+    act(() => socket.onmessage?.({ data: JSON.stringify({ kind: 'snapshot', payload: { tasks: [task] } }) } as MessageEvent))
+    expect(result.current.hasSnapshot).toBe(true)
+    act(() => socket.onclose?.({ code: 1006 } as CloseEvent))
+    expect(result.current.hasSnapshot).toBe(false)
+    expect(result.current.tasks).toEqual([])
+  })
+
   it('does not connect or reconnect for a terminal run', () => {
     vi.useFakeTimers()
     FakeWebSocket.instances = []

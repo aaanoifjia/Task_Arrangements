@@ -144,4 +144,40 @@ describe('RunDetailPage', () => {
     expect(screen.queryByText('SUCCESS')).not.toBeInTheDocument()
     vi.useRealTimers()
   })
+
+  it('falls back to durable task and event data when a stale stream closes', async () => {
+    FakeWebSocket.instances = []
+    const latestTask = { ...fixtureTaskRun, status: 'SUCCESS' as const }
+    const event = { id: 'event-latest', workflow_run_id: 'run-1', task_run_id: fixtureTaskRun.id, attempt_id: null, event_type: 'TURN_COMPLETED', payload: {}, created_at: 'now' }
+    const runApi = api({ tasks: vi.fn().mockResolvedValue([latestTask]), events: vi.fn().mockResolvedValue([event]) })
+    renderPage(runApi, { webSocketFactory: FakeWebSocket })
+    await screen.findByRole('heading', { name: 'Tasks' })
+    const socket = FakeWebSocket.instances[0]!
+    act(() => socket.onmessage?.({ data: JSON.stringify({ kind: 'snapshot', payload: { tasks: [{ ...fixtureTaskRun, status: 'RUNNING' }] } }) } as MessageEvent))
+    act(() => socket.onclose?.({ code: 1006 } as CloseEvent))
+    const taskSection = screen.getByRole('heading', { name: 'Tasks' }).parentElement!
+    const eventSection = screen.getByRole('heading', { name: 'Event log' }).parentElement!
+    expect(await within(taskSection).findByText('SUCCESS')).toBeInTheDocument()
+    expect(await within(eventSection).findByText('TURN_COMPLETED', { selector: 'strong' })).toBeInTheDocument()
+  })
+
+  it('uses terminal durable task state even if a stale stream still appears connected', async () => {
+    FakeWebSocket.instances = []
+    const completedRun = { ...fixtureRunDetail, status: 'SUCCESS' as const }
+    const runApi = api({
+      get: vi.fn().mockResolvedValue(completedRun),
+      tasks: vi.fn().mockResolvedValue([{ ...fixtureTaskRun, status: 'SUCCESS' as const }]),
+    })
+    renderPage(runApi, { webSocketFactory: FakeWebSocket })
+
+    await screen.findByRole('heading', { name: 'Tasks' })
+    const socket = FakeWebSocket.instances[0]!
+    act(() => socket.onmessage?.({
+      data: JSON.stringify({ kind: 'snapshot', payload: { tasks: [{ ...fixtureTaskRun, status: 'RUNNING' }] } }),
+    } as MessageEvent))
+
+    const taskSection = screen.getByRole('heading', { name: 'Tasks' }).parentElement!
+    expect(within(taskSection).getByText('SUCCESS')).toBeInTheDocument()
+    expect(within(taskSection).queryByText('RUNNING')).not.toBeInTheDocument()
+  })
 })
