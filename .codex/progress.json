@@ -3,7 +3,7 @@
   "project": "Codex Flow",
   "repository": "aaanoifjia/Task_Arrangements",
   "branch": "master",
-  "updated_at": "2026-10-22",
+  "updated_at": "2026-11-14",
   "execution_policy": {
     "automatic_push": true,
     "commit_each_completed_task": true,
@@ -15,8 +15,33 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
+  "active_task": {
+    "id": "M13-01",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-11-14",
+    "note": "Reconciling the completed M0-M12 history with current installed-desktop V1 evidence. Pre-existing edits to the installed Desktop E2E scripts are preserved for M13-03 validation."
+  },
   "next_task": null,
+  "m13": {
+    "status": "IN_PROGRESS",
+    "plan": "docs/reference/Codex_Flow_M13_Release_Readiness_Task_Plan.md",
+    "tasks": {
+      "M13-01": { "status": "IN_PROGRESS", "depends_on": ["M12-REPORT-038"] },
+      "M13-02": { "status": "PENDING", "depends_on": ["M13-01"] },
+      "M13-03": { "status": "PENDING", "depends_on": ["M13-02"] },
+      "M13-04": { "status": "PENDING", "depends_on": ["M13-03"] },
+      "M13-05": { "status": "PENDING", "depends_on": ["M13-04"] },
+      "M13-06": { "status": "PENDING", "depends_on": ["M13-05"] }
+    },
+    "baseline": {
+      "source_commit": "d04f6740384ce63e402e20338d121dbc36c5aed8",
+      "historical_installed_e2e": "Three installed A-to-B cycles are documented, but the current source revision and a current installed payload have not yet passed the full M13 acceptance sequence.",
+      "preexisting_uncommitted_m13_03_work": [
+        "scripts/desktop_e2e_v1.mjs",
+        "scripts/run_desktop_e2e_v1.ps1"
+      ]
+    }
+  },
   "completed_tasks": [
     "PREP-000",
     "M0-ARCH-001",
