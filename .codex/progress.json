@@ -17,9 +17,9 @@
   },
   "active_task": {
     "id": "M13-02",
-    "status": "IN_PROGRESS",
+    "status": "BLOCKED",
     "started_at": "2026-11-14",
-    "note": "Diagnosing the exclusive desktop build lock before the formal NSIS build and installed payload identity verification."
+    "note": "Formal NSIS build and marker-aware payload identity passed, but silent installation returned exit code 0 while the installed EXE remained the old hash because a non-test-owned Codex Flow process holds it."
   },
   "next_task": null,
   "m13": {
@@ -27,7 +27,7 @@
     "plan": "docs/reference/Codex_Flow_M13_Release_Readiness_Task_Plan.md",
     "tasks": {
       "M13-01": { "status": "COMPLETE", "depends_on": ["M12-REPORT-038"], "validation": "M0-M12 history preserved; M13 source/current-installer evidence gap and preserved M13-03 scripts recorded." },
-      "M13-02": { "status": "IN_PROGRESS", "depends_on": ["M13-01"] },
+      "M13-02": { "status": "BLOCKED", "depends_on": ["M13-01"], "blocker": "Close the non-test-owned installed Codex Flow process, then rerun NSIS installation and installed-payload identity verification." },
       "M13-03": { "status": "PENDING", "depends_on": ["M13-02"] },
       "M13-04": { "status": "PENDING", "depends_on": ["M13-03"] },
       "M13-05": { "status": "PENDING", "depends_on": ["M13-04"] },
@@ -357,7 +357,12 @@
     "M12-REPORT-038",
     "M13-01"
   ],
-  "blocked_tasks": {},
+  "blocked_tasks": {
+    "M13-02": {
+      "reason": "The formal build lock was released and the current NSIS marker-aware payload identity passed, but the existing installed Codex Flow executable is held by process 32732 (started before this M13 task, parent 26376). Silent install returned 0 without replacing it: installed SHA256 8D445638C50726E5FF7E0F4BC44738D81C67CD8EF0C883B47B2F33B7002F96A9 differs from current payload SHA256 D15777B8742F8CE4A93DF1D9D43B7B855484EB2318E061B9CDDD8DFE03F84FEE. The task scope authorizes closing only test-owned processes, so this process was not terminated.",
+      "next_action": "User closes the pre-existing Codex Flow application, then resume M13-02 installation and verify the installed EXE equals the NSIS payload."
+    }
+  },
   "blocker_history": [
     {
       "task": "M5-RESTART-005",
@@ -956,5 +961,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M13-01 COMPLETE: M13 six-task release-readiness plan, current-source versus historical-installer evidence distinction, and preserved pre-existing M13-03 script work are recorded."
+  "last_validation_note": "M13-02 BLOCKED: formal NSIS build and normalized payload identity passed, but the existing non-test-owned installed process prevented the installed executable from updating; no process was terminated."
 }

@@ -24,3 +24,27 @@ This task records automated build evidence only; installer launch, visual UX,
 and other manual Desktop checks are intentionally deferred. The read-only
 manifest verifier checks every table row's repository-relative path, byte size,
 and SHA256 without rebuilding or downloading artifacts.
+
+## M13-02 current-build evidence — 2026-11-14
+
+The formal command `scripts/build_desktop.ps1 -BundleTarget nsis` completed
+after the exclusive TEMP lock was verified available. The lock was released at
+completion. The build included the frontend production build, PyInstaller
+sidecar staging, bundled Codex CLI, Tauri release build, NSIS package, and the
+script's marker-aware payload gate.
+
+| Artifact | SHA256 |
+| --- | --- |
+| NSIS installer | `F0EB88A6FDE1FA20D3A97E6A3EC7E2344D3DA2A4DCFCF1BDBD6DFD7FC87040F7` |
+| Release EXE | `B73A89E8AB460F557099A2D09D8EFB0EB4F2C34D90BDB34D6FE2C978D846FA47` |
+| Extracted NSIS payload EXE | `D15777B8742F8CE4A93DF1D9D43B7B855484EB2318E061B9CDDD8DFE03F84FEE` |
+
+The normalized release-to-payload comparison passed at marker offset `6909610`
+(`UNK` in the release executable versus the expected `NSS` installer marker).
+
+The installer was then run normally in silent mode and returned exit code 0.
+However, the installed executable remained
+`8D445638C50726E5FF7E0F4BC44738D81C67CD8EF0C883B47B2F33B7002F96A9`, not the
+current payload hash. A pre-existing installed Codex Flow process held the
+executable and was not test-owned, so it was deliberately not terminated.
+This is a blocked install identity gate, not a successful installation.

@@ -213,6 +213,19 @@ verification. M13-02 is next: validate the exclusive build lock, build a
 current NSIS package, install it without touching user data, and prove the
 installed executable matches the NSIS payload identity.
 
+### M13-02 blocked installation evidence
+
+The formal build lock was confirmed released before the new build and released
+again after it. The formal NSIS build completed, and its marker-aware payload
+identity gate passed. Current artifact hashes are recorded in
+`docs/windows-build-artifacts.md`.
+
+The normal silent installer returned exit code 0, but the installed executable
+remained the older hash because `codex-flow-desktop.exe` was already running in
+a process that predates M13 and is not owned by this test run. The process was
+not terminated. M13-02 requires the user to close that existing application;
+then installation and exact installed-payload identity verification can resume.
+
 ## Historical Current Task
 
 Current task:
