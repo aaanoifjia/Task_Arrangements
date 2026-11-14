@@ -1,10 +1,10 @@
 # Codex Flow — Current Progress
 
-Updated: 2026-10-22
+Updated: 2026-11-14
 
 ## Current Phase
 
-M11 — Release Candidate / Real-world Validation.
+M13 — V1 Release Readiness.
 
 M7 Visual DAG UI is complete with all automated gates PASS. The authoritative late-phase plans define the completed M8–M10 reliability, packaging, and hardening work, followed by 74 deterministic M11–M12 release-candidate and product-quality tasks.
 
@@ -201,7 +201,19 @@ output_verified = true
 unexpected_files = []
 ```
 
-## Current Task
+## M13 Release Readiness
+
+M0–M12 remain complete historical implementation and automated-validation
+records. Their results are not evidence that the current source commit and a
+newly installed payload meet the current V1 installed-desktop acceptance gate.
+
+M13-01 is COMPLETE. It established the current release-readiness plan and
+preserved the existing uncommitted Desktop E2E runner improvements for M13-03
+verification. M13-02 is next: validate the exclusive build lock, build a
+current NSIS package, install it without touching user data, and prove the
+installed executable matches the NSIS payload identity.
+
+## Historical Current Task
 
 Current task:
 

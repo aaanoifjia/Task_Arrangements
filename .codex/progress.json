@@ -15,19 +15,14 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M13-01",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-11-14",
-    "note": "Reconciling the completed M0-M12 history with current installed-desktop V1 evidence. Pre-existing edits to the installed Desktop E2E scripts are preserved for M13-03 validation."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M13-02",
   "m13": {
     "status": "IN_PROGRESS",
     "plan": "docs/reference/Codex_Flow_M13_Release_Readiness_Task_Plan.md",
     "tasks": {
-      "M13-01": { "status": "IN_PROGRESS", "depends_on": ["M12-REPORT-038"] },
-      "M13-02": { "status": "PENDING", "depends_on": ["M13-01"] },
+      "M13-01": { "status": "COMPLETE", "depends_on": ["M12-REPORT-038"], "validation": "M0-M12 history preserved; M13 source/current-installer evidence gap and preserved M13-03 scripts recorded." },
+      "M13-02": { "status": "READY", "depends_on": ["M13-01"] },
       "M13-03": { "status": "PENDING", "depends_on": ["M13-02"] },
       "M13-04": { "status": "PENDING", "depends_on": ["M13-03"] },
       "M13-05": { "status": "PENDING", "depends_on": ["M13-04"] },
@@ -354,7 +349,8 @@
     "M12-PERF-035",
     "M12-PERF-036",
     "M12-GATE-037",
-    "M12-REPORT-038"
+    "M12-REPORT-038",
+    "M13-01"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -955,5 +951,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M12-REPORT-038 COMPLETE: final M12 automated evidence report, release-candidate README, and manual V1/Desktop handoff checklist recorded; automated gate PASS and manual observations remain explicitly separated."
+  "last_validation_note": "M13-01 COMPLETE: M13 six-task release-readiness plan, current-source versus historical-installer evidence distinction, and preserved pre-existing M13-03 script work are recorded."
 }

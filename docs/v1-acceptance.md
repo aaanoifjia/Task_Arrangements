@@ -22,3 +22,12 @@
 20. Open the corresponding thread in Codex — Verification: manual UX check
 21. No master LLM control — Verification: automated test
 22. No manual Enter between tasks — Verification: manual UX check
+
+## M13 current-build evidence gate
+
+Historical automated and installed-desktop evidence remains preserved. V1 is
+not release-ready until the current source revision has a freshly built and
+installed NSIS payload whose installed executable matches the extracted
+payload, and the complete installed-desktop acceptance sequence passes three
+consecutive cycles. Manual-only visual/deep-link observations must be recorded
+as `AUTOMATION_LIMITATION`, not represented as automated PASS.

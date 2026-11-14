@@ -1053,3 +1053,16 @@ M11 不做主观 GUI 验收，不安装新的系统软件，不要求外网。
 - 不引入新的 UI framework / 第三方 runtime dependency
 
 M12 完成后，自动化主线结束，进入最终人工 V1 验收。
+
+---
+
+# M13 — V1 Release Readiness
+
+## 目标
+
+在不改变已冻结架构的前提下，针对当前源码和当前安装包完成真实
+Windows Tauri/WebView2 V1 验收。M13 不改写 M0–M12 的完成记录；它补齐
+build/install identity、installed Desktop E2E、三次连续验收和发布证据。
+
+任务顺序和完成门槛见
+`docs/reference/Codex_Flow_M13_Release_Readiness_Task_Plan.md`。
