@@ -15,14 +15,19 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M13-02",
+  "active_task": {
+    "id": "M13-02",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-11-14",
+    "note": "Diagnosing the exclusive desktop build lock before the formal NSIS build and installed payload identity verification."
+  },
+  "next_task": null,
   "m13": {
     "status": "IN_PROGRESS",
     "plan": "docs/reference/Codex_Flow_M13_Release_Readiness_Task_Plan.md",
     "tasks": {
       "M13-01": { "status": "COMPLETE", "depends_on": ["M12-REPORT-038"], "validation": "M0-M12 history preserved; M13 source/current-installer evidence gap and preserved M13-03 scripts recorded." },
-      "M13-02": { "status": "READY", "depends_on": ["M13-01"] },
+      "M13-02": { "status": "IN_PROGRESS", "depends_on": ["M13-01"] },
       "M13-03": { "status": "PENDING", "depends_on": ["M13-02"] },
       "M13-04": { "status": "PENDING", "depends_on": ["M13-03"] },
       "M13-05": { "status": "PENDING", "depends_on": ["M13-04"] },
