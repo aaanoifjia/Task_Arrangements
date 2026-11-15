@@ -418,6 +418,17 @@
   ],
   "remediation_history": [
     {
+      "id": "M13-02-R1",
+      "parent_task": "M13-02",
+      "reason": "The NSIS payload identity inspection installs into a disposable /D directory, which overwrites the per-user Codex Flow uninstall registration. The previous script deleted that directory without restoring the registration, so a later normal installer could target the stale path instead of the real installed application.",
+      "files": [
+        "scripts/build_desktop.ps1"
+      ],
+      "failing_validation": "The formal NSIS build's marker-aware payload identity passed, but subsequent normal silent installation returned 0 while the actual installed EXE retained the old hash; HKCU uninstall InstallLocation pointed to the deleted payload-inspection directory.",
+      "intended_acceptance": "Payload inspection restores the exact pre-existing uninstall registration (or removes only the inspection-created registration when none existed), and a normal NSIS installation updates the real installed EXE to the current payload hash.",
+      "status": "IN_PROGRESS"
+    },
+    {
       "id": "M9-DESKTOP-010-R1",
       "parent_task": "M9-DESKTOP-010",
       "reason": "The real packaged sidecar executable exited successfully without producing help/version output because server.py did not invoke main() and the parser had no --version action.",
