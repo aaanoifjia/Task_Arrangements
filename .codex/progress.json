@@ -15,15 +15,20 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": null,
-  "next_task": "M13-03",
+  "active_task": {
+    "id": "M13-03",
+    "status": "IN_PROGRESS",
+    "started_at": "2026-11-15",
+    "note": "Validating the preserved installed WebView2 CDP E2E runner improvements against the current verified installed payload."
+  },
+  "next_task": null,
   "m13": {
     "status": "IN_PROGRESS",
     "plan": "docs/reference/Codex_Flow_M13_Release_Readiness_Task_Plan.md",
     "tasks": {
       "M13-01": { "status": "COMPLETE", "depends_on": ["M12-REPORT-038"], "validation": "M0-M12 history preserved; M13 source/current-installer evidence gap and preserved M13-03 scripts recorded." },
       "M13-02": { "status": "COMPLETE", "depends_on": ["M13-01"], "validation": "Formal NSIS build and marker-aware payload gate passed; payload inspection restores both NSIS registry keys; normal installation used the standard path and installed EXE matched the independently extracted NSIS payload." },
-      "M13-03": { "status": "READY", "depends_on": ["M13-02"] },
+      "M13-03": { "status": "IN_PROGRESS", "depends_on": ["M13-02"] },
       "M13-04": { "status": "PENDING", "depends_on": ["M13-03"] },
       "M13-05": { "status": "PENDING", "depends_on": ["M13-04"] },
       "M13-06": { "status": "PENDING", "depends_on": ["M13-05"] }
