@@ -48,3 +48,17 @@ However, the installed executable remained
 current payload hash. A pre-existing installed Codex Flow process held the
 executable and was not test-owned, so it was deliberately not terminated.
 This is a blocked install identity gate, not a successful installation.
+
+### M13-02-R1 resolved install identity
+
+Payload inspection was corrected to preserve both NSIS registry keys that it
+temporarily changes: the uninstall registration and the install-mode directory
+key. After a clean rebuild, the normal silent installer selected the standard
+`%LOCALAPPDATA%\Codex Flow` path. An independent temporary extraction, with
+both keys backed up and restored, produced this verified identity:
+
+| Artifact | SHA256 |
+| --- | --- |
+| NSIS installer | `A00540179D4DBF301567B6A3F30B4D32D6BDF76A875B4BD5CEB00B25EBECF207` |
+| Extracted NSIS payload EXE | `8371CE38E0E230E72D803D8E0A940495F961FCA9C35B53DDAF84BEDE4FFD11E4` |
+| Installed EXE | `8371CE38E0E230E72D803D8E0A940495F961FCA9C35B53DDAF84BEDE4FFD11E4` |

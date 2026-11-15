@@ -15,20 +15,15 @@
     "milestone_preflight": true,
     "system_toolchain_installation": "explicit_task_or_current_user_authorization_only"
   },
-  "active_task": {
-    "id": "M13-02",
-    "status": "IN_PROGRESS",
-    "started_at": "2026-11-14",
-    "note": "The prior non-test-owned installed application has exited; rerunning the verified NSIS installation and installed-payload identity gate."
-  },
-  "next_task": null,
+  "active_task": null,
+  "next_task": "M13-03",
   "m13": {
     "status": "IN_PROGRESS",
     "plan": "docs/reference/Codex_Flow_M13_Release_Readiness_Task_Plan.md",
     "tasks": {
       "M13-01": { "status": "COMPLETE", "depends_on": ["M12-REPORT-038"], "validation": "M0-M12 history preserved; M13 source/current-installer evidence gap and preserved M13-03 scripts recorded." },
-      "M13-02": { "status": "IN_PROGRESS", "depends_on": ["M13-01"] },
-      "M13-03": { "status": "PENDING", "depends_on": ["M13-02"] },
+      "M13-02": { "status": "COMPLETE", "depends_on": ["M13-01"], "validation": "Formal NSIS build and marker-aware payload gate passed; payload inspection restores both NSIS registry keys; normal installation used the standard path and installed EXE matched the independently extracted NSIS payload." },
+      "M13-03": { "status": "READY", "depends_on": ["M13-02"] },
       "M13-04": { "status": "PENDING", "depends_on": ["M13-03"] },
       "M13-05": { "status": "PENDING", "depends_on": ["M13-04"] },
       "M13-06": { "status": "PENDING", "depends_on": ["M13-05"] }
@@ -355,7 +350,8 @@
     "M12-PERF-036",
     "M12-GATE-037",
     "M12-REPORT-038",
-    "M13-01"
+    "M13-01",
+    "M13-02"
   ],
   "blocked_tasks": {},
   "blocker_history": [
@@ -426,7 +422,8 @@
       ],
       "failing_validation": "The formal NSIS build's marker-aware payload identity passed, but subsequent normal silent installation returned 0 while the actual installed EXE retained the old hash; HKCU uninstall InstallLocation pointed to the deleted payload-inspection directory.",
       "intended_acceptance": "Payload inspection restores the exact pre-existing uninstall registration (or removes only the inspection-created registration when none existed), and a normal NSIS installation updates the real installed EXE to the current payload hash.",
-      "status": "IN_PROGRESS"
+      "status": "COMPLETE",
+      "validation": "Backed up/restored both the NSIS uninstall registration and install-mode registration around payload inspection; after a clean rebuild, normal installation registered C:\\Users\\Administrator\\AppData\\Local\\Codex Flow and installed EXE SHA256 8371CE38E0E230E72D803D8E0A940495F961FCA9C35B53DDAF84BEDE4FFD11E4 matched the independently extracted payload."
     },
     {
       "id": "M9-DESKTOP-010-R1",
@@ -967,5 +964,5 @@
     "codex_interrupt_probe_verified": true,
     "codex_resume_probe_verified": true
   },
-  "last_validation_note": "M13-02 BLOCKED: formal NSIS build and normalized payload identity passed, but the existing non-test-owned installed process prevented the installed executable from updating; no process was terminated."
+  "last_validation_note": "M13-02 COMPLETE: build lock, formal frontend/sidecar/Tauri/NSIS build, marker-aware payload gate, clean normal installation, and independently extracted installed-payload identity verification passed. M13-02-R1 restored both NSIS registry keys around payload inspection."
 }

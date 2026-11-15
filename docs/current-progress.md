@@ -223,8 +223,16 @@ identity gate passed. Current artifact hashes are recorded in
 The normal silent installer returned exit code 0, but the installed executable
 remained the older hash because `codex-flow-desktop.exe` was already running in
 a process that predates M13 and is not owned by this test run. The process was
-not terminated. M13-02 requires the user to close that existing application;
-then installation and exact installed-payload identity verification can resume.
+not terminated. This historical block was resolved after the application exited.
+
+### M13-02 resolution
+
+M13-02 is COMPLETE. M13-02-R1 repaired the build script so payload inspection
+backs up and restores both the NSIS uninstall registration and the NSIS
+install-mode directory key. The prior temporary installation was removed
+without touching user data. A clean formal build then installed to the standard
+user directory, and the installed EXE matched an independently extracted NSIS
+payload exactly. M13-03 is next.
 
 ## Historical Current Task
 

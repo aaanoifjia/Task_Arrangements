@@ -43,8 +43,31 @@ function Assert-NsisPayloadIdentity {
     Require-File $installer 'NSIS installer'
 
     $inspectionRoot = Join-Path $env:TEMP ('codex-flow-nsis-payload-' + [guid]::NewGuid().ToString('N'))
+    $uninstallRegistryPath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\Codex Flow'
+    $uninstallRegistryKey = 'HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\Codex Flow'
+    $installModeRegistryPath = 'HKCU:\Software\codexflow\Codex Flow'
+    $installModeRegistryKey = 'HKCU\Software\codexflow\Codex Flow'
+    $registryBackup = Join-Path $env:TEMP ('codex-flow-nsis-registration-' + [guid]::NewGuid().ToString('N') + '.reg')
+    $installModeRegistryBackup = Join-Path $env:TEMP ('codex-flow-nsis-install-mode-' + [guid]::NewGuid().ToString('N') + '.reg')
+    $hadUninstallRegistration = Test-Path -LiteralPath $uninstallRegistryPath
+    $hadInstallModeRegistration = Test-Path -LiteralPath $installModeRegistryPath
     New-Item -ItemType Directory -Force -Path $inspectionRoot | Out-Null
     try {
+        # NSIS /D extraction updates the per-user uninstall registration. Keep
+        # the real installation's registration intact so this diagnostic never
+        # redirects a later normal install into the disposable inspection path.
+        if ($hadUninstallRegistration) {
+            & reg.exe export $uninstallRegistryKey $registryBackup /y | Out-Null
+            if ($LASTEXITCODE -ne 0) {
+                throw 'NSIS_PAYLOAD_INSPECTION_FAILED: could not back up the existing uninstall registration.'
+            }
+        }
+        if ($hadInstallModeRegistration) {
+            & reg.exe export $installModeRegistryKey $installModeRegistryBackup /y | Out-Null
+            if ($LASTEXITCODE -ne 0) {
+                throw 'NSIS_PAYLOAD_INSPECTION_FAILED: could not back up the existing install-mode registration.'
+            }
+        }
         $inspection = Start-Process -FilePath $installer -ArgumentList @('/S', ('/D=' + $inspectionRoot)) -Wait -PassThru
         if ($inspection.ExitCode -ne 0) {
             throw "NSIS_PAYLOAD_INSPECTION_FAILED: installer exited with $($inspection.ExitCode)."
@@ -86,6 +109,30 @@ function Assert-NsisPayloadIdentity {
     finally {
         if (Test-Path -LiteralPath $inspectionRoot) {
             Remove-Item -LiteralPath $inspectionRoot -Recurse -Force -ErrorAction SilentlyContinue
+        }
+        if ($hadUninstallRegistration) {
+            & reg.exe import $registryBackup | Out-Null
+            if ($LASTEXITCODE -ne 0) {
+                throw 'NSIS_PAYLOAD_INSPECTION_FAILED: could not restore the existing uninstall registration.'
+            }
+        }
+        elseif (Test-Path -LiteralPath $uninstallRegistryPath) {
+            Remove-Item -LiteralPath $uninstallRegistryPath -Recurse -Force -ErrorAction SilentlyContinue
+        }
+        if ($hadInstallModeRegistration) {
+            & reg.exe import $installModeRegistryBackup | Out-Null
+            if ($LASTEXITCODE -ne 0) {
+                throw 'NSIS_PAYLOAD_INSPECTION_FAILED: could not restore the existing install-mode registration.'
+            }
+        }
+        elseif (Test-Path -LiteralPath $installModeRegistryPath) {
+            Remove-Item -LiteralPath $installModeRegistryPath -Recurse -Force -ErrorAction SilentlyContinue
+        }
+        if (Test-Path -LiteralPath $registryBackup) {
+            Remove-Item -LiteralPath $registryBackup -Force -ErrorAction SilentlyContinue
+        }
+        if (Test-Path -LiteralPath $installModeRegistryBackup) {
+            Remove-Item -LiteralPath $installModeRegistryBackup -Force -ErrorAction SilentlyContinue
         }
     }
 }
